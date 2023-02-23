@@ -5,6 +5,8 @@ public struct Point : IEquatable<Point>
     public float X { get; private set; }
     public float Y { get; private set; }
     public float Z { get; private set; }
+    
+    private const float ε = 1e-6f;
 
     public Point(float x, float y, float z)
     {
@@ -37,9 +39,12 @@ public struct Point : IEquatable<Point>
         return point + (-vector);
     }
 
+    // TODO: may not work correctly, needs to be fixed if this method is to be used.
     public bool Equals(Point other)
     {
         return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+        // it should be more accurate, but may have a higher time complexity:
+        // return Math.Abs(X - other.X) < ε && Math.Abs(Y - other.Y) < ε && Math.Abs(Z - other.Z) < ε;
     }
 
     public override bool Equals(object? obj)

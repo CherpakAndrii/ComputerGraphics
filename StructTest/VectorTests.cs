@@ -1,4 +1,6 @@
-﻿namespace StructTest;
+﻿using Vector = Structures.Vector;
+
+namespace StructTest;
 
 public class VectorTests
 {
@@ -53,5 +55,16 @@ public class VectorTests
         float module = vector.GetModule();
 
         Assert.That(1 - module < 1e-6, Is.True);
+    }
+    
+    [Test]
+    public void VectorIsCollinearTest()
+    {
+        Vector vector1 = new Vector(5, -7, 4);
+        Vector vector2 = new Vector(-7.5f, 10.5f, -6);
+
+        bool isCollinear = vector1.IsCollinearTo(vector2);
+
+        Assert.That(isCollinear, Is.True);
     }
 }

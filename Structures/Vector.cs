@@ -1,12 +1,12 @@
-﻿using System.Numerics;
-
-namespace Structures;
+﻿namespace Structures;
 
 public struct Vector : IEquatable<Vector>
 {
     public float X { get; private set; }
     public float Y { get; private set; }
     public float Z { get; private set; }
+
+    private const float epsilon = 1e-6f;
 
     public Vector(float x, float y, float z)
     {
@@ -64,9 +64,19 @@ public struct Vector : IEquatable<Vector>
         return copy;
     }
 
+    public bool IsCollinearTo(Vector vector)
+    {
+        float[] coefs = { X / vector.X, Y / vector.Y, Z / vector.Z };
+        return Math.Abs(coefs[0] - coefs[1]) < epsilon && Math.Abs(coefs[1] - coefs[2]) < epsilon &&
+               Math.Abs(coefs[2] - coefs[0]) < epsilon;
+    }
+
+    // TODO: may not work correctly, needs to be fixed if this method is to be used.
     public bool Equals(Vector other)
     {
         return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+        // it should be more accurate, but may have a higher time complexity:
+        // return Math.Abs(X - other.X) < epsilon && Math.Abs(Y - other.Y) < epsilon && Math.Abs(Z - other.Z) < epsilon;
     }
 
     public override bool Equals(object? obj)
