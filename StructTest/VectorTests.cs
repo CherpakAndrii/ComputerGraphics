@@ -67,4 +67,61 @@ public class VectorTests
 
         Assert.That(isCollinear, Is.True);
     }
+    
+    [Test]
+    public void VectorIsPerpendicularTest__False()
+    {
+        Vector vector1 = new Vector(5, -7, 4);
+        Vector vector2 = new Vector(-7.5f, 10.5f, -6);
+
+        bool isPerpendicular = vector1.IsPerpendicularTo(vector2);
+
+        Assert.That(isPerpendicular, Is.False);
+    }
+    
+    [Test]
+    public void VectorIsPerpendicularTest__True()
+    {
+        Vector vector1 = new Vector(2, 3, 1);
+        Vector vector2 = new Vector(-3, 4, -6);
+
+        bool isPerpendicular = vector1.IsPerpendicularTo(vector2);
+
+        Assert.That(isPerpendicular, Is.True);
+    }
+    
+    [Test]
+    public void VectorMultiplicationTest()
+    {
+        Vector vector1 = new Vector(-5, 7, 2);
+        Vector vector2 = new Vector(2, -3, 4);
+
+        float result = vector1*vector2;
+
+        Assert.AreEqual(-23f, result);
+    }
+
+    [Test]
+    public void AngleBetweenVectorsTest()
+    {
+        Vector vector1 = new Vector(2, 3, 1);
+        Vector vector2 = new Vector(-3, 4, -6);
+
+        float result = vector1.GetAngleWith(vector2);
+        float error = (float)Math.Abs(result - Math.PI/2);
+        
+        Assert.That(error<1e-6f, Is.True);
+    }
+
+    [Test]
+    public void AngleBetweenVectorsTest2()
+    {
+        Vector vector1 = new Vector(3, 0, -3);
+        Vector vector2 = new Vector(-1, 1, 2);
+
+        float result = vector1.GetAngleWith(vector2);
+        float error = (float)Math.Abs(result - 5*Math.PI/6);
+        
+        Assert.That(error<1e-6f, Is.True);
+    }
 }

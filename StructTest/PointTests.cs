@@ -23,4 +23,15 @@ public class PointTests
         
         Assert.AreEqual(new Point(-1, -2, -4), result);
     }
+    
+    [Test]
+    public void DistanceBetweenPointsTest()
+    {
+        Point point1 = new Point(1, 1, 1);
+        Point point2 = new Point(5, 3, 4);
+
+        float result = point1.GetDistance(point2);
+        
+        Assert.AreEqual((float)Math.Sqrt(4*4+2*2+3*3), result);
+    }
 }

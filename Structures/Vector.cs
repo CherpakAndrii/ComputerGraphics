@@ -75,6 +75,11 @@ public struct Vector : IEquatable<Vector>
         return Math.Abs(coefs[0] - coefs[1]) < epsilon && Math.Abs(coefs[1] - coefs[2]) < epsilon &&
                Math.Abs(coefs[2] - coefs[0]) < epsilon;
     }
+    
+    public bool IsPerpendicularTo(Vector vector)
+    {
+        return this * vector == 0;
+    }
 
     public float GetAngleWith(Vector another)
     {
