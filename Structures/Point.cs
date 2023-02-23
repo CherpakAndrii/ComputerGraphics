@@ -29,6 +29,12 @@ public struct Point : IEquatable<Point>
         Z = original.Z;
     }
 
+    public float GetDistance(Point point2)
+    {
+        float dx = X - point2.X, dy = Y - point2.Y, dz = Z - point2.Z;
+        return (float)Math.Sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
     public static Point operator +(Point point, Vector vector)
     {
         return new Point(point.X + vector.X, point.Y + vector.Y, point.Z + vector.Z);

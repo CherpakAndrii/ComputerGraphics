@@ -48,6 +48,11 @@ public struct Vector : IEquatable<Vector>
     {
         return new Vector(vector1.X-vector2.X, vector1.Y-vector2.Y, vector1.Z-vector2.Z);
     }
+    
+    public static float operator *(Vector vector1, Vector vector2)
+    {
+        return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
+    }
 
     public void Normalize()
     {
@@ -69,6 +74,11 @@ public struct Vector : IEquatable<Vector>
         float[] coefs = { X / vector.X, Y / vector.Y, Z / vector.Z };
         return Math.Abs(coefs[0] - coefs[1]) < epsilon && Math.Abs(coefs[1] - coefs[2]) < epsilon &&
                Math.Abs(coefs[2] - coefs[0]) < epsilon;
+    }
+
+    public float GetAngleWith(Vector another)
+    {
+        return (float)Math.Acos(this * another / (this.GetModule() * another.GetModule()));
     }
 
     // TODO: may not work correctly, needs to be fixed if this method is to be used.
