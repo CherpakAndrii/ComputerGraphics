@@ -19,6 +19,13 @@ public struct Point : IEquatable<Point>
         Y = coordinates.Item2;
         Z = coordinates.Item3;
     }
+    
+    public Point(Point original)
+    {
+        X = original.X;
+        Y = original.Y;
+        Z = original.Z;
+    }
 
     public static Point operator +(Point point, Vector vector)
     {

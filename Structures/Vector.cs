@@ -1,4 +1,6 @@
-﻿namespace Structures;
+﻿using System.Numerics;
+
+namespace Structures;
 
 public struct Vector : IEquatable<Vector>
 {
@@ -18,6 +20,13 @@ public struct Vector : IEquatable<Vector>
         X = coordinates.Item1;
         Y = coordinates.Item2;
         Z = coordinates.Item3;
+    }
+    
+    public Vector(Vector original)
+    {
+        X = original.X;
+        Y = original.Y;
+        Z = original.Z;
     }
 
     public float GetModule()
@@ -46,6 +55,13 @@ public struct Vector : IEquatable<Vector>
         X /= module;
         Y /= module;
         Z /= module;
+    }
+    
+    public Vector Normalized()
+    {
+        Vector copy = new Vector(this);
+        copy.Normalize();
+        return copy;
     }
 
     public bool Equals(Vector other)
