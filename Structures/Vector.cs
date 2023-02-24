@@ -21,6 +21,13 @@ public struct Vector : IEquatable<Vector>
         Y = coordinates.Item2;
         Z = coordinates.Item3;
     }
+
+    public Vector(Point start, Point end)
+    {
+        X = end.X - start.X;
+        Y = end.Y - start.Y;
+        Z = end.Z - start.Z;
+    }
     
     public Vector(Vector original)
     {
@@ -67,6 +74,15 @@ public struct Vector : IEquatable<Vector>
         Vector copy = new Vector(this);
         copy.Normalize();
         return copy;
+    }
+
+    public Vector CrossProductWith(Vector another)
+    {
+        float x = this.Y * another.Z - this.Z * another.Y;
+        float y = this.Z * another.X - this.X * another.Z;
+        float z = this.X * another.Y - this.Y * another.X;
+
+        return new Vector(x, y, z);
     }
 
     public bool IsCollinearTo(Vector vector)

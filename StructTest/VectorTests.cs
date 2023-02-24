@@ -102,6 +102,28 @@ public class VectorTests
     }
 
     [Test]
+    public void VectorCrossProductTest1()
+    {
+        Vector vector1 = new Vector(1, 2, 3);
+        Vector vector2 = new Vector(9, 8, 7);
+
+        Vector result = vector1.CrossProductWith(vector2);
+
+        Assert.AreEqual(new Vector(-10, 20, -10), result);
+    }
+    
+    [Test]
+    public void VectorCrossProductTest2()
+    {
+        Vector vector1 = new Vector(-5, 7, 2);
+        Vector vector2 = new Vector(2, -3, 4);
+
+        Vector result = vector1.CrossProductWith(vector2);
+
+        Assert.AreEqual(new Vector(34, 24, 1), result);
+    }
+    
+    [Test]
     public void AngleBetweenVectorsTest()
     {
         Vector vector1 = new Vector(2, 3, 1);
