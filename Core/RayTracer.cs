@@ -45,7 +45,7 @@ public class RayTracer
     {
         bool intersected = false;
         intersection = new();
-        figure = new Triangle();
+        figure = default;
         double minDistance = double.MaxValue;
         for (int i = 0; i < scene.Figures.Count; i++)
         {
