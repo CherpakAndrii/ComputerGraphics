@@ -1,6 +1,6 @@
 ﻿namespace Structures;
 
-public struct Triangle : ISurface
+public struct Triangle : IIntersectable
 {
     public Point A { get; }
     public Point B { get; }
@@ -29,12 +29,12 @@ public struct Triangle : ISurface
 
     public Vector GetNormalVector(Point point) => Normal;
 
-    public bool HasIntersectionWith(Beam beam)
+    public bool HasIntersectionWith(Ray ray)
     {
         throw new NotImplementedException();
     }
 
-    public Point? GetIntersectionWith(Beam beam)
+    public Point? GetIntersectionWith(Ray ray)
     {
         throw new NotImplementedException();
     }
