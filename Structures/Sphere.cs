@@ -1,0 +1,34 @@
+﻿namespace Structures;
+
+public class Sphere : IIntersectable
+{
+    public Point Center { get; protected set; }
+    public float Radius { get; protected set; }
+
+    public Sphere(Point center, float radius)
+    {
+        Center = center;
+        Radius = radius;
+    }
+
+    public Sphere(Sphere original)
+    {
+        Center = original.Center;
+        Radius = original.Radius;
+    }
+
+    public Vector GetNormalVector(Point point)
+    {
+        return new Vector(Center, point).Normalized();
+    }
+
+    public bool HasIntersectionWith(Ray ray)
+    {
+        return (new Vector(Center, ray.GetNearestPointTo(Center)).GetModule() <= Radius);
+    }
+
+    public Point? GetIntersectionWith(Ray ray)
+    {
+        throw new NotImplementedException();
+    }
+}
