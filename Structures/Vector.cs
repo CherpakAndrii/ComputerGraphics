@@ -60,6 +60,11 @@ public struct Vector : IEquatable<Vector>
     {
         return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
     }
+    
+    public static Vector operator *(Vector vector, float number)
+    {
+        return new Vector(vector.X * number, vector.Y * number, vector.Z * number);
+    }
 
     public void Normalize()
     {
