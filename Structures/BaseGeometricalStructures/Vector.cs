@@ -131,4 +131,12 @@ public struct Vector : IEquatable<Vector>
 
     public static bool operator !=(Vector first, Vector second)
         => !first.Equals(second);
+
+
+    //TODO: add test
+    public double FindCos(Vector other)
+    {
+        double cosAlpha = DotProductWith(other) / (other.GetModule() * GetModule());
+        return cosAlpha;
+    }
 }

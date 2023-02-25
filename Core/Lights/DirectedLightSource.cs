@@ -1,4 +1,4 @@
-﻿using Core.Light;
+﻿using Core.Lights;
 using Structures;
 using Structures.BaseGeometricalStructures;
 

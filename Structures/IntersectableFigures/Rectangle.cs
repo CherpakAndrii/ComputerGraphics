@@ -48,19 +48,14 @@ public class Rectangle : IIntersectable
     }
 
     public Vector GetNormalVector(Point point) => Normal;
-
-    public bool HasIntersectionWith(Ray ray)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Point? GetIntersectionWith(Ray ray)
-    {
-        throw new NotImplementedException();
-    }
     
     private static Vector CalculateNormalVector(Point p1, Point p2, Point p3)
     {
         return new Vector(p1, p2).CrossProductWith(new Vector(p1, p3)).Normalized();
+    }
+
+    public bool HasIntersectionWith(Ray ray, out Point intersectionPoint)
+    {
+        throw new NotImplementedException();
     }
 }

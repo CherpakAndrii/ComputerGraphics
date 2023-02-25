@@ -1,6 +1,6 @@
 ﻿using Structures.BaseGeometricalStructures;
 
-namespace Core.Camera;
+namespace Core.Cameras;
 
 public class Camera
 {

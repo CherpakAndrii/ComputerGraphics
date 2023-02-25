@@ -25,12 +25,7 @@ public class Sphere : IIntersectable
         return new Vector(Center, point).Normalized();
     }
 
-    public bool HasIntersectionWith(Ray ray)
-    {
-        return (new Vector(Center, ray.GetNearestPointTo(Center)).GetModule() <= Radius);
-    }
-
-    public Point? GetIntersectionWith(Ray ray)
+    public bool HasIntersectionWith(Ray ray, out Point intersectionPoint)
     {
         throw new NotImplementedException();
     }
