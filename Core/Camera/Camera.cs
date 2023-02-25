@@ -1,9 +1,6 @@
-﻿using System.Numerics;
-using Structures;
-using Structures.BaseGeometricalStructures;
-using Vector = Structures.BaseGeometricalStructures.Vector;
+﻿using Structures.BaseGeometricalStructures;
 
-namespace Core;
+namespace Core.Camera;
 
 public class Camera
 {
