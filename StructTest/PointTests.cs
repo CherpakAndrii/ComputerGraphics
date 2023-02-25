@@ -1,3 +1,5 @@
+using Structures.BaseGeometricalStructures;
+
 namespace StructTest;
 
 public class PointTests
@@ -10,7 +12,7 @@ public class PointTests
 
         Point result = point + vector;
         
-        Assert.AreEqual(new Point(3, 4, 6), result);
+        Assert.That(result, Is.EqualTo(new Point(3, 4, 6)));
     }
     
     [Test]
@@ -21,7 +23,7 @@ public class PointTests
 
         Point result = point - vector;
         
-        Assert.AreEqual(new Point(-1, -2, -4), result);
+        Assert.That(result, Is.EqualTo(new Point(-1, -2, -4)));
     }
     
     [Test]
@@ -32,6 +34,6 @@ public class PointTests
 
         float result = point1.GetDistance(point2);
         
-        Assert.AreEqual((float)Math.Sqrt(4*4+2*2+3*3), result);
+        Assert.That(result, Is.EqualTo((float)Math.Sqrt(29)));
     }
 }

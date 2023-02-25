@@ -1,4 +1,5 @@
 ﻿using Structures;
+using Structures.Interfaces;
 
 namespace Core.Scene;
 

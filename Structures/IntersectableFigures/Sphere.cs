@@ -1,4 +1,7 @@
-﻿namespace Structures;
+﻿using Structures.BaseGeometricalStructures;
+using Structures.Interfaces;
+
+namespace Structures.IntersectableFigures;
 
 public class Sphere : IIntersectable
 {

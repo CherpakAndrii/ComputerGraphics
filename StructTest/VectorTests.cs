@@ -1,4 +1,4 @@
-using Vector = Structures.Vector;
+using Vector = Structures.BaseGeometricalStructures.Vector;
 
 namespace StructTest;
 

@@ -1,4 +1,4 @@
-﻿namespace Structures;
+﻿namespace Structures.BaseGeometricalStructures;
 
 public struct Ray
 {

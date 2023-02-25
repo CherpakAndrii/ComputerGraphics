@@ -1,4 +1,5 @@
 ﻿using Structures;
+using Structures.BaseGeometricalStructures;
 
 namespace Core;
 

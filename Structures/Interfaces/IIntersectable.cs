@@ -1,4 +1,6 @@
-﻿namespace Structures;
+﻿using Structures.BaseGeometricalStructures;
+
+namespace Structures.Interfaces;
 
 public interface IIntersectable
 {
