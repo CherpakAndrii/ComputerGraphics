@@ -2,7 +2,6 @@
 using Core.Scenes;
 using Structures.BaseGeometricalStructures;
 using Structures.Interfaces;
-using Structures.IntersectableFigures;
 
 namespace Core;
    
@@ -22,17 +21,22 @@ public class RayTracer
             {
                 pixels[i, j] = new();
                 Ray ray = new(scene.Camera.Position, projectionPlane[i, j]);
-                if (FindClosestIntersection(ray, out Point intersectionPoint, out IIntersectable figure))
+                if (FindClosestIntersection(ray, out Point intersectionPoint, out IIntersectable? figure))
                 {
                     for (int k = 0; j < scene.LightSources.Count; k++)
                     {
                         Ray toLightRay = new(intersectionPoint, scene.LightSources[k].GetVector(intersectionPoint) * -1);
                         if (IsOnLight(toLightRay))
                         {
-                            double cosLight = toLightRay.Direction.FindCos(figure.GetNormalVector(intersectionPoint));
-                            pixels[i, j].R += (int)(Math.Abs(cosLight) * 255);
-                            pixels[i, j].G += (int)(Math.Abs(cosLight) * 255);
-                            pixels[i, j].B += (int)(Math.Abs(cosLight) * 255);
+                            Vector normal = figure!.GetNormalVector(intersectionPoint);
+                            if (normal.FindCos(scene.Camera.Direction) > 0) normal *= -1;
+                            double cosLight = toLightRay.Direction.FindCos(normal);
+                            if (cosLight > 0)
+                            {
+                                pixels[i, j].R += (int)(Math.Abs(cosLight) * 255);
+                                pixels[i, j].G += (int)(Math.Abs(cosLight) * 255);
+                                pixels[i, j].B += (int)(Math.Abs(cosLight) * 255);
+                            }
                         }
                     }
                 }
@@ -41,7 +45,7 @@ public class RayTracer
         return pixels;
     }
  
-    private bool FindClosestIntersection(Ray ray, out Point intersection, out IIntersectable figure)
+    private bool FindClosestIntersection(Ray ray, out Point intersection, out IIntersectable? figure)
     {
         bool intersected = false;
         intersection = new();
