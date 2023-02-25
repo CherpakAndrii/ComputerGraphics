@@ -2,11 +2,12 @@
 
 public struct Vector : IEquatable<Vector>
 {
+    public static Vector Zero => new (0, 0, 0); 
     public float X { get; private set; }
     public float Y { get; private set; }
     public float Z { get; private set; }
 
-    private const float epsilon = 1e-6f;
+    private const float Epsilon = 1e-6f;
 
     public Vector(float x, float y, float z)
     {
@@ -83,9 +84,9 @@ public struct Vector : IEquatable<Vector>
 
     public Vector CrossProductWith(Vector another)
     {
-        float x = this.Y * another.Z - this.Z * another.Y;
-        float y = this.Z * another.X - this.X * another.Z;
-        float z = this.X * another.Y - this.Y * another.X;
+        float x = Y * another.Z - Z * another.Y;
+        float y = Z * another.X - X * another.Z;
+        float z = X * another.Y - Y * another.X;
 
         return new Vector(x, y, z);
     }
@@ -93,8 +94,8 @@ public struct Vector : IEquatable<Vector>
     public bool IsCollinearTo(Vector vector)
     {
         float[] coefs = { X / vector.X, Y / vector.Y, Z / vector.Z };
-        return Math.Abs(coefs[0] - coefs[1]) < epsilon && Math.Abs(coefs[1] - coefs[2]) < epsilon &&
-               Math.Abs(coefs[2] - coefs[0]) < epsilon;
+        return Math.Abs(coefs[0] - coefs[1]) < Epsilon && Math.Abs(coefs[1] - coefs[2]) < Epsilon &&
+               Math.Abs(coefs[2] - coefs[0]) < Epsilon;
     }
     
     public bool IsPerpendicularTo(Vector vector)
@@ -104,7 +105,7 @@ public struct Vector : IEquatable<Vector>
 
     public float GetAngleWith(Vector another)
     {
-        return (float)Math.Acos(this * another / (this.GetModule() * another.GetModule()));
+        return (float)Math.Acos(this * another / (GetModule() * another.GetModule()));
     }
 
     // TODO: may not work correctly, needs to be fixed if this method is to be used.
