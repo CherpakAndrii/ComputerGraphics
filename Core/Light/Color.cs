@@ -1,4 +1,4 @@
-﻿namespace Structures;
+﻿namespace Core.Light;
 
 public struct Color
 {
