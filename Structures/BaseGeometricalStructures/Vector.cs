@@ -1,4 +1,4 @@
-﻿namespace Structures.BaseGeometricalStructures;
+namespace Structures.BaseGeometricalStructures;
 
 public struct Vector : IEquatable<Vector>
 {
@@ -56,12 +56,7 @@ public struct Vector : IEquatable<Vector>
     {
         return new Vector(vector1.X-vector2.X, vector1.Y-vector2.Y, vector1.Z-vector2.Z);
     }
-    
-    public static float operator *(Vector vector1, Vector vector2)
-    {
-        return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
-    }
-    
+
     public static Vector operator *(Vector vector, float number)
     {
         return new Vector(vector.X * number, vector.Y * number, vector.Z * number);
@@ -89,6 +84,11 @@ public struct Vector : IEquatable<Vector>
         float z = X * another.Y - Y * another.X;
 
         return new Vector(x, y, z);
+    }
+
+    public float DotProductWith(Vector another)
+    {
+        return X * another.X + Y * another.Y + Z * another.Z;
     }
 
     public bool IsCollinearTo(Vector vector)
