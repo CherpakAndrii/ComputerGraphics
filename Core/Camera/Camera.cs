@@ -1,14 +1,24 @@
-﻿using Structures;
+﻿using System.Numerics;
+using Structures;
 using Structures.BaseGeometricalStructures;
+using Vector = Structures.BaseGeometricalStructures.Vector;
 
 namespace Core;
 
 public class Camera
 {
     public Point Position { get; set; }
-    public Vector Direction { get; set; }
+    
+    private Vector _directionNormalized;
+    public Vector Direction
+    {
+        get => _directionNormalized;
+        set => _directionNormalized = value.Normalized();
+    }
+    
+    public float DistanceToProjectionPlane { get; set; }
+    
     private float _fieldOfView;
-
     public float FieldOfView
     {
         get => _fieldOfView;
@@ -22,30 +32,55 @@ public class Camera
             _fieldOfView = value;
         }
     }
-    private readonly int _xSize, _ySize;
-
-    public Camera(int xSize, int ySize)
-    {
-        _xSize = xSize;
-        _ySize = ySize;
-    }
+    
+    public int ProjectionPlaneWidthInPixels { get; set; }
+    
+    public int ProjectionPlaneHeightInPixels { get; set; }
 
     public Point[,] ProjectionPlane
     {
         get
         {
-            var pixelPosition = new Point();
-            var projectionPlane = new Point[20, 20];
-            for (int i = 0; i < _xSize; i++)
+            Vector rightProjectionPlaneDirection
+                = new Vector(0, 0, 1).CrossProductWith(_directionNormalized);
+            if (rightProjectionPlaneDirection == Vector.Zero)
             {
-                for (int j = 0; j < _ySize; j++)
-                {
-                    projectionPlane[i, j] = pixelPosition;
-                    pixelPosition += new Vector(5, 0, 0);
-                }
-                pixelPosition += new Vector(0, 5, 0);
+                rightProjectionPlaneDirection
+                    = new Vector(0, 1, 0).CrossProductWith(_directionNormalized);
             }
+            Vector upProjectionPlaneDirection =
+                _directionNormalized.CrossProductWith(rightProjectionPlaneDirection);
+            
+            var projectionPlane = new Point[ProjectionPlaneWidthInPixels, ProjectionPlaneHeightInPixels];
+            float projectionPlaneAspectRatio
+                = (float)ProjectionPlaneWidthInPixels / ProjectionPlaneHeightInPixels;
 
+            float alpha = _fieldOfView / 2;
+            
+            float leftProjectionPlaneOffset = (float)Math.Tan(alpha) * DistanceToProjectionPlane;
+            float bottomProjectionPlaneOffset = leftProjectionPlaneOffset * projectionPlaneAspectRatio;
+            
+            float horizontalDistanceBetweenProjectionPixels
+                = leftProjectionPlaneOffset / ProjectionPlaneWidthInPixels / 2;
+            float verticalDistanceBetweenProjectionPixels
+                = bottomProjectionPlaneOffset / ProjectionPlaneHeightInPixels / 2;
+
+
+            Point leftBottomCornerOfProjectionPlane =
+                Position
+                + rightProjectionPlaneDirection * horizontalDistanceBetweenProjectionPixels
+                + upProjectionPlaneDirection * verticalDistanceBetweenProjectionPixels;
+
+            for (int x = 0; x < ProjectionPlaneWidthInPixels; x++)
+            {
+                for (int y = 0; y < ProjectionPlaneHeightInPixels; y++)
+                {
+                    projectionPlane[x, y] =
+                        leftBottomCornerOfProjectionPlane
+                        + rightProjectionPlaneDirection * x
+                        + upProjectionPlaneDirection * y;
+                }
+            }
             return projectionPlane;
         }
     }
