@@ -40,13 +40,16 @@ public class Sphere : IIntersectable
 
         var D = b * b - 4 * a * c;
         if (D < 0)
-            return null;
+        {
+            intersectionPoint = default;
+            return false;
+        }
 
         var distance1 = (-b - Math.Sqrt(D)) / 2;
         var distance2 = (-b + Math.Sqrt(D)) / 2;
         var distance = (float)Math.Min(distance1, distance2);
 
-        var intersectionPoint = ray.Origin + ray.Direction.Normalized() * distance;
-        return intersectionPoint;
+        intersectionPoint = ray.Origin + ray.Direction.Normalized() * distance;
+        return true;
     }
 }
