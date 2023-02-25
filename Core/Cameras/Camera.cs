@@ -12,8 +12,19 @@ public class Camera
         get => _directionNormalized;
         set => _directionNormalized = value.Normalized();
     }
-    
-    public float DistanceToProjectionPlane { get; set; }
+
+    private float _distanceToProjectionPlane;
+
+    public float DistanceToProjectionPlane
+    {
+        get => _distanceToProjectionPlane;
+        set
+        {
+            if (value < 0)
+                throw new Exception("Distance cannot be negative");
+            _distanceToProjectionPlane = value;
+        }
+    }
     
     private float _fieldOfView;
     public float FieldOfView
@@ -54,7 +65,7 @@ public class Camera
 
             float alpha = _fieldOfView / 2;
             
-            float leftProjectionPlaneOffset = (float)Math.Tan(alpha) * DistanceToProjectionPlane;
+            float leftProjectionPlaneOffset = (float)Math.Tan(alpha) * _distanceToProjectionPlane;
             float bottomProjectionPlaneOffset = leftProjectionPlaneOffset * projectionPlaneAspectRatio;
             
             float horizontalDistanceBetweenProjectionPixels
