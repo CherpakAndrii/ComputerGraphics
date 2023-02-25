@@ -125,4 +125,10 @@ public struct Vector : IEquatable<Vector>
     {
         return HashCode.Combine(X, Y, Z);
     }
+
+    public static bool operator ==(Vector first, Vector second)
+        => first.Equals(second);
+
+    public static bool operator !=(Vector first, Vector second)
+        => !first.Equals(second);
 }
