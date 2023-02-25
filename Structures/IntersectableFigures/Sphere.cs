@@ -27,7 +27,7 @@ public class Sphere : IIntersectable
 
     public bool HasIntersectionWith(Ray ray, out Point intersectionPoint)
     {
-        Vector vectorFromRayOriginToSphereCenter = new Vector(ray.Origin, Center);
+        Vector vectorFromRayOriginToSphereCenter = new Vector(Center, ray.Origin);
 
         var rayDirectionSquared = ray.Direction.DotProductWith(ray.Direction);
         var radiusSquared = Radius * Radius;
