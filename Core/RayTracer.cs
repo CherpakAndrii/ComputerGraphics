@@ -52,7 +52,7 @@ public class RayTracer
             if (scene.Figures[i].HasIntersectionWith(ray, out Point currIntersection))
             {
                 intersected = true;
-                double currDistance = new Vector(ray.StartPoint, currIntersection).GetModule();
+                double currDistance = new Vector(ray.Origin, currIntersection).GetModule();
                 if (currDistance < minDistance)
                 {
                     intersection = currIntersection;
