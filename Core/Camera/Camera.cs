@@ -8,21 +8,24 @@ public class Camera
     public Point ProjectionPlanePosition { get; set; }
     public float FieldOfView { get; set; }
 
-    public Point[,] GetProjectionPlane()
-    {   
-        var pixelPosition = new Point();
-        var projectionPlane = new Point[20, 20];
-        for (int i = 0; i < 20; i++)
+    public Point[,] ProjectionPlane
+    {
+        get
         {
-            for (int j = 0; j < 20; j++)
+            var pixelPosition = new Point();
+            var projectionPlane = new Point[20, 20];
+            for (int i = 0; i < 20; i++)
             {
-                projectionPlane[i, j] = pixelPosition;
-                pixelPosition += new Vector(5, 0, 0);
+                for (int j = 0; j < 20; j++)
+                {
+                    projectionPlane[i, j] = pixelPosition;
+                    pixelPosition += new Vector(5, 0, 0);
+                }
+                pixelPosition += new Vector(0, 5, 0);
             }
-            pixelPosition += new Vector(0, 5, 0);
-        }
 
-        return projectionPlane;
+            return projectionPlane;
+        }
     }
     
 }
