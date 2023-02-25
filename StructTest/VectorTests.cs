@@ -1,4 +1,4 @@
-﻿using Vector = Structures.Vector;
+using Vector = Structures.Vector;
 
 namespace StructTest;
 
@@ -12,7 +12,7 @@ public class VectorTests
 
         Vector result = vector1 + vector2;
         
-        Assert.AreEqual(new Vector(3, 4, 6), result);
+        Assert.That(result, Is.EqualTo(new Vector(3, 4, 6)));
     }
     
     [Test]
@@ -23,7 +23,7 @@ public class VectorTests
 
         Vector result = vector1 - vector2;
         
-        Assert.AreEqual(new Vector(-1, -2, -4), result);
+        Assert.That(result, Is.EqualTo(new Vector(-1, -2, -4)));
     }
     
     [Test]
@@ -33,7 +33,7 @@ public class VectorTests
 
         float module = vector.GetModule();
 
-        Assert.AreEqual(5, module);
+        Assert.That(module, Is.EqualTo(5));
     }
     
     [Test]
@@ -43,7 +43,7 @@ public class VectorTests
 
         float module = vector.GetModule();
 
-        Assert.AreEqual((float)Math.Sqrt(Math.Pow(11, 2)+Math.Pow(13, 2)+Math.Pow(19, 2)), module);
+        Assert.That(module, Is.EqualTo((float)Math.Sqrt(Math.Pow(11, 2)+Math.Pow(13, 2)+Math.Pow(19, 2))));
     }
     
     [Test]
@@ -54,7 +54,7 @@ public class VectorTests
 
         float module = vector.GetModule();
 
-        Assert.That(1 - module < 1e-6, Is.True);
+        Assert.That(1 - module, Is.LessThan(1e-6));
     }
     
     [Test]
@@ -98,7 +98,7 @@ public class VectorTests
 
         float result = vector1*vector2;
 
-        Assert.AreEqual(-23f, result);
+        Assert.That(result, Is.EqualTo(-23f));
     }
 
     [Test]
@@ -109,7 +109,7 @@ public class VectorTests
 
         Vector result = vector1.CrossProductWith(vector2);
 
-        Assert.AreEqual(new Vector(-10, 20, -10), result);
+        Assert.That(result, Is.EqualTo(new Vector(-10, 20, -10)));
     }
     
     [Test]
@@ -120,7 +120,7 @@ public class VectorTests
 
         Vector result = vector1.CrossProductWith(vector2);
 
-        Assert.AreEqual(new Vector(34, 24, 1), result);
+        Assert.That(result, Is.EqualTo(new Vector(34, 24, 1)));
     }
     
     [Test]
@@ -132,7 +132,7 @@ public class VectorTests
         float result = vector1.GetAngleWith(vector2);
         float error = (float)Math.Abs(result - Math.PI/2);
         
-        Assert.That(error<1e-6f, Is.True);
+        Assert.That(error, Is.LessThan(1e-6f));
     }
 
     [Test]
@@ -144,6 +144,6 @@ public class VectorTests
         float result = vector1.GetAngleWith(vector2);
         float error = (float)Math.Abs(result - 5*Math.PI/6);
         
-        Assert.That(error<1e-6f, Is.True);
+        Assert.That(error, Is.LessThan(1e-6f));
     }
 }
