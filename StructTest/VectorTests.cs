@@ -96,7 +96,7 @@ public class VectorTests
         Vector vector1 = new Vector(-5, 7, 2);
         Vector vector2 = new Vector(2, -3, 4);
 
-        float result = vector1*vector2;
+        float result = vector1.DotProductWith(vector2);
 
         Assert.That(result, Is.EqualTo(-23f));
     }

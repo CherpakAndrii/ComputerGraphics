@@ -26,7 +26,7 @@ public struct Ray
     public Point GetNearestPointTo(Point another)
     {
         Vector vectorToPoint = new Vector(StartPoint, another);
-        float coef = vectorToPoint*Direction / (float)Math.Pow(Direction.GetModule(), 2);
+        float coef = vectorToPoint.DotProductWith(Direction) / (float)Math.Pow(Direction.GetModule(), 2);
         Point nearest = StartPoint + Direction * coef;
 
         return nearest;

@@ -13,7 +13,7 @@ public class Rectangle : IIntersectable
 
     public Rectangle(Point a, Point b, Point c)
     {
-        if (new Vector(b, a) * new Vector(b, c) != 0)
+        if (new Vector(b, a).DotProductWith(new Vector(b, c)) != 0)
             throw new ArgumentException("This points can't define the rectangle!");
         A = a;
         B = b;
@@ -28,7 +28,7 @@ public class Rectangle : IIntersectable
         Vector bc = new Vector(b, c);
         Vector dc = new Vector(d, c);
         
-        if (!ab.Equals(dc) || ab*bc != 0)
+        if (!ab.Equals(dc) || ab.DotProductWith(bc) != 0)
             throw new ArgumentException("This points can't define the rectangle!");
         
         A = a;
