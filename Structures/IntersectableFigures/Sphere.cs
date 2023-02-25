@@ -32,6 +32,26 @@ public class Sphere : IIntersectable
 
     public Point? GetIntersectionWith(Ray ray)
     {
-        throw new NotImplementedException();
+        Vector vectorFromRayOriginToSphereCenter = new Vector(ray.Origin, Center);
+
+        var rayDirectionSquared = ray.Direction.DotProductWith(ray.Direction);
+        var radiusSquared = Radius * Radius;
+        var vectorFromRayOriginToSphereCenterSquared =
+            vectorFromRayOriginToSphereCenter.DotProductWith(vectorFromRayOriginToSphereCenter);
+
+        var a = rayDirectionSquared;
+        var b = 2 * ray.Direction.DotProductWith(vectorFromRayOriginToSphereCenter);
+        var c = vectorFromRayOriginToSphereCenterSquared - radiusSquared;
+
+        var D = b * b - 4 * a * c;
+        if (D < 0)
+            return null;
+
+        var distance1 = (-b - Math.Sqrt(D)) / 2;
+        var distance2 = (-b + Math.Sqrt(D)) / 2;
+        var distance = (float)Math.Min(distance1, distance2);
+
+        var intersectionPoint = ray.Origin + ray.Direction.Normalized() * distance;
+        return intersectionPoint;
     }
 }
