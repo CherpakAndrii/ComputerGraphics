@@ -100,12 +100,12 @@ public struct Vector : IEquatable<Vector>
     
     public bool IsPerpendicularTo(Vector vector)
     {
-        return this * vector == 0;
+        return DotProductWith(vector) == 0;
     }
 
     public float GetAngleWith(Vector another)
     {
-        return (float)Math.Acos(this * another / (GetModule() * another.GetModule()));
+        return (float)Math.Acos(DotProductWith(another) / (GetModule() * another.GetModule()));
     }
 
     // TODO: may not work correctly, needs to be fixed if this method is to be used.
