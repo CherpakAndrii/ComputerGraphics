@@ -25,8 +25,22 @@ public class SphereTests
         Point expectedIntersectionPoint = new(0, 0, 1);
 
         var hasIntersection = sphere.HasIntersectionWith(ray, out var actualIntersectionPoint);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(hasIntersection, Is.True);
+            Assert.That(actualIntersectionPoint, Is.EqualTo(expectedIntersectionPoint));
+        });
+    }
+    
+    [Test]
+    public void Sphere_WhenRayInOppositeDirection_NoIntersection()
+    {
+        Sphere sphere = new(new Point(0, 0, 0), 1);
+        Ray ray = new(new Point(0, 0, 5), new Vector(0, 0, 1));
+
+        var hasIntersection = sphere.HasIntersectionWith(ray, out _);
         
-        Assert.That(hasIntersection, Is.True);
-        Assert.That(actualIntersectionPoint, Is.EqualTo(expectedIntersectionPoint));
+        Assert.That(hasIntersection, Is.False);
     }
 }
