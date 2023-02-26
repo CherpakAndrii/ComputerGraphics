@@ -23,19 +23,20 @@ public class RayTracer
                 Ray ray = new(Scene.Camera.Position, projectionPlane[i, j]);
                 if (FindClosestIntersection(ray, out Point intersectionPoint, out IIntersectable? figure))
                 {
-                    for (int k = 0; j < Scene.LightSources.Count; k++)
+                    for (int k = 0; k < Scene.LightSources.Count; k++)
                     {
-                        Ray toLightRay = new(intersectionPoint, Scene.LightSources[k].GetVector(intersectionPoint) * -1);
+                        Ray toLightRay = new(intersectionPoint, Scene.LightSources[k].GetVector(intersectionPoint));
                         if (IsOnLight(toLightRay))
                         {
                             Vector normal = figure!.GetNormalVector(intersectionPoint);
+                            //TODO: that if must work only with flat figures
                             if (normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
                             double cosLight = toLightRay.Direction.FindCos(normal);
                             if (cosLight > 0)
                             {
-                                pixels[i, j].R += (int)(Math.Abs(cosLight) * 255);
-                                pixels[i, j].G += (int)(Math.Abs(cosLight) * 255);
-                                pixels[i, j].B += (int)(Math.Abs(cosLight) * 255);
+                                pixels[i, j].R += (int)(Math.Abs(cosLight) * Scene.LightSources[k].Color.R);
+                                pixels[i, j].G += (int)(Math.Abs(cosLight) * Scene.LightSources[k].Color.G);
+                                pixels[i, j].B += (int)(Math.Abs(cosLight) * Scene.LightSources[k].Color.B);
                             }
                         }
                     }
