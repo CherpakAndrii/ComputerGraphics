@@ -25,7 +25,7 @@ public class Sphere : IIntersectable
         return new Vector(Center, point).Normalized();
     }
 
-    public bool HasIntersectionWith(Ray ray, out Point intersectionPoint)
+    public Point? GetIntersectionWith(Ray ray)
     {
         Vector vectorFromRayOriginToSphereCenter = new Vector(Center, ray.Origin);
 
@@ -41,8 +41,7 @@ public class Sphere : IIntersectable
         var D = b * b - 4 * a * c;
         if (D < 0)
         {
-            intersectionPoint = default;
-            return false;
+            return null;
         }
 
         var distance1 = (-b - Math.Sqrt(D)) / 2;
@@ -51,10 +50,14 @@ public class Sphere : IIntersectable
 
         if (distance < 0)
         {
-            intersectionPoint = default;
-            return false;
+            return null;
         }
-        intersectionPoint = ray.Origin + ray.Direction.Normalized() * distance;
-        return true;
+        return ray.Origin + ray.Direction.Normalized() * distance;;
+    }
+    
+    public bool HasIntersectionWith(Ray ray)
+    {
+        Point nearest = ray.GetNearestPointTo(Center);
+        return Center.GetDistance(nearest) < Radius;
     }
 }

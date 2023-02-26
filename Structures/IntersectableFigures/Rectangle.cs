@@ -54,7 +54,12 @@ public class Rectangle : IIntersectable
         return new Vector(p1, p2).CrossProductWith(new Vector(p1, p3)).Normalized();
     }
 
-    public bool HasIntersectionWith(Ray ray, out Point intersectionPoint)
+    public Point? GetIntersectionWith(Ray ray)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool HasIntersectionWith(Ray ray)
     {
         throw new NotImplementedException();
     }

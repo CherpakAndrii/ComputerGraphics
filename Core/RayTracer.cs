@@ -53,7 +53,7 @@ public class RayTracer
         double minDistance = double.MaxValue;
         for (int i = 0; i < Scene.Figures.Count; i++)
         {
-            if (Scene.Figures[i].HasIntersectionWith(ray, out Point currIntersection))
+            if (Scene.Figures[i].GetIntersectionWith(ray) is { } currIntersection)
             {
                 intersected = true;
                 double currDistance = new Vector(ray.Origin, currIntersection).GetModule();
@@ -72,7 +72,7 @@ public class RayTracer
     {
         for (int i = 0; i < Scene.Figures.Count; i++)
         {
-            if (Scene.Figures[i].HasIntersectionWith(ray, out _)) return false;
+            if (Scene.Figures[i].GetIntersectionWith(ray) is not null) return false;
         }
         return true;
     }
