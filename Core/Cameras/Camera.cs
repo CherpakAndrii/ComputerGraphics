@@ -69,15 +69,15 @@ public class Camera
             float bottomProjectionPlaneOffset = leftProjectionPlaneOffset * projectionPlaneAspectRatio;
             
             float horizontalDistanceBetweenProjectionPixels
-                = leftProjectionPlaneOffset / ProjectionPlaneWidthInPixels / 2;
+                = leftProjectionPlaneOffset / ProjectionPlaneWidthInPixels * 2;
             float verticalDistanceBetweenProjectionPixels
-                = bottomProjectionPlaneOffset / ProjectionPlaneHeightInPixels / 2;
+                = bottomProjectionPlaneOffset / ProjectionPlaneHeightInPixels * 2;
 
 
             Point leftBottomCornerOfProjectionPlane =
                 Position
-                + rightProjectionPlaneDirection * horizontalDistanceBetweenProjectionPixels
-                + upProjectionPlaneDirection * verticalDistanceBetweenProjectionPixels;
+                - rightProjectionPlaneDirection * horizontalDistanceBetweenProjectionPixels
+                - upProjectionPlaneDirection * verticalDistanceBetweenProjectionPixels;
 
             for (int x = 0; x < ProjectionPlaneWidthInPixels; x++)
             {
