@@ -27,7 +27,7 @@ public class Sphere : IIntersectable
 
     public bool HasIntersectionWith(Ray ray, out Point intersectionPoint)
     {
-        Vector vectorFromRayOriginToSphereCenter = new Vector(ray.Origin, Center);
+        Vector vectorFromRayOriginToSphereCenter = new Vector(Center, ray.Origin);
 
         var rayDirectionSquared = ray.Direction.DotProductWith(ray.Direction);
         var radiusSquared = Radius * Radius;
@@ -49,6 +49,11 @@ public class Sphere : IIntersectable
         var distance2 = (-b + Math.Sqrt(D)) / 2;
         var distance = (float)Math.Min(distance1, distance2);
 
+        if (distance < 0)
+        {
+            intersectionPoint = default;
+            return false;
+        }
         intersectionPoint = ray.Origin + ray.Direction.Normalized() * distance;
         return true;
     }
