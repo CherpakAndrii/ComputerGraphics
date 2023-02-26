@@ -33,12 +33,9 @@ public class SphereTests
         });
     }
     
-    [Test]
-    public void Sphere_WhenRayInOppositeDirection_NoIntersection()
+    [TestCaseSource(nameof(NoIntersectionCases))]
+    public void Sphere_WhenRayInOppositeDirection_NoIntersection(Sphere sphere, Ray ray)
     {
-        Sphere sphere = new(new Point(0, 0, 0), 1);
-        Ray ray = new(new Point(0, 0, 5), new Vector(0, 0, 1));
-
         var hasIntersection = sphere.HasIntersectionWith(ray, out _);
         
         Assert.That(hasIntersection, Is.False);
@@ -63,6 +60,25 @@ public class SphereTests
             new Sphere(new Point(0, 0, 0), 1),
             new Ray(new Point(0, 5, 0), new Vector(0, -1, 0)),
             new Point(0, 1, 0)
+        }
+    };
+    
+    public static object[] NoIntersectionCases =
+    {
+        new object[]
+        {
+            new Sphere(new Point(0, 0, 0), 1),
+            new Ray(new Point(0, 0, 5), new Vector(0, 0, 1))
         },
+        new object[]
+        {
+            new Sphere(new Point(0, 0, 0), 1),
+            new Ray(new Point(0, 0, -5), new Vector(0, 0, -1)),
+        },
+        new object[]
+        {
+            new Sphere(new Point(0, 0, 0), 1),
+            new Ray(new Point(0, -5, 0), new Vector(0, 1, 1))
+        }
     };
 }
