@@ -1,10 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Structures", "Structures\Structures.csproj", "{A591EDDE-A340-4DA7-B43A-629F23C481A9}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Structures", "Structures\Structures.csproj", "{A591EDDE-A340-4DA7-B43A-629F23C481A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructTest", "StructTest\StructTest.csproj", "{ABA512AA-6107-4CC7-B456-A213C63B4AC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StructTest", "StructTest\StructTest.csproj", "{ABA512AA-6107-4CC7-B456-A213C63B4AC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{294ED50A-94BD-4277-929D-78764435D9E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{294ED50A-94BD-4277-929D-78764435D9E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenderApp", "RenderApp\RenderApp.csproj", "{CF4B9ADF-12F3-4719-BDF4-334D02E3F6BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +29,15 @@ Global
 		{294ED50A-94BD-4277-929D-78764435D9E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{294ED50A-94BD-4277-929D-78764435D9E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{294ED50A-94BD-4277-929D-78764435D9E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF4B9ADF-12F3-4719-BDF4-334D02E3F6BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF4B9ADF-12F3-4719-BDF4-334D02E3F6BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF4B9ADF-12F3-4719-BDF4-334D02E3F6BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF4B9ADF-12F3-4719-BDF4-334D02E3F6BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D5D9627-A9EA-432D-9438-A2543D462A73}
 	EndGlobalSection
 EndGlobal
