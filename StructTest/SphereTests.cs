@@ -17,14 +17,14 @@ public class SphereTests
         Assert.That(actualNormal, Is.EqualTo(expectedNormal));
     }
     
-    [Test]
-    public void Sphere_WhenIntersectsWithRay_CorrectIntersectionPointReturned()
+    [TestCaseSource(nameof(IntersectionCases))]
+    public void Sphere_WhenIntersectsWithRay_CorrectIntersectionPointReturned
+    (
+        Sphere sphere,
+        Ray ray,
+        Point expectedIntersectionPoint)
     {
-        Sphere sphere = new(new Point(0, 0, 0), 1);
-        Ray ray = new(new Point(0, 0, 5), new Vector(0, 0, -1));
-        Point expectedIntersectionPoint = new(0, 0, 1);
-
-        var hasIntersection = sphere.HasIntersectionWith(ray, out var actualIntersectionPoint);
+         var hasIntersection = sphere.HasIntersectionWith(ray, out var actualIntersectionPoint);
 
         Assert.Multiple(() =>
         {
@@ -43,4 +43,26 @@ public class SphereTests
         
         Assert.That(hasIntersection, Is.False);
     }
+    
+    public static object[] IntersectionCases =
+    {
+        new object[]
+        {
+            new Sphere(new Point(0, 0, 0), 1),
+            new Ray(new Point(0, 0, 5), new Vector(0, 0, -1)),
+            new Point(0, 0, 1)
+        },
+        new object[]
+        {
+            new Sphere(new Point(0, 0, 0), 1),
+            new Ray(new Point(0, 0, -5), new Vector(0, 0, 1)),
+            new Point(0, 0, -1)
+        },
+        new object[]
+        {
+            new Sphere(new Point(0, 0, 0), 1),
+            new Ray(new Point(0, 5, 0), new Vector(0, -1, 0)),
+            new Point(0, 1, 0)
+        },
+    };
 }
