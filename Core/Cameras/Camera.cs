@@ -85,6 +85,7 @@ public class Camera
                 {
                     projectionPlane[x, y] =
                         leftBottomCornerOfProjectionPlane
+                        + _directionNormalized * _distanceToProjectionPlane
                         + rightProjectionPlaneDirection * x
                         + upProjectionPlaneDirection * y;
                 }
