@@ -29,7 +29,6 @@ public class RayTracer
                         if (IsOnLight(toLightRay))
                         {
                             Vector normal = figure!.GetNormalVector(intersectionPoint);
-                            //TODO: that if must work only with flat figures
                             if (normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
                             double cosLight = toLightRay.Direction.FindCos(normal);
                             if (cosLight > 0)
