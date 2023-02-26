@@ -76,8 +76,8 @@ public class Camera
 
             Point leftBottomCornerOfProjectionPlane =
                 Position
-                - rightProjectionPlaneDirection * horizontalDistanceBetweenProjectionPixels
-                - upProjectionPlaneDirection * verticalDistanceBetweenProjectionPixels;
+                - rightProjectionPlaneDirection * leftProjectionPlaneOffset
+                - upProjectionPlaneDirection * bottomProjectionPlaneOffset;
 
             for (int x = 0; x < ProjectionPlaneWidthInPixels; x++)
             {
@@ -86,8 +86,8 @@ public class Camera
                     projectionPlane[x, y] =
                         leftBottomCornerOfProjectionPlane
                         + _directionNormalized * _distanceToProjectionPlane
-                        + rightProjectionPlaneDirection * x
-                        + upProjectionPlaneDirection * y;
+                        + rightProjectionPlaneDirection * x * horizontalDistanceBetweenProjectionPixels
+                        + upProjectionPlaneDirection * y * verticalDistanceBetweenProjectionPixels;
                 }
             }
             return projectionPlane;
