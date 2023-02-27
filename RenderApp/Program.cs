@@ -1,7 +1,11 @@
 ﻿using Core;
 using Core.Scenes;
 using Core.Cameras;
+using RenderApp;
 using Structures.IntersectableFigures;
+
+ConsoleConfigurer configuerer = new ConsoleConfigurer();
+configuerer.SetupConsole();
 
 Camera camera = new()
 {
@@ -25,3 +29,4 @@ scene.Figures.Add(sphere);
 
 RayTracer rayTracer = new(scene);
 ConsoleRenderer.PrintToConsole(rayTracer.TraceRays());
+Console.ReadKey();

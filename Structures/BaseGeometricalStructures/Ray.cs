@@ -27,8 +27,9 @@ public struct Ray
     {
         Vector vectorToPoint = new Vector(Origin, another);
         float coef = vectorToPoint.DotProductWith(Direction) / (float)Math.Pow(Direction.GetModule(), 2);
+        if (coef <= 0) return Origin;
+        
         Point nearest = Origin + Direction * coef;
-
         return nearest;
     }
 }

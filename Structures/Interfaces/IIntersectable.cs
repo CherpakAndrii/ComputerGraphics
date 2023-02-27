@@ -5,5 +5,6 @@ namespace Structures.Interfaces;
 public interface IIntersectable
 {
     public Vector GetNormalVector(Point point);
-    public bool HasIntersectionWith(Ray ray, out Point intersectionPoint);
+    public Point? GetIntersectionWith(Ray ray);
+    public bool HasIntersectionWith(Ray ray);
 }

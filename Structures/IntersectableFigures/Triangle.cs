@@ -31,8 +31,12 @@ public struct Triangle : IIntersectable
     }
 
     public Vector GetNormalVector(Point point) => Normal;
+    public Point? GetIntersectionWith(Ray ray)
+    {
+        throw new NotImplementedException();
+    }
 
-    public bool HasIntersectionWith(Ray ray, out Point intersectionPoint)
+    public bool HasIntersectionWith(Ray ray)
     {
         throw new NotImplementedException();
     }

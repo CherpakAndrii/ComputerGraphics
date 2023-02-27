@@ -24,19 +24,39 @@ public class SphereTests
         Ray ray,
         Point expectedIntersectionPoint)
     {
-         var hasIntersection = sphere.HasIntersectionWith(ray, out var actualIntersectionPoint);
+         var actualIntersectionPoint = sphere.GetIntersectionWith(ray);
 
         Assert.Multiple(() =>
         {
-            Assert.That(hasIntersection, Is.True);
+            Assert.That(actualIntersectionPoint is not null, Is.True);
             Assert.That(actualIntersectionPoint, Is.EqualTo(expectedIntersectionPoint));
         });
+    }
+    
+    [TestCaseSource(nameof(IntersectionCases))]
+    public void Sphere_WhenIntersectsWithRay_TrueReturned
+    (
+        Sphere sphere,
+        Ray ray,
+        Point expectedIntersectionPoint)
+    {
+        var hasIntersection = sphere.HasIntersectionWith(ray);
+
+        Assert.That(hasIntersection, Is.True);
     }
     
     [TestCaseSource(nameof(NoIntersectionCases))]
     public void Sphere_WhenRayInOppositeDirection_NoIntersection(Sphere sphere, Ray ray)
     {
-        var hasIntersection = sphere.HasIntersectionWith(ray, out _);
+        var intersection = sphere.GetIntersectionWith(ray);
+        
+        Assert.That(intersection, Is.Null);
+    }
+    
+    [TestCaseSource(nameof(NoIntersectionCases))]
+    public void Sphere_WhenRayInOppositeDirection_FalseReturned(Sphere sphere, Ray ray)
+    {
+        var hasIntersection = sphere.HasIntersectionWith(ray);
         
         Assert.That(hasIntersection, Is.False);
     }
