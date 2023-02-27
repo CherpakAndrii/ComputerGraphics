@@ -4,14 +4,15 @@ namespace Core;
 
 public static class ConsoleRenderer
 {
+    public static bool Retro { get; set; } = true;
+
     public static void PrintToConsole(Color[,] pixels)
     {
-        bool retro = ChoosePrintType();
         for (int  i = 0; i < pixels.GetLength(0); i++)
         {
             for (int j = 0; j < pixels.GetLength(1); j++)
             {
-                if (retro)
+                if (Retro)
                 {
                     Console.ForegroundColor = GetConsoleColor(pixels[i, j]);
                     Console.Write(ColorToSymbol(pixels[i, j]));
@@ -21,14 +22,6 @@ public static class ConsoleRenderer
             Console.Write('\n');
         }
         Console.ForegroundColor = ConsoleColor.White;
-    }
-
-    private static bool ChoosePrintType()
-    {
-        Console.WriteLine("Choose type of print:\n(0)Retro\n(any)Default");
-        bool retro = Console.ReadLine() == "0";
-        Console.Clear();
-        return retro;
     }
 
     private static char ColorToSymbol(Color color)
