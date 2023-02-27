@@ -65,7 +65,7 @@ public class Camera
 
             float alpha = _fieldOfView / 2;
             
-            float leftProjectionPlaneOffset = (float)Math.Tan(alpha) * _distanceToProjectionPlane;
+            float leftProjectionPlaneOffset = (float)Math.Tan((Math.PI / 180) * alpha) * _distanceToProjectionPlane;
             float bottomProjectionPlaneOffset = leftProjectionPlaneOffset * projectionPlaneAspectRatio;
             
             float horizontalDistanceBetweenProjectionPixels
