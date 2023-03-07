@@ -59,4 +59,18 @@ public class PlaneTests
             new Point(0, 0, 0)
         }
     };
+    
+    private static object[] _noIntersectionCases =
+    {
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, 0), new Vector(0, 1, 0))
+        },
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, -1), new Vector(0, 0, 1))
+        }
+    };
 }
