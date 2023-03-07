@@ -10,7 +10,7 @@ public class Plane : IIntersectable
     
     public Vector GetNormalVector(Point point)
     {
-        throw new NotImplementedException();
+        return Normal.Normalized();
     }
 
     public Point? GetIntersectionWith(Ray ray)
@@ -20,6 +20,6 @@ public class Plane : IIntersectable
 
     public bool HasIntersectionWith(Ray ray)
     {
-        throw new NotImplementedException();
+        return GetIntersectionWith(ray) is not null;
     }
 }
