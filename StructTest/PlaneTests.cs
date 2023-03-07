@@ -30,6 +30,19 @@ public class PlaneTests
             Assert.That(actualIntersectionPoint, Is.EqualTo(expectedIntersectionPoint));
         });
     }
+    
+    [TestCaseSource(nameof(_intersectionCases))]
+    public void Plane_WhenIntersectsWithRay_TrueReturned
+    (
+        Plane plane,
+        Ray ray,
+        Point expectedIntersectionPoint
+    )
+    {
+        var hasIntersection = plane.HasIntersectionWith(ray);
+
+        Assert.That(hasIntersection, Is.True);
+    }
 
     private static object[] _intersectionCases =
     {
