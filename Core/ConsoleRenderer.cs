@@ -1,13 +1,14 @@
-﻿using Core.Lights;
+using Core.Lights;
 
 namespace Core;
 
 public static class ConsoleRenderer
 {
     public static bool Retro { get; set; } = true;
-
+    public static bool RetroColor { get; set; } = false;
     public static void PrintToConsole(Color[,] pixels)
     {
+        Console.ForegroundColor = ConsoleColor.White;
         for (int  i = 0; i < pixels.GetLength(0); i++)
         {
             for (int j = 0; j < pixels.GetLength(1); j++)
@@ -39,7 +40,7 @@ public static class ConsoleRenderer
 
     private static ConsoleColor GetConsoleColor(Color color)
     {
-        if (color is { R: >= 160, B: >= 160, G: >= 160 })
+        if (!RetroColor || color is { R: >= 160, B: >= 160, G: >= 160 })
             return ConsoleColor.White;
         if (color.R - color.B > 100 && color.R - color.G > 100)
         {

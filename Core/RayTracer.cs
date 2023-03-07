@@ -1,4 +1,4 @@
-﻿using Core.Lights;
+using Core.Lights;
 using Core.Scenes;
 using Structures.Interfaces;
 using Structures.BaseGeometricalStructures;
@@ -22,27 +22,28 @@ public class RayTracer
                 pixels[i, j] = new();
                 Ray ray = new(Scene.Camera.Position, projectionPlane[i, j]);
                 if (FindClosestIntersection(ray, out Point intersectionPoint, out IIntersectable? figure))
-                {
-                    foreach (var lightSource in Scene.LightSources)
-                    {
-                        Ray toLightRay = new(intersectionPoint, lightSource.GetVector(intersectionPoint));
-                        if (IsOnLight(toLightRay))
-                        {
-                            Vector normal = figure!.GetNormalVector(intersectionPoint);
-                            if (normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
-                            double cosLight = toLightRay.Direction.FindCos(normal);
-                            if (cosLight > 0)
-                            {
-                                pixels[i, j].R += (int)(Math.Abs(cosLight) * lightSource.Color.R);
-                                pixels[i, j].G += (int)(Math.Abs(cosLight) * lightSource.Color.G);
-                                pixels[i, j].B += (int)(Math.Abs(cosLight) * lightSource.Color.B);
-                            }
-                        }
-                    }
-                }
+                    CalculateLight(ref pixels[i, j], intersectionPoint, figure);
             }
         }
         return pixels;
+    }
+
+    private void CalculateLight(ref Color pixel, Point intersection, IIntersectable? figure)
+    {
+        foreach (ILightSource lightSource in Scene.LightSources)
+        {
+            Ray toLightRay = new(intersection, lightSource.GetVector(intersection));
+            if (!IsOnLight(toLightRay)) continue;
+            Vector normal = figure!.GetNormalVector(intersection);
+            if (normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
+            double cosLight = toLightRay.Direction.FindCos(normal);
+            if (cosLight > 0)
+            {
+                pixel.R += (int)(Math.Abs(cosLight) * lightSource.Color.R);
+                pixel.G += (int)(Math.Abs(cosLight) * lightSource.Color.G);
+                pixel.B += (int)(Math.Abs(cosLight) * lightSource.Color.B);
+            }
+        }
     }
  
     private bool FindClosestIntersection(Ray ray, out Point intersection, out IIntersectable? figure)
