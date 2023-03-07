@@ -1,13 +1,13 @@
-﻿using Structures.BaseGeometricalStructures;
-using Structures.Interfaces;
-using Vector = Structures.BaseGeometricalStructures.Vector;
+﻿using Structures.Interfaces;
+using Structures.BaseGeometricalStructures;
 using Point = Structures.BaseGeometricalStructures.Point;
+using Vector = Structures.BaseGeometricalStructures.Vector;
 
 namespace Structures.IntersectableFigures;
 
 public class Plane : IIntersectable
 {
-    public bool IsFlat { get; } = true;
+    public bool IsFlat => true;
 
     public Point Point { get; }
     public Vector Normal { get; }

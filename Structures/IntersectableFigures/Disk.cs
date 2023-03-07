@@ -1,11 +1,11 @@
-﻿using Structures.BaseGeometricalStructures;
-using Structures.Interfaces;
+﻿using Structures.Interfaces;
+using Structures.BaseGeometricalStructures;
 
 namespace Structures.IntersectableFigures;
 
 public class Disk : IIntersectable
 {
-    public bool IsFlat { get; } = true;
+    public bool IsFlat => true;
 
     public Point Position { get; }
     public Vector Normal { get; }

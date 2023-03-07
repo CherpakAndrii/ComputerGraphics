@@ -4,7 +4,7 @@ using Structures.Interfaces;
 using Structures.BaseGeometricalStructures;
 
 namespace Core;
-   
+
 public class RayTracer
 {
     public Scene Scene { get; set; }

@@ -1,11 +1,11 @@
-﻿using Structures.BaseGeometricalStructures;
-using Structures.Interfaces;
+﻿using Structures.Interfaces;
+using Structures.BaseGeometricalStructures;
 
 namespace Structures.IntersectableFigures;
 
 public struct Triangle : IIntersectable
 {
-    public bool IsFlat { get; } = true;
+    public bool IsFlat => true;
 
     public Point A { get; }
     public Point B { get; }

@@ -1,11 +1,11 @@
-﻿using Structures.BaseGeometricalStructures;
-using Structures.Interfaces;
+﻿using Structures.Interfaces;
+using Structures.BaseGeometricalStructures;
 
 namespace Structures.IntersectableFigures;
 
 public class Sphere : IIntersectable
 {
-    public bool IsFlat { get; } = false;
+    public bool IsFlat => false;
 
     public Point Center { get; protected set; }
     public float Radius { get; protected set; }

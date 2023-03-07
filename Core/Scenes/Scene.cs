@@ -1,6 +1,6 @@
-﻿using Structures.Interfaces;
+﻿using Core.Lights;
 using Core.Cameras;
-using Core.Lights;
+using Structures.Interfaces;
 
 namespace Core.Scenes;
 
