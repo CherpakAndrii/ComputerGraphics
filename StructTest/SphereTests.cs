@@ -17,7 +17,7 @@ public class SphereTests
         Assert.That(actualNormal, Is.EqualTo(expectedNormal));
     }
     
-    [TestCaseSource(nameof(IntersectionCases))]
+    [TestCaseSource(nameof(_intersectionCases))]
     public void Sphere_WhenIntersectsWithRay_CorrectIntersectionPointReturned
     (
         Sphere sphere,
@@ -33,7 +33,7 @@ public class SphereTests
         });
     }
     
-    [TestCaseSource(nameof(IntersectionCases))]
+    [TestCaseSource(nameof(_intersectionCases))]
     public void Sphere_WhenIntersectsWithRay_TrueReturned
     (
         Sphere sphere,
@@ -45,7 +45,7 @@ public class SphereTests
         Assert.That(hasIntersection, Is.True);
     }
     
-    [TestCaseSource(nameof(NoIntersectionCases))]
+    [TestCaseSource(nameof(_noIntersectionCases))]
     public void Sphere_WhenRayInOppositeDirection_NoIntersection(Sphere sphere, Ray ray)
     {
         var intersection = sphere.GetIntersectionWith(ray);
@@ -53,15 +53,15 @@ public class SphereTests
         Assert.That(intersection, Is.Null);
     }
     
-    [TestCaseSource(nameof(NoIntersectionCases))]
+    [TestCaseSource(nameof(_noIntersectionCases))]
     public void Sphere_WhenRayInOppositeDirection_FalseReturned(Sphere sphere, Ray ray)
     {
         var hasIntersection = sphere.HasIntersectionWith(ray);
         
         Assert.That(hasIntersection, Is.False);
     }
-    
-    public static object[] IntersectionCases =
+
+    private static object[] _intersectionCases =
     {
         new object[]
         {
@@ -82,8 +82,8 @@ public class SphereTests
             new Point(0, 1, 0)
         }
     };
-    
-    public static object[] NoIntersectionCases =
+
+    private static object[] _noIntersectionCases =
     {
         new object[]
         {
