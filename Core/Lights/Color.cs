@@ -2,25 +2,25 @@
 
 public struct Color
 {
-    private byte r;
+    private byte _r;
     public int R 
     { 
-        get => r;
-        set => r = (byte)Math.Clamp(value, 0, 255);
+        get => _r;
+        set => _r = (byte)Math.Clamp(value, 0, 255);
     }
 
-    private byte g;
+    private byte _g;
     public int G 
     { 
-        get => g;
-        set => g = (byte)Math.Clamp(value, 0, 255);
+        get => _g;
+        set => _g = (byte)Math.Clamp(value, 0, 255);
     }
 
-    private byte b;
+    private byte _b;
     public int B 
     { 
-        get => b;
-        set => b = (byte)Math.Clamp(value, 0, 255);
+        get => _b;
+        set => _b = (byte)Math.Clamp(value, 0, 255);
     }
 
     public Color(byte r, byte g, byte b)
