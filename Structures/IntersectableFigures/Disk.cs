@@ -11,7 +11,7 @@ public class Disk : IIntersectable
 
     private readonly Plane _plane;
 
-    private float _radiusSquared;
+    private readonly float _radiusSquared;
 
     public Disk(Point position, Vector normal, float radius)
     {
