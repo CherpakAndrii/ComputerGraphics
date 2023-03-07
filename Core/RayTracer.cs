@@ -23,9 +23,9 @@ public class RayTracer
                 Ray ray = new(Scene.Camera.Position, projectionPlane[i, j]);
                 if (FindClosestIntersection(ray, out Point intersectionPoint, out IIntersectable? figure))
                 {
-                    for (int k = 0; k < Scene.LightSources.Count; k++)
+                    foreach (var lightSource in Scene.LightSources)
                     {
-                        Ray toLightRay = new(intersectionPoint, Scene.LightSources[k].GetVector(intersectionPoint));
+                        Ray toLightRay = new(intersectionPoint, lightSource.GetVector(intersectionPoint));
                         if (IsOnLight(toLightRay))
                         {
                             Vector normal = figure!.GetNormalVector(intersectionPoint);
@@ -33,9 +33,9 @@ public class RayTracer
                             double cosLight = toLightRay.Direction.FindCos(normal);
                             if (cosLight > 0)
                             {
-                                pixels[i, j].R += (int)(Math.Abs(cosLight) * Scene.LightSources[k].Color.R);
-                                pixels[i, j].G += (int)(Math.Abs(cosLight) * Scene.LightSources[k].Color.G);
-                                pixels[i, j].B += (int)(Math.Abs(cosLight) * Scene.LightSources[k].Color.B);
+                                pixels[i, j].R += (int)(Math.Abs(cosLight) * lightSource.Color.R);
+                                pixels[i, j].G += (int)(Math.Abs(cosLight) * lightSource.Color.G);
+                                pixels[i, j].B += (int)(Math.Abs(cosLight) * lightSource.Color.B);
                             }
                         }
                     }
@@ -51,16 +51,16 @@ public class RayTracer
         intersection = new();
         figure = default;
         double minDistance = double.MaxValue;
-        for (int i = 0; i < Scene.Figures.Count; i++)
+        foreach (var f in Scene.Figures)
         {
-            if (Scene.Figures[i].GetIntersectionWith(ray) is { } currIntersection)
+            if (f.GetIntersectionWith(ray) is { } currIntersection)
             {
                 intersected = true;
                 double currDistance = new Vector(ray.Origin, currIntersection).GetModule();
                 if (currDistance < minDistance)
                 {
                     intersection = currIntersection;
-                    figure = Scene.Figures[i];
+                    figure = f;
                     minDistance = currDistance;
                 }
             }
@@ -70,10 +70,12 @@ public class RayTracer
 
     private bool IsOnLight(Ray ray)
     {
-        for (int i = 0; i < Scene.Figures.Count; i++)
+        foreach (var figure in Scene.Figures)
         {
-            if (Scene.Figures[i].GetIntersectionWith(ray) is not null) return false;
+            if (figure.GetIntersectionWith(ray) is not null)
+                return false;
         }
+
         return true;
     }
 }
