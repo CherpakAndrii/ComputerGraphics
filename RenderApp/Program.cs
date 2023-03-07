@@ -44,8 +44,8 @@ using Core.Lights;
 using RenderApp;
 using Structures.IntersectableFigures;
 
-ConsoleConfigurer configuerer = new ConsoleConfigurer();
-configuerer.SetupConsole();
+var configurator = new ConsoleConfigurator();
+configurator.SetupConsole();
 
 Camera camera = new()
 {

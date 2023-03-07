@@ -2,7 +2,7 @@
 
 namespace RenderApp;
 
-internal class ConsoleConfigurer
+internal class ConsoleConfigurator
 {
     const int STD_OUTPUT_HANDLE = -11;
     const uint ENABLE_VIRTUAL_TERMINAL_PROCESSING = 4;
