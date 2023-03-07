@@ -1,7 +1,4 @@
-﻿using Structures.BaseGeometricalStructures;
-using Structures.IntersectableFigures;
-
-namespace StructTest;
+﻿namespace StructTest;
 
 public class SphereTests
 {
