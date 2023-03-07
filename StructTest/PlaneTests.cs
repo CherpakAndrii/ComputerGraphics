@@ -43,6 +43,22 @@ public class PlaneTests
 
         Assert.That(hasIntersection, Is.True);
     }
+    
+    [TestCaseSource(nameof(_noIntersectionCases))]
+    public void Plane_WhenNoIntersectionWithRay_NullReturned(Plane plane, Ray ray)
+    {
+        var intersection = plane.GetIntersectionWith(ray);
+
+        Assert.That(intersection, Is.Null);
+    }
+    
+    [TestCaseSource(nameof(_noIntersectionCases))]
+    public void Plane_WhenNoIntersectionWithRay_FalseReturned(Plane plane, Ray ray)
+    {
+        var intersection = plane.HasIntersectionWith(ray);
+
+        Assert.That(intersection, Is.False);
+    }
 
     private static object[] _intersectionCases =
     {
@@ -70,7 +86,7 @@ public class PlaneTests
         new object[]
         {
             new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
-            new Ray(new Point(0, 0, -1), new Vector(0, 0, 1))
+            new Ray(new Point(0, 0, -1), new Vector(0, 1, 0))
         }
     };
 }
