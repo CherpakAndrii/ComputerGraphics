@@ -35,7 +35,8 @@ public class SphereTests
     (
         Sphere sphere,
         Ray ray,
-        Point expectedIntersectionPoint)
+        Point expectedIntersectionPoint
+    )
     {
         var hasIntersection = sphere.HasIntersectionWith(ray);
 

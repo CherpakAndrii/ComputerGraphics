@@ -14,13 +14,14 @@ public class PlaneTests
         Assert.That(actualNormal, Is.EqualTo(expectedNormal));
     }
     
-    [Test]
-    public void Plane_WhenIntersectsWithRay_CorrectIntersectionPointReturned()
+    [TestCaseSource(nameof(_intersectionCases))]
+    public void Plane_WhenIntersectsWithRay_CorrectIntersectionPointReturned
+    (
+        Plane plane,
+        Ray ray,
+        Point expectedIntersectionPoint
+    )
     {
-        Plane plane = new(new Point(0, 0, 0), new Vector(0, 0, 1));
-        Ray ray = new(new Point(0, 0, 1), new Vector(0, 0, -1));
-        Point expectedIntersectionPoint = new(0, 0, 0);
-        
         var actualIntersectionPoint = plane.GetIntersectionWith(ray);
 
         Assert.Multiple(() =>
@@ -29,4 +30,20 @@ public class PlaneTests
             Assert.That(actualIntersectionPoint, Is.EqualTo(expectedIntersectionPoint));
         });
     }
+
+    private static object[] _intersectionCases =
+    {
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, 1), new Vector(0, 0, -1)),
+            new Point(0, 0, 0)
+        },
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, -1), new Vector(0, 0, 1)),
+            new Point(0, 0, 0)
+        }
+    };
 }
