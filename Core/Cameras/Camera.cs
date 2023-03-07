@@ -50,8 +50,8 @@ public class Camera
         get
         {
             (
-                Vector rightProjectionPlaneDirection,
-                Vector upProjectionPlaneDirection
+                var rightProjectionPlaneDirection,
+                var upProjectionPlaneDirection
             ) = GetProjectionPlaneDirections();
 
             var projectionPlane = new Point[ProjectionPlaneWidthInPixels, ProjectionPlaneHeightInPixels];
@@ -69,7 +69,7 @@ public class Camera
                 = bottomProjectionPlaneOffset / ProjectionPlaneHeightInPixels * 2;
 
 
-            Point leftBottomCornerOfProjectionPlane =
+            var leftBottomCornerOfProjectionPlane =
                 Position
                 - rightProjectionPlaneDirection * leftProjectionPlaneOffset
                 - upProjectionPlaneDirection * bottomProjectionPlaneOffset;
@@ -89,16 +89,15 @@ public class Camera
         }
     }
 
-    private (Vector upDirection, Vector rightDirection) GetProjectionPlaneDirections()
+    private (Vector rightDirection, Vector upDirection) GetProjectionPlaneDirections()
     {
-        Vector rightDirection = new Vector(0, 0, 1).CrossProductWith(_directionNormalized);
+        var rightDirection = new Vector(0, 0, 1).CrossProductWith(_directionNormalized);
         if (rightDirection == Vector.Zero)
         {
             rightDirection
                 = new Vector(0, 1, 0).CrossProductWith(_directionNormalized);
         }
-        Vector upDirection =
-            _directionNormalized.CrossProductWith(rightDirection);
-        return (upDirection, rightDirection);
+        var upDirection = _directionNormalized.CrossProductWith(rightDirection);
+        return (rightDirection, upDirection);
     }
 }
