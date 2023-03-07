@@ -5,22 +5,39 @@ namespace Structures.IntersectableFigures;
 
 public class Disk : IIntersectable
 {
-    public Point Position { get; set; }
-    public Vector Normal { get; set; }
-    public float Radius { get; set; }
+    public Point Position { get; }
+    public Vector Normal { get; }
+    public float Radius { get; }
 
-    public Vector GetNormalVector(Point point)
+    private readonly Plane _plane;
+
+    private float _radiusSquared;
+
+    public Disk(Point position, Vector normal, float radius)
     {
-        throw new NotImplementedException();
+        Position = position;
+        Normal = normal.Normalized();
+        Radius = radius;
+        _plane = new Plane(Position, Normal);
+        _radiusSquared = Radius * Radius;
     }
+    public Vector GetNormalVector(Point point)
+        => Normal;
 
     public Point? GetIntersectionWith(Ray ray)
     {
-        throw new NotImplementedException();
+        var intersectionPoint = _plane.GetIntersectionWith(ray);
+        if (intersectionPoint is null)
+            return null;
+
+        var radiusVector = new Vector(Position, intersectionPoint.Value);
+        float radiusVectorLengthSquared = radiusVector.DotProductWith(radiusVector);
+        return radiusVectorLengthSquared <= _radiusSquared
+            ? intersectionPoint
+            : null;
     }
 
+    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
     public bool HasIntersectionWith(Ray ray)
-    {
-        throw new NotImplementedException();
-    }
+        => GetIntersectionWith(ray) is not null;
 }
