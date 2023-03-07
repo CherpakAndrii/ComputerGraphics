@@ -1,5 +1,6 @@
 ﻿using Structures.Interfaces;
 using Core.Cameras;
+using Core.Lights;
 
 namespace Core.Scenes;
 

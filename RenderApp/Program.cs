@@ -40,6 +40,7 @@ ConsoleRenderer.PrintToConsole(rayTracer.TraceRays());
 using Core;
 using Core.Scenes;
 using Core.Cameras;
+using Core.Lights;
 using RenderApp;
 using Structures.IntersectableFigures;
 

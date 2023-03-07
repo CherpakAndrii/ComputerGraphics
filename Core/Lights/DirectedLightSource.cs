@@ -1,8 +1,6 @@
-﻿using Core.Lights;
-using Structures;
-using Structures.BaseGeometricalStructures;
+﻿using Structures.BaseGeometricalStructures;
 
-namespace Core;
+namespace Core.Lights;
 
 public class DirectedLightSource : ILightSource
 {
