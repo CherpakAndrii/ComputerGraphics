@@ -5,22 +5,22 @@ public struct Color
     private byte r;
     public int R 
     { 
-        get { return r; }
-        set { r = (byte)Math.Clamp(value, 0, 255); }
+        get => r;
+        set => r = (byte)Math.Clamp(value, 0, 255);
     }
 
     private byte g;
     public int G 
     { 
-        get { return g; }
-        set { g = (byte)Math.Clamp(value, 0, 255); }
+        get => g;
+        set => g = (byte)Math.Clamp(value, 0, 255);
     }
 
     private byte b;
     public int B 
     { 
-        get { return b; }
-        set { b = (byte)Math.Clamp(value, 0, 255); }
+        get => b;
+        set => b = (byte)Math.Clamp(value, 0, 255);
     }
 
     public Color(byte r, byte g, byte b)
