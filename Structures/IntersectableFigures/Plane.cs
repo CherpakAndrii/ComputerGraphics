@@ -38,8 +38,8 @@ public class Plane : IIntersectable
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
     private float? GetDistanceFromRayOriginToPlane(Ray ray)
     {
-        float denominator = Normal.DotProductWith(ray.Direction);
-        if (denominator < 1e-6)
+        float denominator = Normal.DotProductWith(ray.Direction.Normalized());
+        if (Math.Abs(denominator) < 1e-6)
             return null;
         
         Vector difference = new(ray.Origin, Point);
