@@ -1,17 +1,24 @@
 ﻿using Structures.BaseGeometricalStructures;
 using Structures.Interfaces;
 using Vector = Structures.BaseGeometricalStructures.Vector;
+using Point = Structures.BaseGeometricalStructures.Point;
 
 namespace Structures.IntersectableFigures;
 
 public class Plane : IIntersectable
 {
-    private Point Point { get; set; }
-    private Vector Normal { get; set; }
-    
+    public Point Point { get; }
+    public Vector Normal { get; }
+
+    public Plane(Point point, Vector normal)
+    {
+        Point = point;
+        Normal = normal.Normalized();
+    }
+
     public Vector GetNormalVector(Point point)
     {
-        return Normal.Normalized();
+        return Normal;
     }
 
     public Point? GetIntersectionWith(Ray ray)
@@ -20,8 +27,7 @@ public class Plane : IIntersectable
         if (distance is null or < 0)
             return null;
 
-        var intersectionPoint = ray.Origin + ray.Direction.Normalized() * distance;
-        return intersectionPoint;
+        return ray.Origin + ray.Direction.Normalized() * distance;
     }
 
     public bool HasIntersectionWith(Ray ray)
@@ -32,13 +38,11 @@ public class Plane : IIntersectable
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-plane-and-ray-disk-intersection.html
     private float? GetDistanceFromRayOriginToPlane(Ray ray)
     {
-        Vector normal = Normal.Normalized();
-        float denominator = normal.DotProductWith(ray.Direction);
+        float denominator = Normal.DotProductWith(ray.Direction);
         if (denominator < 1e-6)
             return null;
         
         Vector difference = new(ray.Origin, Point);
-        float t = difference.DotProductWith(normal) / denominator;
-        return t;
+        return difference.DotProductWith(Normal) / denominator;
     }
 }
