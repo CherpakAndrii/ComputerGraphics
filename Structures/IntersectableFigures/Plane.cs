@@ -16,7 +16,12 @@ public class Plane : IIntersectable
 
     public Point? GetIntersectionWith(Ray ray)
     {
-        throw new NotImplementedException();
+        var distance = GetDistanceFromRayOriginToPlane(ray);
+        if (distance is null or < 0)
+            return null;
+
+        var intersectionPoint = ray.Origin + ray.Direction.Normalized() * distance;
+        return intersectionPoint;
     }
 
     public bool HasIntersectionWith(Ray ray)
