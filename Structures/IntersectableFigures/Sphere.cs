@@ -5,6 +5,8 @@ namespace Structures.IntersectableFigures;
 
 public class Sphere : IIntersectable
 {
+    public bool IsFlat { get; } = false;
+
     public Point Center { get; protected set; }
     public float Radius { get; protected set; }
 

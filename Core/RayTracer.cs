@@ -35,7 +35,7 @@ public class RayTracer
             Ray toLightRay = new(intersection, lightSource.GetVector(intersection));
             if (!IsOnLight(toLightRay)) continue;
             Vector normal = figure!.GetNormalVector(intersection);
-            if (normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
+            if (figure.IsFlat && normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
             double cosLight = toLightRay.Direction.FindCos(normal);
             if (cosLight > 0)
             {

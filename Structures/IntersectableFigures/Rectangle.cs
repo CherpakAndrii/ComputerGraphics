@@ -5,12 +5,14 @@ namespace Structures.IntersectableFigures;
 
 public class Rectangle : IIntersectable
 {
+    public bool IsFlat { get; } = true;
+
     public Point A { get; protected set; }
     public Point B { get; protected set; }
     public Point C { get; protected set; }
     public Point D { get; protected set; }
     public Vector Normal { get; }
-
+        
     public Rectangle(Point a, Point b, Point c)
     {
         if (new Vector(b, a).DotProductWith(new Vector(b, c)) != 0)

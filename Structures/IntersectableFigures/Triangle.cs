@@ -5,6 +5,8 @@ namespace Structures.IntersectableFigures;
 
 public struct Triangle : IIntersectable
 {
+    public bool IsFlat { get; } = true;
+
     public Point A { get; }
     public Point B { get; }
     public Point C { get; }

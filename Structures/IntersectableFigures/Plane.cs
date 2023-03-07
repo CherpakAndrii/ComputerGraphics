@@ -7,6 +7,8 @@ namespace Structures.IntersectableFigures;
 
 public class Plane : IIntersectable
 {
+    public bool IsFlat { get; } = true;
+
     public Point Point { get; }
     public Vector Normal { get; }
 

@@ -5,6 +5,8 @@ namespace Structures.IntersectableFigures;
 
 public class Disk : IIntersectable
 {
+    public bool IsFlat { get; } = true;
+
     public Point Position { get; }
     public Vector Normal { get; }
     public float Radius { get; }
