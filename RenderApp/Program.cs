@@ -1,5 +1,7 @@
 ﻿/* Чебурашка
 using Core;
+using RenderApp;
+using Core.Lights;
 using Core.Scenes;
 using Core.Cameras;
 using Structures.IntersectableFigures;
@@ -38,14 +40,14 @@ ConsoleRenderer.PrintToConsole(rayTracer.TraceRays());
 */
 
 using Core;
+using RenderApp;
+using Core.Lights;
 using Core.Scenes;
 using Core.Cameras;
-using Core.Lights;
-using RenderApp;
 using Structures.IntersectableFigures;
 
-var configurator = new ConsoleConfigurator();
-configurator.SetupConsole();
+ConsoleConfigurator configuerer = new();
+configuerer.SetupConsole();
 
 Camera camera = new()
 {
@@ -57,7 +59,7 @@ Camera camera = new()
     Position = new(0, 0, 0)
 };
 
-Sphere sphere = new(new(5, 0, 0), 4);
+Sphere sphere = new(new(7, 0, 0), 4);
 
 LightPoint lightPoint = new(new(-2, -5, 5), new(0, 255, 255));
 LightPoint lightPoint2 = new(new(-3, 5, 5), new(255, 0, 255));
@@ -70,5 +72,6 @@ scene.Figures.Add(sphere);
 RayTracer rayTracer = new(scene);
 
 ConsoleRenderer.Retro = false;
+ConsoleRenderer.RetroColor = false;
 ConsoleRenderer.PrintToConsole(rayTracer.TraceRays());
 Console.ReadKey();
