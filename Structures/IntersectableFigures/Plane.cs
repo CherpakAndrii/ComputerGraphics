@@ -5,6 +5,9 @@ namespace Structures.IntersectableFigures;
 
 public class Plane : IIntersectable
 {
+    private Point Point { get; set; }
+    private Vector Normal { get; set; }
+    
     public Vector GetNormalVector(Point point)
     {
         throw new NotImplementedException();
