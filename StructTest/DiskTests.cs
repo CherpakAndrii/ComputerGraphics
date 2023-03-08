@@ -44,6 +44,22 @@ public class DiskTests
         Assert.That(hasIntersection, Is.True);
     }
     
+    [TestCaseSource(nameof(_noIntersectionCases))]
+    public void Disk_WhenNoIntersectionWithRay_NullReturned(Disk disk, Ray ray)
+    {
+        var intersection = disk.GetIntersectionWith(ray);
+
+        Assert.That(intersection, Is.Null);
+    }
+    
+    [TestCaseSource(nameof(_noIntersectionCases))]
+    public void Disk_WhenNoIntersectionWithRay_FalseReturned(Disk disk, Ray ray)
+    {
+        var intersection = disk.HasIntersectionWith(ray);
+
+        Assert.That(intersection, Is.False);
+    }
+    
     private static object[] _intersectionCases =
     {
         new object[]
@@ -64,5 +80,19 @@ public class DiskTests
             new Ray(new Point(0, 4, -1), new Vector(0, 0, 1)),
             new Point(0, 4, 0)
         }
+    };
+    
+    private static object[] _noIntersectionCases =
+    {
+        new object[]
+        {
+            new Disk(new Point(0, 0, 0), new Vector(0, 0, 1), 5),
+            new Ray(new Point(0, 0, 1), new Vector(0, 0, 1))
+        },
+        new object[]
+        {
+            new Disk(new Point(0, 0, 0), new Vector(0, 0, 1), 5),
+            new Ray(new Point(0, 6, -1), new Vector(0, 0, 1))
+        },
     };
 }
