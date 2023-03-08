@@ -6,7 +6,7 @@ public struct Point : IEquatable<Point>
     public float Y { get; private set; }
     public float Z { get; private set; }
     
-    private const float ε = 1e-6f;
+    private const float ε = 1e-2f;
 
     public Point(float x, float y, float z)
     {
