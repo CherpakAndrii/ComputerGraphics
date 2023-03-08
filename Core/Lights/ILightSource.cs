@@ -5,5 +5,5 @@ namespace Core.Lights;
 public interface ILightSource
 {
     public Vector GetVector(Point targetPoint);
-    public Color Color { get; set; }
+    public Color Color { get; }
 }

@@ -2,10 +2,10 @@
 
 namespace Core.Lights;
 
-public class DirectedLightSource : ILightSource
+public readonly struct DirectedLightSource : ILightSource
 {
-    public Vector Direction { get; protected set; }
-    public Color Color { get; set; }
+    public Vector Direction { get; }
+    public Color Color { get; }
 
     public DirectedLightSource(Vector direction, Color color)
     {

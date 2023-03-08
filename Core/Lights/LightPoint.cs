@@ -2,10 +2,10 @@
 
 namespace Core.Lights;
 
-public class LightPoint : ILightSource
+public readonly struct LightPoint : ILightSource
 {
-    public Point Location { get; protected set; }
-    public Color Color { get; set; }
+    public Point Location { get; }
+    public Color Color { get; }
 
     public LightPoint(Point location, Color color)
     {
