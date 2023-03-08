@@ -9,48 +9,46 @@ namespace Core.Tests;
 
 public class LightCalculatorTests
 {
-    private Camera camera = new()
-    {
-        ProjectionPlaneHeightInPixels = 60,
-        ProjectionPlaneWidthInPixels = 60,
-        DistanceToProjectionPlane = 1,
-        FieldOfView = 90,
-        Direction = new(1, 0, 0),
-        Position = new(0, 0, 0)
-    };
+    private readonly Camera _camera = new
+    (
+        new Point(0, 0, 0),
+        new Vector(1, 0, 0),
+        90,
+        1
+    );
 
-    private Scene scene;
-    private Ray cameraRay;
-    private Color pixel = new();
-    private Sphere sphere = new(new(10, 0, 0), 5);
+    private readonly Scene _scene;
+    private readonly Ray _cameraRay;
+    private Color _pixel;
+    private readonly Sphere _sphere = new(new Point(10, 0, 0), 5);
 
     public LightCalculatorTests()
     {
-        scene = new() { Camera = camera };
+        _scene = new() { ProjectionPlane = new ProjectionPlane(_camera, 60, 60)};
         LightPoint lightPoint = new(new(0, 0, 0), new(255, 255, 255));
-        scene.Figures.Add(sphere);
-        scene.LightSources.Add(lightPoint);
-        cameraRay = new(camera.Position, camera.Direction);
+        _scene.Figures.Add(_sphere);
+        _scene.LightSources.Add(lightPoint);
+        _cameraRay = new Ray(_camera.Position, _camera.Direction);
     }
 
     [Fact]
     public void CalculateLight_SphereShadow_ReturnDarkPixel()
     {
-        Plane plane = new(new(1, 0, 0), new(1, 0, 0));
-        scene.Figures.Add(plane);
+        Plane plane = new(new Point(1, 0, 0), new Vector(1, 0, 0));
+        _scene.Figures.Add(plane);
 
-        Point intersection = (Point)sphere.GetIntersectionWith(cameraRay)!;
-        LightCalculator.CalculateLight(scene, ref pixel, intersection, sphere);
+        var intersection = (Point)_sphere.GetIntersectionWith(_cameraRay)!;
+        LightCalculator.CalculateLight(_scene, ref _pixel, intersection, _sphere);
 
-        Assert.Equal(pixel, new(0, 0, 0));
+        Assert.Equal(_pixel, new Color(0, 0, 0));
     }
 
     [Fact]
     public void CalculateLight_SphereLight_ReturnWhitePixel()
     {
-        Point intersection = (Point)sphere.GetIntersectionWith(cameraRay)!;
-        LightCalculator.CalculateLight(scene, ref pixel, intersection, sphere);
+        var intersection = (Point)_sphere.GetIntersectionWith(_cameraRay)!;
+        LightCalculator.CalculateLight(_scene, ref _pixel, intersection, _sphere);
 
-        Assert.Equal(pixel, new(255, 255, 255));
+        Assert.Equal(_pixel, new Color(255, 255, 255));
     }
 }

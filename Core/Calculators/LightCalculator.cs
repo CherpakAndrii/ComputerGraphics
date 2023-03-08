@@ -15,7 +15,7 @@ public static class LightCalculator
             if (!IsOnLight(scene, toLightRay, intersection, figure))
                 continue;
             Vector normal = figure!.GetNormalVector(intersection);
-            if (figure.IsFlat && normal.FindCos(scene.Camera.Direction) > 0)
+            if (figure.IsFlat && normal.FindCos(scene.ProjectionPlane.Camera.Direction) > 0)
                 normal *= -1;
             double cosLight = toLightRay.Direction.FindCos(normal);
             if (cosLight > 0)

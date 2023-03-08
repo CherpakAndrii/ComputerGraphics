@@ -50,24 +50,24 @@ using Structures.IntersectableFigures;
 ConsoleConfigurator configuerer = new();
 configuerer.SetupConsole();
 
-Camera camera = new()
-{
-    ProjectionPlaneHeightInPixels = 60,
-    ProjectionPlaneWidthInPixels = 60,
-    DistanceToProjectionPlane = 1,
-    FieldOfView = 90,
-    Direction = new(1, 0, 0),
-    Position = new(0, 0, 0)
-};
+Camera camera = new
+(
+    new Point(0, 0, 0),
+    new Vector(1, 0, 0),
+    90,
+    1
+);
 
-Sphere sphere = new(new(7, 0, 0), 4);
-Plane plane = new Plane(new Point(10, 10, 0), new Vector(-1, -1, 0));
-Disk disk = new Disk(new Point(2, 2, 2), new Vector(-1, 0, 0), 1);
+var projectionPlane = new ProjectionPlane(camera, 60, 60);
 
-LightPoint lightPoint = new(new(0, 0, 0), new(0, 255, 255));
-LightPoint lightPoint2 = new(new(-3, 5, 5), new(255, 0, 255));
+Sphere sphere = new(new Point(7, 0, 0), 4);
+var plane = new Plane(new Point(10, 10, 0), new Vector(-1, -1, 0));
+var disk = new Disk(new Point(2, 2, 2), new Vector(-1, 0, 0), 1);
 
-Scene scene = new() { Camera = camera };
+LightPoint lightPoint = new(new Point(0, 0, 0), new Color(0, 255, 255));
+LightPoint lightPoint2 = new(new Point(-3, 5, 5), new Color(255, 0, 255));
+
+Scene scene = new() { ProjectionPlane = projectionPlane };
 scene.LightSources.Add(lightPoint);
 scene.LightSources.Add(lightPoint2);
 scene.Figures.Add(sphere);
