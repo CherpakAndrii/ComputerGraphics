@@ -62,6 +62,7 @@ Camera camera = new()
 
 Sphere sphere = new(new(7, 0, 0), 4);
 Plane plane = new Plane(new Point(10, 0, 0), new Vector(-1, 0, 0));
+//Disk disk = new Disk(new Point(5, 0, 0), new Vector(-1, 0, 0), 4);
 
 LightPoint lightPoint = new(new(0, 0, 0), new(0, 255, 255));
 LightPoint lightPoint2 = new(new(-3, 5, 5), new(255, 0, 255));
@@ -71,6 +72,7 @@ scene.LightSources.Add(lightPoint);
 scene.LightSources.Add(lightPoint2);
 scene.Figures.Add(sphere);
 scene.Figures.Add(plane);
+//scene.Figures.Add(disk);
 
 RayTracer rayTracer = new(scene);
 
