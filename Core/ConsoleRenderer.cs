@@ -5,7 +5,7 @@ namespace Core;
 public static class ConsoleRenderer
 {
     public static bool Retro { get; set; } = true;
-    public static bool RetroColor { get; set; } = false;
+    public static bool RetroColor { get; set; }
     public static void PrintToConsole(Color[,] pixels)
     {
         Console.ForegroundColor = ConsoleColor.White;
