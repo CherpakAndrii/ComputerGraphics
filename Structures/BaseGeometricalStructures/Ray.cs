@@ -1,9 +1,9 @@
 ﻿namespace Structures.BaseGeometricalStructures;
 
-public struct Ray
+public readonly struct Ray
 {
-    public Point Origin { get; private set; }
-    public Vector Direction { get; private set; }
+    public Point Origin { get; }
+    public Vector Direction { get; }
 
     public Ray(Point start, Vector direction)
     {
@@ -25,11 +25,11 @@ public struct Ray
 
     public Point GetNearestPointTo(Point another)
     {
-        Vector vectorToPoint = new Vector(Origin, another);
+        var vectorToPoint = new Vector(Origin, another);
         float coef = vectorToPoint.DotProductWith(Direction) / (float)Math.Pow(Direction.GetModule(), 2);
         if (coef <= 0) return Origin;
         
-        Point nearest = Origin + Direction * coef;
+        var nearest = Origin + Direction * coef;
         return nearest;
     }
 }
