@@ -1,7 +1,5 @@
-using System.Diagnostics.CodeAnalysis;
 using Core.Lights;
 using Core.Scenes;
-using Structures.Interfaces;
 using Structures.BaseGeometricalStructures;
 
 namespace Core;
@@ -22,64 +20,10 @@ public class RayTracer
             {
                 pixels[i, j] = new();
                 Ray ray = new(Scene.Camera.Position, projectionPlane[i, j]);
-                if (FindClosestIntersection(ray, out var intersectionPoint, out var figure))
-                    CalculateLight(ref pixels[i, j], intersectionPoint, figure);
+                if (IntersectionCalculator.FindClosestIntersection(Scene, ray, out var intersectionPoint, out var figure))
+                    LightCalculator.CalculateLight(Scene, ref pixels[i, j], intersectionPoint, figure);
             }
         }
         return pixels;
-    }
-
-    private void CalculateLight(ref Color pixel, Point intersection, IIntersectable figure)
-    {
-        foreach (var lightSource in Scene.LightSources)
-        {
-            Ray toLightRay = new(intersection, lightSource.GetVector(intersection));
-            if (!IsOnLight(toLightRay, intersection, figure))
-                continue;
-            Vector normal = figure!.GetNormalVector(intersection);
-            if (figure.IsFlat && normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
-            double cosLight = toLightRay.Direction.FindCos(normal);
-            if (cosLight > 0)
-            {
-                pixel.R += (int)(Math.Abs(cosLight) * lightSource.Color.R);
-                pixel.G += (int)(Math.Abs(cosLight) * lightSource.Color.G);
-                pixel.B += (int)(Math.Abs(cosLight) * lightSource.Color.B);
-            }
-        }
-    }
- 
-    private bool FindClosestIntersection(Ray ray, out Point intersection, [NotNullWhen(true)] out IIntersectable? figure)
-    {
-        bool intersected = false;
-        intersection = new();
-        figure = default;
-        double minDistance = double.MaxValue;
-        foreach (var f in Scene.Figures)
-        {
-            if (f.GetIntersectionWith(ray) is { } currIntersection)
-            {
-                intersected = true;
-                double currDistance = new Vector(ray.Origin, currIntersection).GetModule();
-                if (currDistance < minDistance)
-                {
-                    intersection = currIntersection;
-                    figure = f;
-                    minDistance = currDistance;
-                }
-            }
-        }
-        return intersected;
-    }
-
-    private bool IsOnLight(Ray ray, Point currentIntersection, IIntersectable currentFigure)
-    {
-        foreach (var figure in Scene.Figures)
-        {
-            if (figure.GetIntersectionWith(ray) is { } point
-                && (!point.Equals(currentIntersection) || figure != currentFigure))
-                return false;
-        }
-
-        return true;
     }
 }
