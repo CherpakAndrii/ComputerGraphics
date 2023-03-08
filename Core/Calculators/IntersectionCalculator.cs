@@ -15,16 +15,16 @@ public static class IntersectionCalculator
         double minDistance = double.MaxValue;
         foreach (var f in scene.Figures)
         {
-            if (f.GetIntersectionWith(ray) is { } currIntersection)
+            if (f.GetIntersectionWith(ray) is not { } currIntersection)
+                continue;
+
+            intersected = true;
+            double currDistance = new Vector(ray.Origin, currIntersection).GetModule();
+            if (currDistance < minDistance)
             {
-                intersected = true;
-                double currDistance = new Vector(ray.Origin, currIntersection).GetModule();
-                if (currDistance < minDistance)
-                {
-                    intersection = currIntersection;
-                    figure = f;
-                    minDistance = currDistance;
-                }
+                intersection = currIntersection;
+                figure = f;
+                minDistance = currDistance;
             }
         }
         return intersected;
