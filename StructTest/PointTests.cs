@@ -1,5 +1,3 @@
-using Structures.BaseGeometricalStructures;
-
 namespace StructTest;
 
 public class PointTests
@@ -7,10 +5,10 @@ public class PointTests
     [Test]
     public void PointPlusVectorTest()
     {
-        Point point = new Point(1, 1, 1);
-        Vector vector = new Vector(2, 3, 5);
+        var point = new Point(1, 1, 1);
+        var vector = new Vector(2, 3, 5);
 
-        Point result = point + vector;
+        var result = point + vector;
         
         Assert.That(result, Is.EqualTo(new Point(3, 4, 6)));
     }
@@ -18,10 +16,10 @@ public class PointTests
     [Test]
     public void PointMinusVectorTest()
     {
-        Point point = new Point(1, 1, 1);
-        Vector vector = new Vector(2, 3, 5);
+        var point = new Point(1, 1, 1);
+        var vector = new Vector(2, 3, 5);
 
-        Point result = point - vector;
+        var result = point - vector;
         
         Assert.That(result, Is.EqualTo(new Point(-1, -2, -4)));
     }
@@ -29,8 +27,8 @@ public class PointTests
     [Test]
     public void DistanceBetweenPointsTest()
     {
-        Point point1 = new Point(1, 1, 1);
-        Point point2 = new Point(5, 3, 4);
+        var point1 = new Point(1, 1, 1);
+        var point2 = new Point(5, 3, 4);
 
         float result = point1.GetDistance(point2);
         
