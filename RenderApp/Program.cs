@@ -4,11 +4,19 @@ using RenderApp;
 ConsoleConfigurator configurator = new();
 configurator.SetupConsole();
 
-var scene = ScenesSetup.SceneWithAllFigures();
-
-RayTracer rayTracer = new(scene);
-
 ConsoleRenderer.Retro = false;
 ConsoleRenderer.RetroColor = false;
-ConsoleRenderer.PrintToConsole(rayTracer.TraceRays());
-Console.ReadKey();
+
+var scenes = new[]
+{
+    ScenesSetup.SceneWithAllFigures(),
+    ScenesSetup.CheburashkaScene()
+};
+
+foreach (var scene in scenes)
+{
+    RayTracer rayTracer = new(scene);
+    ConsoleRenderer.PrintToConsole(rayTracer.TraceRays());
+    Console.ReadKey();
+    Console.Clear();
+}
