@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Core.Lights;
 using Core.Scenes;
 using Structures.Interfaces;
@@ -21,19 +22,19 @@ public class RayTracer
             {
                 pixels[i, j] = new();
                 Ray ray = new(Scene.Camera.Position, projectionPlane[i, j]);
-                if (FindClosestIntersection(ray, out Point intersectionPoint, out IIntersectable? figure))
+                if (FindClosestIntersection(ray, out var intersectionPoint, out var figure))
                     CalculateLight(ref pixels[i, j], intersectionPoint, figure);
             }
         }
         return pixels;
     }
 
-    private void CalculateLight(ref Color pixel, Point intersection, IIntersectable? figure)
+    private void CalculateLight(ref Color pixel, Point intersection, IIntersectable figure)
     {
-        foreach (ILightSource lightSource in Scene.LightSources)
+        foreach (var lightSource in Scene.LightSources)
         {
             Ray toLightRay = new(intersection, lightSource.GetVector(intersection));
-            if (!IsOnLight(toLightRay, intersection))
+            if (!IsOnLight(toLightRay, intersection, figure))
                 continue;
             Vector normal = figure!.GetNormalVector(intersection);
             if (figure.IsFlat && normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
@@ -47,7 +48,7 @@ public class RayTracer
         }
     }
  
-    private bool FindClosestIntersection(Ray ray, out Point intersection, out IIntersectable? figure)
+    private bool FindClosestIntersection(Ray ray, out Point intersection, [NotNullWhen(true)] out IIntersectable? figure)
     {
         bool intersected = false;
         intersection = new();
@@ -70,11 +71,12 @@ public class RayTracer
         return intersected;
     }
 
-    private bool IsOnLight(Ray ray, Point currentIntersection)
+    private bool IsOnLight(Ray ray, Point currentIntersection, IIntersectable currentFigure)
     {
         foreach (var figure in Scene.Figures)
         {
-            if (figure.GetIntersectionWith(ray) is { } point && !point.Equals(currentIntersection))
+            if (figure.GetIntersectionWith(ray) is { } point
+                && (!point.Equals(currentIntersection) || figure != currentFigure))
                 return false;
         }
 
