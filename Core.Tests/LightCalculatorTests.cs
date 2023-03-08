@@ -19,18 +19,25 @@ public class LightCalculatorTests
         Position = new(0, 0, 0)
     };
 
+    private Scene scene;
+    private Ray cameraRay;
+    private Color pixel = new();
+    private Sphere sphere = new(new(10, 0, 0), 5);
+
+    public LightCalculatorTests()
+    {
+        scene = new() { Camera = camera };
+        LightPoint lightPoint = new(new(0, 0, 0), new(255, 255, 255));
+        scene.Figures.Add(sphere);
+        scene.LightSources.Add(lightPoint);
+        cameraRay = new(camera.Position, camera.Direction);
+    }
+
     [Fact]
     public void CalculateLight_SphereShadow_ReturnDarkPixel()
     {
-        Scene scene = new() { Camera = camera };
-        Sphere sphere = new(new(10, 0, 0), 5);
         Plane plane = new(new(1, 0, 0), new(1, 0, 0));
-        LightPoint lightPoint = new(new(0, 0, 0), new(255, 255, 255));
-        scene.LightSources.Add(lightPoint);
-        scene.Figures.Add(sphere);
         scene.Figures.Add(plane);
-        Ray cameraRay = new(camera.Position, camera.Direction);
-        Color pixel = new();
 
         Point intersection = (Point)sphere.GetIntersectionWith(cameraRay)!;
         LightCalculator.CalculateLight(scene, ref pixel, intersection, sphere);
@@ -41,14 +48,6 @@ public class LightCalculatorTests
     [Fact]
     public void CalculateLight_SphereShadow_ReturnWhitePixel()
     {
-        Scene scene = new() { Camera = camera };
-        Sphere sphere = new(new(10, 0, 0), 5);
-        LightPoint lightPoint = new(new(0, 0, 0), new(255, 255, 255));
-        scene.LightSources.Add(lightPoint);
-        scene.Figures.Add(sphere);
-        Ray cameraRay = new(camera.Position, camera.Direction);
-        Color pixel = new();
-
         Point intersection = (Point)sphere.GetIntersectionWith(cameraRay)!;
         LightCalculator.CalculateLight(scene, ref pixel, intersection, sphere);
 

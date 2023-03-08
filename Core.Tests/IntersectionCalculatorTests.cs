@@ -26,8 +26,11 @@ public class IntersectionCalculatorTests
 
         bool result = IntersectionCalculator.FindClosestIntersection(scene, cameraRay, out var _, out var figure);
 
-        Assert.False(result);
-        Assert.Null(figure);
+        Assert.Multiple(() =>
+        {
+            Assert.False(result);
+            Assert.Null(figure);
+        });
     }
 
     [Fact]
@@ -40,8 +43,11 @@ public class IntersectionCalculatorTests
 
         bool result = IntersectionCalculator.FindClosestIntersection(scene, cameraRay, out var _, out var figure);
 
-        Assert.Null(figure);
-        Assert.False(result);
+        Assert.Multiple(() =>
+        {
+            Assert.Null(figure);
+            Assert.False(result);
+        });
     }
 
     [Fact]
@@ -54,7 +60,10 @@ public class IntersectionCalculatorTests
 
         bool result = IntersectionCalculator.FindClosestIntersection(scene, cameraRay, out var _, out var figure);
 
-        Assert.Equal(sphere, figure);
-        Assert.True(result);
+        Assert.Multiple(() =>
+        {
+            Assert.Equal(sphere, figure);
+            Assert.True(result);
+        });
     }
 }
