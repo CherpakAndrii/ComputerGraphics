@@ -48,9 +48,7 @@ public struct Point : IEquatable<Point>
     // TODO: may not work correctly, needs to be fixed if this method is to be used.
     public bool Equals(Point other)
     {
-        return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
-        // it should be more accurate, but may have a higher time complexity:
-        // return Math.Abs(X - other.X) < ε && Math.Abs(Y - other.Y) < ε && Math.Abs(Z - other.Z) < ε;
+        return Math.Abs(X - other.X) < ε && Math.Abs(Y - other.Y) < ε && Math.Abs(Z - other.Z) < ε;
     }
 
     public override bool Equals(object? obj)
