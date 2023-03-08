@@ -46,7 +46,7 @@ public class LightCalculatorTests
     }
 
     [Fact]
-    public void CalculateLight_SphereShadow_ReturnWhitePixel()
+    public void CalculateLight_SphereLight_ReturnWhitePixel()
     {
         Point intersection = (Point)sphere.GetIntersectionWith(cameraRay)!;
         LightCalculator.CalculateLight(scene, ref pixel, intersection, sphere);
