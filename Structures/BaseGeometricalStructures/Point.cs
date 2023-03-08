@@ -60,4 +60,14 @@ public struct Point : IEquatable<Point>
     {
         return HashCode.Combine(X, Y, Z);
     }
+
+    public static bool operator ==(Point left, Point right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Point left, Point right)
+    {
+        return !(left == right);
+    }
 }
