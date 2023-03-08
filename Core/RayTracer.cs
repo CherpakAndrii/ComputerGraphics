@@ -1,5 +1,6 @@
 using Core.Lights;
 using Core.Scenes;
+using Core.Calculators;
 using Structures.BaseGeometricalStructures;
 
 namespace Core;
