@@ -31,6 +31,19 @@ public class DiskTests
         });
     }
     
+    [TestCaseSource(nameof(_intersectionCases))]
+    public void Disk_WhenIntersectsWithRay_TrueReturned
+    (
+        Disk disk,
+        Ray ray,
+        Point expectedIntersectionPoint
+    )
+    {
+        var hasIntersection = disk.HasIntersectionWith(ray);
+
+        Assert.That(hasIntersection, Is.True);
+    }
+    
     private static object[] _intersectionCases =
     {
         new object[]
