@@ -44,6 +44,7 @@ using RenderApp;
 using Core.Lights;
 using Core.Scenes;
 using Core.Cameras;
+using Structures.BaseGeometricalStructures;
 using Structures.IntersectableFigures;
 
 ConsoleConfigurator configuerer = new();
@@ -51,8 +52,8 @@ configuerer.SetupConsole();
 
 Camera camera = new()
 {
-    ProjectionPlaneHeightInPixels = 80,
-    ProjectionPlaneWidthInPixels = 80,
+    ProjectionPlaneHeightInPixels = 60,
+    ProjectionPlaneWidthInPixels = 60,
     DistanceToProjectionPlane = 1,
     FieldOfView = 90,
     Direction = new(1, 0, 0),
@@ -60,14 +61,16 @@ Camera camera = new()
 };
 
 Sphere sphere = new(new(7, 0, 0), 4);
+Plane plane = new Plane(new Point(10, 0, 0), new Vector(-1, 0, 0));
 
-LightPoint lightPoint = new(new(-2, -5, 5), new(0, 255, 255));
+LightPoint lightPoint = new(new(0, 0, 0), new(0, 255, 255));
 LightPoint lightPoint2 = new(new(-3, 5, 5), new(255, 0, 255));
 
 Scene scene = new() { Camera = camera };
 scene.LightSources.Add(lightPoint);
 scene.LightSources.Add(lightPoint2);
 scene.Figures.Add(sphere);
+scene.Figures.Add(plane);
 
 RayTracer rayTracer = new(scene);
 
