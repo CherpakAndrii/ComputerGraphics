@@ -2,9 +2,9 @@
 
 public struct Point : IEquatable<Point>
 {
-    public float X { get; private set; }
-    public float Y { get; private set; }
-    public float Z { get; private set; }
+    public float X { get; }
+    public float Y { get; }
+    public float Z { get; }
     
     private const float ε = 1e-2f;
 
@@ -42,10 +42,9 @@ public struct Point : IEquatable<Point>
 
     public static Point operator -(Point point, Vector vector)
     {
-        return point + (-vector);
+        return point + -vector;
     }
 
-    // TODO: may not work correctly, needs to be fixed if this method is to be used.
     public bool Equals(Point other)
     {
         return Math.Abs(X - other.X) < ε && Math.Abs(Y - other.Y) < ε && Math.Abs(Z - other.Z) < ε;
