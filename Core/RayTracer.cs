@@ -33,7 +33,8 @@ public class RayTracer
         foreach (ILightSource lightSource in Scene.LightSources)
         {
             Ray toLightRay = new(intersection, lightSource.GetVector(intersection));
-            if (!IsOnLight(toLightRay)) continue;
+            if (!IsOnLight(toLightRay, intersection))
+                continue;
             Vector normal = figure!.GetNormalVector(intersection);
             if (figure.IsFlat && normal.FindCos(Scene.Camera.Direction) > 0) normal *= -1;
             double cosLight = toLightRay.Direction.FindCos(normal);
@@ -69,11 +70,11 @@ public class RayTracer
         return intersected;
     }
 
-    private bool IsOnLight(Ray ray)
+    private bool IsOnLight(Ray ray, Point currentIntersection)
     {
         foreach (var figure in Scene.Figures)
         {
-            if (figure.GetIntersectionWith(ray) is not null)
+            if (figure.GetIntersectionWith(ray) is { } point && !point.Equals(currentIntersection))
                 return false;
         }
 
