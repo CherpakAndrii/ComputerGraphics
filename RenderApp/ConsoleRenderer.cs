@@ -1,6 +1,5 @@
 using Core.Lights;
-
-namespace Core;
+namespace RenderApp;
 
 public static class ConsoleRenderer
 {
