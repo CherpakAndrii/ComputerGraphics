@@ -24,14 +24,14 @@ public struct ProjectionPlane
     {
         var (rightProjectionPlaneDirection, upProjectionPlaneDirection) = GetProjectionPlaneDirections();
 
-        var projectionPlane = new Point[Width, Height];
+        var projectionPlane = new Point[Height, Width];
         float projectionPlaneAspectRatio
             = (float)Width / Height;
 
         float alpha = Camera.FieldOfView / 2;
             
         float leftProjectionPlaneOffset = (float)Math.Tan((Math.PI / 180) * alpha) * Camera.DistanceToProjectionPlane;
-        float bottomProjectionPlaneOffset = leftProjectionPlaneOffset * projectionPlaneAspectRatio;
+        float bottomProjectionPlaneOffset = leftProjectionPlaneOffset / projectionPlaneAspectRatio;
             
         float horizontalDistanceBetweenProjectionPixels
             = leftProjectionPlaneOffset / Width * 2;
@@ -44,15 +44,16 @@ public struct ProjectionPlane
             - rightProjectionPlaneDirection * leftProjectionPlaneOffset
             - upProjectionPlaneDirection * bottomProjectionPlaneOffset;
 
-        for (int x = 0; x < Width; x++)
+
+        for (int y = 0; y < Height; y++)
         {
-            for (int y = 0; y < Height; y++)
+            for (int x = 0; x < Width; x++)
             {
-                projectionPlane[x, y] =
-                    leftBottomCornerOfProjectionPlane
-                    + Camera.Direction * Camera.DistanceToProjectionPlane
-                    + rightProjectionPlaneDirection * x * horizontalDistanceBetweenProjectionPixels
-                    + upProjectionPlaneDirection * y * verticalDistanceBetweenProjectionPixels;
+                projectionPlane[y, x] =
+                leftBottomCornerOfProjectionPlane
+                + Camera.Direction * Camera.DistanceToProjectionPlane
+                + rightProjectionPlaneDirection * x * horizontalDistanceBetweenProjectionPixels
+                + upProjectionPlaneDirection * y * verticalDistanceBetweenProjectionPixels;
             }
         }
         return projectionPlane;
