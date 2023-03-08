@@ -4,14 +4,25 @@ namespace Core.Cameras;
 
 public class Camera
 {
-    public Point Position { get; set; }
-    
-    private Vector _directionNormalized;
-    public Vector Direction
+    public Camera
+    (
+        Point position,
+        Vector direction,
+        float fieldOfView
+    )
     {
-        get => _directionNormalized;
-        set => _directionNormalized = value.Normalized();
+        Position = position;
+        Direction = direction.Normalized();
+
+        if (fieldOfView is < 0 or > 180)
+        {
+            throw new Exception("Field of view has wrong value");
+        }
+
+        FieldOfView = fieldOfView;
     }
+    public Point Position { get; }
+    public Vector Direction { get; }
 
     private float _distanceToProjectionPlane;
 
@@ -25,21 +36,7 @@ public class Camera
             _distanceToProjectionPlane = value;
         }
     }
-    
-    private float _fieldOfView;
-    public float FieldOfView
-    {
-        get => _fieldOfView;
-        set
-        {
-            if (value is < 0 or > 180)
-            {
-                throw new Exception("Field of view has wrong value");
-            }
-
-            _fieldOfView = value;
-        }
-    }
+    public float FieldOfView { get; }
     
     public int ProjectionPlaneWidthInPixels { get; set; }
     
@@ -58,7 +55,7 @@ public class Camera
             float projectionPlaneAspectRatio
                 = (float)ProjectionPlaneWidthInPixels / ProjectionPlaneHeightInPixels;
 
-            float alpha = _fieldOfView / 2;
+            float alpha = FieldOfView / 2;
             
             float leftProjectionPlaneOffset = (float)Math.Tan((Math.PI / 180) * alpha) * _distanceToProjectionPlane;
             float bottomProjectionPlaneOffset = leftProjectionPlaneOffset * projectionPlaneAspectRatio;
@@ -80,7 +77,7 @@ public class Camera
                 {
                     projectionPlane[x, y] =
                         leftBottomCornerOfProjectionPlane
-                        + _directionNormalized * _distanceToProjectionPlane
+                        + Direction * _distanceToProjectionPlane
                         + rightProjectionPlaneDirection * x * horizontalDistanceBetweenProjectionPixels
                         + upProjectionPlaneDirection * y * verticalDistanceBetweenProjectionPixels;
                 }
@@ -91,13 +88,13 @@ public class Camera
 
     private (Vector rightDirection, Vector upDirection) GetProjectionPlaneDirections()
     {
-        var rightDirection = new Vector(0, 0, 1).CrossProductWith(_directionNormalized);
+        var rightDirection = new Vector(0, 0, 1).CrossProductWith(Direction);
         if (rightDirection == Vector.Zero)
         {
             rightDirection
-                = new Vector(0, 1, 0).CrossProductWith(_directionNormalized);
+                = new Vector(0, 1, 0).CrossProductWith(Direction);
         }
-        var upDirection = _directionNormalized.CrossProductWith(rightDirection);
+        var upDirection = Direction.CrossProductWith(rightDirection);
         return (rightDirection, upDirection);
     }
 }
