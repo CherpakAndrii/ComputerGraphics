@@ -31,13 +31,8 @@ public class PlaneTests
         });
     }
     
-    [TestCaseSource(nameof(_intersectionCases))]
-    public void Plane_WhenIntersectsWithRay_TrueReturned
-    (
-        Plane plane,
-        Ray ray,
-        Point expectedIntersectionPoint
-    )
+    [TestCaseSource(nameof(_intersectionBooleanCases))]
+    public void Plane_WhenIntersectsWithRay_TrueReturned(Plane plane, Ray ray)
     {
         var hasIntersection = plane.HasIntersectionWith(ray);
 
@@ -76,6 +71,30 @@ public class PlaneTests
         }
     };
     
+    private static object[] _intersectionBooleanCases =
+    {
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, 1), new Vector(0, 0, -1))
+        },
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, -1), new Vector(0, 0, 1))
+        },
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, -5), new Vector(1, 1, 1))
+        },
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, 5), new Vector(-1, -1, -1))
+        }
+    };
+    
     private static object[] _noIntersectionCases =
     {
         new object[]
@@ -87,6 +106,11 @@ public class PlaneTests
         {
             new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
             new Ray(new Point(0, 0, -1), new Vector(0, 1, 0))
+        },
+        new object[]
+        {
+            new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)),
+            new Ray(new Point(0, 0, 1), new Vector(0, 0, 1))
         }
     };
 }
