@@ -1,9 +1,8 @@
-using Core.Calculators;
 using Core.Cameras;
-using Core.Lights;
 using Core.Scenes;
-using Structures.BaseGeometricalStructures;
+using Core.Calculators;
 using Structures.IntersectableFigures;
+using Structures.BaseGeometricalStructures;
 
 namespace Core.Tests;
 
