@@ -70,4 +70,58 @@ public static class ScenesSetup
 
         return scene;
     }
+
+    public static Scene SceneSphereAndDisk()
+    {
+        Camera camera = new
+        (
+            new Point(0, 0, 0),
+            new Vector(1, 0, 0),
+            90,
+            1
+        );
+
+        var projectionPlane = new ProjectionPlane(camera, 90, 90);
+
+        Sphere sphere = new(new Point(15, -2, 0), 4);
+        var disk = new Disk(new Point(15, 3, 0), new Vector(0, -1, 0), 10);
+
+        LightPoint lightPoint = new(new Point(15, -100, 0), new Color(150, 0, 150));
+        LightPoint lightPoint2 = new(new Point(15, -30, -100), new Color(0, 150, 150));
+        LightPoint lightPoint3 = new(new Point(15, -30, 100), new Color(150, 150, 0));
+
+        Scene scene = new() { ProjectionPlane = projectionPlane };
+        scene.LightSources.Add(lightPoint);
+        scene.LightSources.Add(lightPoint2);
+        scene.LightSources.Add(lightPoint3);
+        scene.Figures.Add(sphere);
+        scene.Figures.Add(disk);
+
+        return scene;
+    }
+
+    public static Scene PlaneAndSphere()
+    {
+        Camera camera = new
+        (
+            new Point(0, 0, 0),
+            new Vector(0, 1, 0),
+            90,
+            1
+        );
+
+        var projectionPlane = new ProjectionPlane(camera, 90, 90);
+
+        Plane plane = new(new(0, 0, 5), new(0, 0, -1));
+        Sphere sphere = new(new(0, 10, -4), 5);
+
+        LightPoint lightPoint = new(new Point(-10, -10, -10), new Color(255, 255, 255));
+
+        Scene scene = new() { ProjectionPlane = projectionPlane };
+        scene.LightSources.Add(lightPoint);
+        scene.Figures.Add(plane);
+        scene.Figures.Add(sphere);
+
+        return scene;
+    }
 }

@@ -9,8 +9,11 @@ var consoleRendererRetroSymbols = new ConsoleRenderer(true, false);
 
 var scenes = new[]
 {
+    (consoleRendererColourful, ScenesSetup.PlaneAndSphere()),
     (consoleRendererColourful, ScenesSetup.SceneWithAllFigures()),
-    (consoleRendererRetroSymbols, ScenesSetup.CheburashkaScene())
+    (consoleRendererRetroSymbols, ScenesSetup.CheburashkaScene()),
+    (consoleRendererColourful, ScenesSetup.CheburashkaScene()),
+    (consoleRendererColourful, ScenesSetup.SceneSphereAndDisk())
 };
 
 foreach (var scene in scenes)
