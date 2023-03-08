@@ -1,11 +1,16 @@
 using Core.Lights;
 namespace RenderApp;
 
-public static class ConsoleRenderer
+public class ConsoleRenderer
 {
-    public static bool Retro { get; set; } = true;
-    public static bool RetroColor { get; set; }
-    public static void PrintToConsole(Color[,] pixels)
+    public ConsoleRenderer(bool retro, bool retroColor)
+    {
+        Retro = retro;
+        RetroColor = retroColor;
+    }
+    public bool Retro { get; }
+    public bool RetroColor { get; }
+    public void PrintToConsole(Color[,] pixels)
     {
         Console.ForegroundColor = ConsoleColor.White;
         for (int  i = 0; i < pixels.GetLength(0); i++)
@@ -37,7 +42,7 @@ public static class ConsoleRenderer
         };
     }
 
-    private static ConsoleColor GetConsoleColor(Color color)
+    private ConsoleColor GetConsoleColor(Color color)
     {
         if (!RetroColor || color is { R: >= 160, B: >= 160, G: >= 160 })
             return ConsoleColor.White;

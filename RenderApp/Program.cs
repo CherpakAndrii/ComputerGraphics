@@ -4,8 +4,7 @@ using RenderApp;
 ConsoleConfigurator configurator = new();
 configurator.SetupConsole();
 
-ConsoleRenderer.Retro = false;
-ConsoleRenderer.RetroColor = false;
+var consoleRenderer = new ConsoleRenderer(false, false);
 
 var scenes = new[]
 {
@@ -16,7 +15,7 @@ var scenes = new[]
 foreach (var scene in scenes)
 {
     RayTracer rayTracer = new(scene);
-    ConsoleRenderer.PrintToConsole(rayTracer.TraceRays());
+    consoleRenderer.PrintToConsole(rayTracer.TraceRays());
     Console.ReadKey();
     Console.Clear();
 }
