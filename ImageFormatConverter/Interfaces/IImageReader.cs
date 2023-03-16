@@ -1,9 +1,8 @@
 ﻿using Core.Lights;
 
-namespace ImageFormatConverter;
+namespace ImageFormatConverter.Interfaces;
 
 public interface IImageReader
 {
-    public bool ValidateFileFormat(string filename);
     public Color[,] ImageToPixels(string filename);
 }

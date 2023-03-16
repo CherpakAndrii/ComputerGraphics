@@ -1,6 +1,6 @@
 ﻿using Core.Lights;
 
-namespace ImageFormatConverter;
+namespace ImageFormatConverter.Interfaces;
 
 public interface IImageWriter
 {
