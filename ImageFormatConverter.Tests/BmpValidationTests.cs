@@ -1,5 +1,4 @@
-﻿using Core.Lights;
-using ImageFormatConverter.Validators;
+﻿using ImageFormatConverter.Validators;
 
 namespace ImageFormatConverter.Tests;
 

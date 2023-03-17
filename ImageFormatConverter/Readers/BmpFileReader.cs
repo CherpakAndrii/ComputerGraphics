@@ -8,7 +8,33 @@ public class BmpFileReader : IImageReader
     public Color[,] ImageToPixels(string filename)
     {
         byte[] filedata = File.ReadAllBytes(filename);
-        int filesize = BitConverter.ToInt32(filedata[2..6]);
-        throw new NotImplementedException();
+        
+        int imageWidth = BitConverter.ToInt32(filedata[18..22]);
+        int imageHeight = BitConverter.ToInt32(filedata[22..26]);
+        
+        int rowLength = imageWidth * 3;
+        int numberOfZeroBytes = 0;
+
+        while (rowLength%4 != 0)
+        {
+            rowLength++;
+            numberOfZeroBytes++;
+        }
+
+        Color[,] picture = new Color[imageHeight, imageWidth];
+        int pointer = 54;
+
+        for (int i = imageHeight-1; i >= 0; i--)
+        {
+            for (int j = 0; j < imageWidth; j++)
+            {
+                picture[i, j] = new Color(filedata[pointer + 2], filedata[pointer + 1], filedata[pointer]);
+                pointer += 3;
+            }
+
+            pointer += numberOfZeroBytes;
+        }
+
+        return picture;
     }
 }
