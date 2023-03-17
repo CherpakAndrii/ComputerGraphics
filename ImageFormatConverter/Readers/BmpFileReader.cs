@@ -7,6 +7,8 @@ public class BmpFileReader : IImageReader
 {
     public Color[,] ImageToPixels(string filename)
     {
+        byte[] filedata = File.ReadAllBytes(filename);
+        int filesize = BitConverter.ToInt32(filedata[2..6]);
         throw new NotImplementedException();
     }
 }
