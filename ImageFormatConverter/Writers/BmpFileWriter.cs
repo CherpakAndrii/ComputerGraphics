@@ -7,8 +7,8 @@ public class BmpFileWriter : IImageWriter
 {
     public void WriteToFile(string outputFileName, Color[,] pixels)
     {
-        int width = pixels.GetLength(0);
-        int height = pixels.GetLength(1);
+        int height = pixels.GetLength(0);
+        int width = pixels.GetLength(1);
         int rowLength = width * 3;
         int numberOfZeroBytes = 0;
 
@@ -24,12 +24,16 @@ public class BmpFileWriter : IImageWriter
         byte[] bmpInfoHeader = GetInfoHeader(width, height);
         byte[] pixelData = GetPixelData(pixels, numberOfZeroBytes);
 
-        using (BinaryWriter binaryWriter = new BinaryWriter(File.Open(outputFileName, FileMode.Create)))
+        using (FileStream fs = File.Open(outputFileName, FileMode.Create))
         {
-            binaryWriter.Write(bmpHeader);
-            binaryWriter.Write(bmpInfoHeader);
-            binaryWriter.Write(pixelData);
+            using (BinaryWriter binaryWriter = new BinaryWriter(fs))
+            {
+                binaryWriter.Write(bmpHeader);
+                binaryWriter.Write(bmpInfoHeader);
+                binaryWriter.Write(pixelData);
+            }
         }
+        
     }
 
     private byte[] GetBmpHeader(int fileSize)
@@ -59,8 +63,8 @@ public class BmpFileWriter : IImageWriter
 
     private byte[] GetPixelData(Color[,] pixels, int zeros)
     {
-        int width = pixels.GetLength(0);
-        int height = pixels.GetLength(1);
+        int height = pixels.GetLength(0);
+        int width = pixels.GetLength(1);
         int size = height * (width * 3 + zeros);
         int counter = 0;
         

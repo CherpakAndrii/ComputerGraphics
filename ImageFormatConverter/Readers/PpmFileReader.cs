@@ -59,7 +59,7 @@ public class PpmFileReader : IImageReader
         int headerLength = Regex.Match(header, @"^P6\s+(?:\d+\s+){3}").Length;
 
         byte[] filedata = File.ReadAllBytes(filename);
-        Color[,] picture = new Color[width, height];
+        Color[,] picture = new Color[height, width];
         
         for (int i = 0, ptr = headerLength; i < height; i++)
         {
