@@ -5,7 +5,7 @@ namespace ImageFormatConverter.Writers;
 
 public class BmpFileWriter : IImageWriter
 {
-    public void WriteToFile(string inputFileName, Color[,] pixels)
+    public void WriteToFile(string outputFileName, Color[,] pixels)
     {
         int width = pixels.GetLength(0);
         int height = pixels.GetLength(1);
@@ -20,12 +20,11 @@ public class BmpFileWriter : IImageWriter
         
         int fileSize = 54 + height * rowLength;
 
-        string newFileName = GetOutputFileName(inputFileName);
         byte[] bmpHeader = GetBmpHeader(fileSize);
         byte[] bmpInfoHeader = GetInfoHeader(width, height);
         byte[] pixelData = GetPixelData(pixels, numberOfZeroBytes);
 
-        using (BinaryWriter binaryWriter = new BinaryWriter(File.Open(newFileName, FileMode.Create)))
+        using (BinaryWriter binaryWriter = new BinaryWriter(File.Open(outputFileName, FileMode.Create)))
         {
             binaryWriter.Write(bmpHeader);
             binaryWriter.Write(bmpInfoHeader);
@@ -82,10 +81,10 @@ public class BmpFileWriter : IImageWriter
         return pixelData;
     }
 
-    private string GetOutputFileName(string inputFileName)
+    /*private string GetOutputFileName(string inputFileName)
     {
         string[] splited = inputFileName.Split('.');
         splited[^1] = "bmp";
         return String.Join('.', splited);
-    }
+    }*/
 }

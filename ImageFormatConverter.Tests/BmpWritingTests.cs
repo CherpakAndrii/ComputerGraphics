@@ -24,7 +24,7 @@ public class BmpWritingTests
             }
         }
 
-        bmpWriter.WriteToFile("testResPictures/red_gradient.png", image);
+        bmpWriter.WriteToFile("testResPictures/red_gradient.bmp", image);
         Assert.Pass();
     }
     
@@ -40,7 +40,7 @@ public class BmpWritingTests
             }
         }
 
-        bmpWriter.WriteToFile("testResPictures/blue_gradient.png", image);
+        bmpWriter.WriteToFile("testResPictures/blue_gradient.bmp", image);
         Assert.Pass();
     }
     
@@ -56,7 +56,7 @@ public class BmpWritingTests
             }
         }
 
-        bmpWriter.WriteToFile("testResPictures/red_blue_gradient.png", image);
+        bmpWriter.WriteToFile("testResPictures/red_blue_gradient.bmp", image);
         Assert.Pass();
     }
 }
