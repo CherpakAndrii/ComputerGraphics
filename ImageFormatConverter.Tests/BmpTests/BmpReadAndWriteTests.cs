@@ -1,9 +1,4 @@
-﻿using Core.Lights;
-using ImageFormatConverter.Readers;
-using ImageFormatConverter.Validators;
-using ImageFormatConverter.Writers;
-
-namespace ImageFormatConverter.Tests.BmpTests;
+﻿namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]
 public class BmpReadAndWriteTests

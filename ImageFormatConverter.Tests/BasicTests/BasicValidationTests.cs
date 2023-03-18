@@ -1,6 +1,4 @@
-﻿using ImageFormatConverter.Validators;
-
-namespace ImageFormatConverter.Tests.BasicTests;
+﻿namespace ImageFormatConverter.Tests.BasicTests;
 
 [TestFixture]
 public class BasicValidationTests

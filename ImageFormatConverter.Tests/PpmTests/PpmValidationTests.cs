@@ -1,6 +1,4 @@
-﻿using ImageFormatConverter.Validators;
-
-namespace ImageFormatConverter.Tests.PpmTests;
+﻿namespace ImageFormatConverter.Tests.PpmTests;
 
 [TestFixture]
 public class PpmValidationTests

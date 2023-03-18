@@ -1,6 +1,3 @@
-using Core.Lights;
-using ImageFormatConverter.Writers;
-
 namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]

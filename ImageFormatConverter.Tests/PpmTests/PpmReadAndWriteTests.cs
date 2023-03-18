@@ -1,9 +1,4 @@
-﻿using Core.Lights;
-using ImageFormatConverter.Readers;
-using ImageFormatConverter.Validators;
-using ImageFormatConverter.Writers;
-
-namespace ImageFormatConverter.Tests.PpmTests;
+﻿namespace ImageFormatConverter.Tests.PpmTests;
 
 [TestFixture]
 public class PpmReadAndWriteTests
@@ -45,6 +40,6 @@ public class PpmReadAndWriteTests
         new object[] { "testResPictures/createdPpms/red_gradient.ppm" }, 
         new object[] { "testResPictures/createdPpms/blue_gradient.ppm" }, 
         new object[] { "testResPictures/createdPpms/red_blue_gradient.ppm" }, 
-        //new object[] { "testResPictures/sources/correct_sample.ppm" }
+//        new object[] { "testResPictures/sources/correct_sample.ppm" }
     };
 }
