@@ -3,6 +3,7 @@ using ImageFormatConverter.Writers;
 
 namespace ImageFormatConverter.Tests;
 
+[TestFixture]
 public class BmpWritingTests
 {
     private BmpFileWriter bmpWriter;

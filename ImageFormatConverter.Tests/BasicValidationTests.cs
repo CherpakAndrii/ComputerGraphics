@@ -3,6 +3,7 @@ using ImageFormatConverter.Validators;
 
 namespace ImageFormatConverter.Tests;
 
+[TestFixture]
 public class BasicValidationTests
 {
     private BasicValidator basicValidator;

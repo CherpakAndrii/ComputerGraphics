@@ -5,6 +5,7 @@ using ImageFormatConverter.Writers;
 
 namespace ImageFormatConverter.Tests;
 
+[TestFixture]
 public class BmpReadAndWriteTests
 {
     private BmpFileWriter bmpWriter;
@@ -29,7 +30,7 @@ public class BmpReadAndWriteTests
             bmpValidator.ValidateFileStructure(origFileName))
         {
             Color[,] image = bmpReader.ImageToPixels(origFileName);
-            bmpWriter.WriteToFile(origFileName + ".copy.idk", image);
+            bmpWriter.WriteToFile(origFileName + ".copy.bmp", image);
 
             byte[] originalData = File.ReadAllBytes(origFileName);
             byte[] copyData = File.ReadAllBytes(origFileName + ".copy.bmp");

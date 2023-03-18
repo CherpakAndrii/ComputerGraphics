@@ -2,6 +2,7 @@
 
 namespace ImageFormatConverter.Tests;
 
+[TestFixture]
 public class BmpValidationTests
 {
     private BmpStructureValidator bmpValidator;
