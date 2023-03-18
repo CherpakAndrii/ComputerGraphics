@@ -1,6 +1,6 @@
 ﻿using ImageFormatConverter.Validators;
 
-namespace ImageFormatConverter.Tests;
+namespace ImageFormatConverter.Tests.PpmTests;
 
 [TestFixture]
 public class PpmValidationTests
@@ -16,7 +16,7 @@ public class PpmValidationTests
     [TestCaseSource(nameof(correctFileNames))]
     public void PPM_ValidateCorrectSample_TrueReturned(string correctFileName)
     {
-        bool structureValidationResult = ppmValidator.ValidateFileStructure("testResPictures/correct_sample.ppm");
+        bool structureValidationResult = ppmValidator.ValidateFileStructure(correctFileName);
         Assert.That(structureValidationResult, Is.True);
     }
     
@@ -29,10 +29,10 @@ public class PpmValidationTests
 
     private static object[] correctFileNames =
     {
-        new object[] { "testResPictures/red_gradient.ppm" }, 
-        new object[] { "testResPictures/blue_gradient.ppm" }, 
-        new object[] { "testResPictures/red_blue_gradient.ppm" }, 
-        new object[] { "testResPictures/test.ppm" }, 
-        new object[] { "testResPictures/correct_sample.ppm" }
+        new object[] { "testResPictures/createdPpms/red_gradient.ppm" }, 
+        new object[] { "testResPictures/createdPpms/blue_gradient.ppm" }, 
+        new object[] { "testResPictures/createdPpms/red_blue_gradient.ppm" }, 
+        new object[] { "testResPictures/sources/test.ppm" }, 
+        new object[] { "testResPictures/sources/correct_sample.ppm" }
     };
 }

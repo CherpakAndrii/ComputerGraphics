@@ -3,7 +3,7 @@ using ImageFormatConverter.Readers;
 using ImageFormatConverter.Validators;
 using ImageFormatConverter.Writers;
 
-namespace ImageFormatConverter.Tests;
+namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]
 public class BmpReadAndWriteTests
@@ -42,6 +42,8 @@ public class BmpReadAndWriteTests
     
     private static object[] correctFiles =
     {
-        new object[] { "testResPictures/red_gradient.bmp" }, new object[] { "testResPictures/blue_gradient.bmp" }, new object[] { "testResPictures/red_blue_gradient.bmp" }
+        new object[] { "testResPictures/createdBmps/red_gradient.bmp" }, 
+        new object[] { "testResPictures/createdBmps/blue_gradient.bmp" }, 
+        new object[] { "testResPictures/createdBmps/red_blue_gradient.bmp" }
     };
 }

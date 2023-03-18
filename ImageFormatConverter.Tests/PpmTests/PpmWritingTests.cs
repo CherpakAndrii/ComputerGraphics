@@ -1,20 +1,20 @@
-using Core.Lights;
+﻿using Core.Lights;
 using ImageFormatConverter.Writers;
 
-namespace ImageFormatConverter.Tests;
+namespace ImageFormatConverter.Tests.PpmTests;
 
 [TestFixture]
-public class BmpWritingTests
+public class PpmWritingTests
 {
-    private BmpFileWriter bmpWriter;
+    private PpmFileWriter ppmFileWriter;
     [SetUp]
     public void Setup()
     {
-        bmpWriter = new();
+        ppmFileWriter = new();
     }
 
     [Test]
-    public void CreateBmpWithRedGradientLeftToRight()
+    public void CreatePpmWithRedGradientLeftToRight()
     {
         Color[,] image = new Color[512, 512];
         for (int i = 0; i < 512; i++)
@@ -25,12 +25,12 @@ public class BmpWritingTests
             }
         }
 
-        bmpWriter.WriteToFile("testResPictures/red_gradient.bmp", image);
+        ppmFileWriter.WriteToFile("testResPictures/createdPpms/red_gradient.ppm", image);
         Assert.Pass();
     }
     
     [Test]
-    public void CreateBmpWithBlueGradientUpToDown()
+    public void CreatePpmWithBlueGradientUpToDown()
     {
         Color[,] image = new Color[512, 512];
         for (int i = 0; i < 512; i++)
@@ -41,12 +41,12 @@ public class BmpWritingTests
             }
         }
 
-        bmpWriter.WriteToFile("testResPictures/blue_gradient.bmp", image);
+        ppmFileWriter.WriteToFile("testResPictures/createdPpms/blue_gradient.ppm", image);
         Assert.Pass();
     }
     
     [Test]
-    public void CreateBmpWithBlueGradientUpToDownAndRedGradientLeftToRight()
+    public void CreatePpmWithBlueGradientUpToDownAndRedGradientLeftToRight()
     {
         Color[,] image = new Color[1024, 1024];
         for (int i = 0; i < 1024; i++)
@@ -57,7 +57,7 @@ public class BmpWritingTests
             }
         }
 
-        bmpWriter.WriteToFile("testResPictures/red_blue_gradient.bmp", image);
+        ppmFileWriter.WriteToFile("testResPictures/createdPpms/red_blue_gradient.ppm", image);
         Assert.Pass();
     }
 }

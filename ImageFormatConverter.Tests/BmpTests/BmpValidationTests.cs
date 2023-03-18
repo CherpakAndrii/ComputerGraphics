@@ -1,6 +1,6 @@
 ﻿using ImageFormatConverter.Validators;
 
-namespace ImageFormatConverter.Tests;
+namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]
 public class BmpValidationTests
@@ -16,21 +16,21 @@ public class BmpValidationTests
     [Test]
     public void BMP_ValidateCorrectSample_TrueReturned()
     {
-        bool structureValidationResult = bmpValidator.ValidateFileStructure("testResPictures/correct_sample.bmp");
+        bool structureValidationResult = bmpValidator.ValidateFileStructure("testResPictures/sources/correct_sample.bmp");
         Assert.That(structureValidationResult, Is.True);
     }
     
     [Test]
     public void BMP_ValidateIncorrectSample_FalseReturned()
     {
-        bool structureValidationResult = bmpValidator.ValidateFileStructure("testResPictures/incorrect_sample.bmp");
+        bool structureValidationResult = bmpValidator.ValidateFileStructure("testResPictures/sources/incorrect_sample.bmp");
         Assert.That(structureValidationResult, Is.False);
     }
     
     [Test]
     public void BMP_ValidateOwnPicture_TrueReturned()
     {
-        bool res = bmpValidator.ValidateFileStructure("testResPictures/red_gradient.bmp");
+        bool res = bmpValidator.ValidateFileStructure("testResPictures/createdBmps/red_gradient.bmp");
         Assert.That(res, Is.True);
     }
 }
