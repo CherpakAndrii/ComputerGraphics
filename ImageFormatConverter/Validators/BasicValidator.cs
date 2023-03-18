@@ -2,7 +2,7 @@
 
 public class BasicValidator
 {
-    private string[] _supportedFormats = { "bmp" };
+    private string[] _supportedFormats = { "bmp", "ppm" };
     public bool CheckFileExistence(string filename)
     {
         return !String.IsNullOrWhiteSpace(filename) && File.Exists(filename);
