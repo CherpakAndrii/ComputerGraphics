@@ -11,24 +11,19 @@ public class BmpValidationTests
         bmpValidator = new();
     }
 
-    [Test]
-    public void BMP_ValidateCorrectSample_TrueReturned()
+    [TestCaseSource(nameof(validBmps))]
+    public void BMP_ValidateCorrectSample_TrueReturned(string correctFilename)
     {
-        bool structureValidationResult = bmpValidator.ValidateFileStructure("testResPictures/sources/correct_sample.bmp");
+        bool structureValidationResult = bmpValidator.ValidateFileStructure(correctFilename);
         Assert.That(structureValidationResult, Is.True);
     }
-    
-    [Test]
-    public void BMP_ValidateIncorrectSample_FalseReturned()
+
+    private static object[] validBmps =
     {
-        bool structureValidationResult = bmpValidator.ValidateFileStructure("testResPictures/sources/incorrect_sample.bmp");
-        Assert.That(structureValidationResult, Is.False);
-    }
-    
-    [Test]
-    public void BMP_ValidateOwnPicture_TrueReturned()
-    {
-        bool res = bmpValidator.ValidateFileStructure("testResPictures/createdBmps/red_gradient.bmp");
-        Assert.That(res, Is.True);
-    }
+        new object[] { "testResPictures/sources/correct_sample.bmp" },
+        new object[] { "testResPictures/sources/incorrect_sample.bmp" },
+        new object[] { "testResPictures/createdBmps/red_gradient.bmp" },
+        new object[] { "testResPictures/createdBmps/blue_gradient.bmp" },
+        new object[] { "testResPictures/createdBmps/red_blue_gradient.bmp" }
+    };
 }

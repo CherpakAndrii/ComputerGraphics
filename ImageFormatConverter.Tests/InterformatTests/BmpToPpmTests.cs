@@ -48,6 +48,7 @@ public class BmpToPpmTests
         new object[] { "testResPictures/createdBmps/red_gradient.bmp" }, 
         new object[] { "testResPictures/createdBmps/blue_gradient.bmp" }, 
         new object[] { "testResPictures/createdBmps/red_blue_gradient.bmp" }, 
-        new object[] { "testResPictures/sources/correct_sample.bmp" }
+        new object[] { "testResPictures/sources/correct_sample.bmp" },
+        new object[] { "testResPictures/sources/incorrect_sample.bmp" }
     };
 }

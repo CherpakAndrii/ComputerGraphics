@@ -28,7 +28,7 @@ public class PpmFileReader : IImageReader
         int maxColorValue = int.Parse(words[3]);
         double colorCoefficient = 255.0 / maxColorValue;
 
-        Color[,] picture = new Color[width, height];
+        Color[,] picture = new Color[height, width];
         
         for (int i = 0, ptr = 4; i < height; i++)
         {

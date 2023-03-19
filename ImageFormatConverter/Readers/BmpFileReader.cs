@@ -11,7 +11,7 @@ public class BmpFileReader : IImageReader
         
         int imageWidth = BitConverter.ToInt32(filedata[18..22]);
         int imageHeight = BitConverter.ToInt32(filedata[22..26]);
-        
+        int metadataLength = BitConverter.ToInt32(filedata[10..14]);
         int rowLength = imageWidth * 3;
         int numberOfZeroBytes = 0;
 
@@ -22,7 +22,7 @@ public class BmpFileReader : IImageReader
         }
 
         Color[,] picture = new Color[imageHeight, imageWidth];
-        int pointer = 54;
+        int pointer = metadataLength;
 
         for (int i = imageHeight-1; i >= 0; i--)
         {

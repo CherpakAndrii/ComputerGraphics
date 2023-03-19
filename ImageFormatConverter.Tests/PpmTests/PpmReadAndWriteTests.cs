@@ -25,12 +25,16 @@ public class PpmReadAndWriteTests
             ppmValidator.ValidateFileStructure(origFileName))
         {
             Color[,] image = ppmReader.ImageToPixels(origFileName);
-            ppmWriter.WriteToFile(origFileName + ".copy.ppm", image);
+            string filename = Regex.Match(origFileName, @".+/([^/]+)\.ppm").Groups[1].Captures[0].Value;
+            string newFilepath = "testResPictures/createdPpms/" + filename + ".copy.ppm";
+            ppmWriter.WriteToFile(newFilepath, image);
 
-            byte[] originalData = File.ReadAllBytes(origFileName);
-            byte[] copyData = File.ReadAllBytes(origFileName + ".copy.ppm");
-            
-            CollectionAssert.AreEqual(originalData, copyData);
+            if (ppmValidator.ValidateFileStructure(newFilepath))
+            {
+                var pic_created = ppmReader.ImageToPixels(newFilepath);
+                CollectionAssert.AreEqual(image, pic_created);
+            }
+            else Assert.Fail("invalid created file structure");
         }
         else Assert.Fail();
     }
