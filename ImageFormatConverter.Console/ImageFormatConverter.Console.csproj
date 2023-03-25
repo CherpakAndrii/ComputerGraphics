@@ -9,9 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+      <ProjectReference Include="..\ImageFormatConverter.Abstractions\ImageFormatConverter.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
