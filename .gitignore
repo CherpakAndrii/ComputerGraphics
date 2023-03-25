@@ -661,3 +661,5 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,rider,csharp
 .idea/.idea.ComputerGraphics/.idea/
+
+.idea/.idea.ImageFormatConverter/.idea/
