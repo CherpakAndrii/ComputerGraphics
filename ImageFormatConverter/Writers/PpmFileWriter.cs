@@ -1,5 +1,5 @@
 ﻿using Core.Lights;
-using ImageFormatConverter.Interfaces;
+using ImageFormatConverter.Abstractions.Interfaces;
 
 namespace ImageFormatConverter.Writers;
 
