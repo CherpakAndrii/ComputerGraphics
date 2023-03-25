@@ -1,4 +1,6 @@
-﻿namespace ImageFormatConverter.Tests.BmpTests;
+﻿using Reader.BMP;
+
+namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]
 public class BmpValidationTests

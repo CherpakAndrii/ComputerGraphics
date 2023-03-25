@@ -1,4 +1,6 @@
-﻿namespace ImageFormatConverter.Tests.PpmTests;
+﻿using Reader.PPM;
+
+namespace ImageFormatConverter.Tests.PpmTests;
 
 [TestFixture]
 public class PpmValidationTests

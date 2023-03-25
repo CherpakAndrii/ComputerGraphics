@@ -11,4 +11,9 @@
         <ProjectReference Include="..\ImageFormatConverter.Abstractions\ImageFormatConverter.Abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Readers" />
+      <Folder Include="Writers" />
+    </ItemGroup>
+
 </Project>

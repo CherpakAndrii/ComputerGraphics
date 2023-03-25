@@ -18,7 +18,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Core\Core.csproj" />
-      <ProjectReference Include="..\ImageFormatConverter\ImageFormatConverter.csproj" />
+      <ProjectReference Include="..\Reader.BMP\Reader.BMP.csproj" />
+      <ProjectReference Include="..\Reader.PPM\Reader.PPM.csproj" />
+      <ProjectReference Include="..\Writer.BMP\Writer.BMP.csproj" />
+      <ProjectReference Include="..\Writer.PPM\Writer.PPM.csproj" />
     </ItemGroup>
 
 </Project>

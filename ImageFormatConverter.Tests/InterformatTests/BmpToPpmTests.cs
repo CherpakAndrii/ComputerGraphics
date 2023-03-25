@@ -1,4 +1,7 @@
-﻿namespace ImageFormatConverter.Tests.InterformatTests;
+﻿using Reader.BMP;
+using Reader.PPM;
+
+namespace ImageFormatConverter.Tests.InterformatTests;
 
 [TestFixture]
 public class BmpToPpmTests

@@ -1,3 +1,5 @@
+using Writer.BMP;
+
 namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]

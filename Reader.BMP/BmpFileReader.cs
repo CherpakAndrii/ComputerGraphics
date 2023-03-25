@@ -1,7 +1,7 @@
 ﻿using Core.Lights;
 using ImageFormatConverter.Abstractions.Interfaces;
 
-namespace ImageFormatConverter.Readers;
+namespace Reader.BMP;
 
 public class BmpFileReader : IImageReader
 {

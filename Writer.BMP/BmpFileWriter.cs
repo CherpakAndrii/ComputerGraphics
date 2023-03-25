@@ -1,7 +1,7 @@
 ﻿using Core.Lights;
 using ImageFormatConverter.Abstractions.Interfaces;
 
-namespace ImageFormatConverter.Writers;
+namespace Writer.BMP;
 
 public class BmpFileWriter : IImageWriter
 {

@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using Core.Lights;
 using ImageFormatConverter.Abstractions.Interfaces;
 
-namespace ImageFormatConverter.Readers;
+namespace Reader.PPM;
 
 public class PpmFileReader : IImageReader
 {
