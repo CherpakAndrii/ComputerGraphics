@@ -7,4 +7,6 @@ public interface IImageReader
     public Color[,] ImageToPixels(string filename);
 
     public bool ValidateFileStructure(string filename);
+
+    public string FileExtension { get; }
 }

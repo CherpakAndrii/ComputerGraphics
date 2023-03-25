@@ -24,4 +24,6 @@ public class PpmFileWriter : IImageWriter
         
         streamWriter.Close();
     }
+
+    public string FileExtension => "ppm";
 }

@@ -3,39 +3,32 @@
 [TestFixture]
 public class BmpToPpmTests
 {
-    private PpmFileWriter ppmWriter;
-    private BmpFileReader bmpReader;
-    private PpmFileReader ppmReader;
-    private BmpStructureValidator bmpValidator;
-    private PpmStructureValidator ppmValidator;
-    private BasicValidator basicValidator;
+    private PpmFileWriter _ppmWriter;
+    private BmpFileReader _bmpReader;
+    private PpmFileReader _ppmReader;
 
     [SetUp]
     public void Setup()
     {
-        ppmWriter = new();
-        bmpReader = new();
-        ppmReader = new();
-        bmpValidator = new();
-        ppmValidator = new();
-        basicValidator = new ();
+        _ppmWriter = new PpmFileWriter();
+        _bmpReader = new BmpFileReader();
+        _ppmReader = new PpmFileReader();
     }
     
-    [TestCaseSource(nameof(validBmps))]
+    [TestCaseSource(nameof(_validBmps))]
     public void BmpToPpm_SamePictureGot(string inputBmpFile)
     {
-        if (basicValidator.CheckFileExistence(inputBmpFile) && basicValidator.CheckFileExtension(inputBmpFile) &&
-            bmpValidator.ValidateFileStructure(inputBmpFile))
+        if (_bmpReader.ValidateFileStructure(inputBmpFile))
         {
-            var pic_orig = bmpReader.ImageToPixels(inputBmpFile);
+            var picOrig = _bmpReader.ImageToPixels(inputBmpFile);
             string filename = Regex.Match(inputBmpFile, @".+/([^/]+)\.bmp$").Groups[1].Captures[0].Value;
             string newFilepath = "testResPictures/interformat/" + filename + ".ppm";
-            ppmWriter.WriteToFile(newFilepath, pic_orig);
+            _ppmWriter.WriteToFile(newFilepath, picOrig);
             
-            if (ppmValidator.ValidateFileStructure(newFilepath))
+            if (_ppmReader.ValidateFileStructure(newFilepath))
             {
-                var pic_created = ppmReader.ImageToPixels(newFilepath);
-                CollectionAssert.AreEqual(pic_orig, pic_created);
+                var picCreated = _ppmReader.ImageToPixels(newFilepath);
+                CollectionAssert.AreEqual(picOrig, picCreated);
             }
             else Assert.Fail("invalid created file structure");
         }
@@ -43,7 +36,7 @@ public class BmpToPpmTests
     }
 
 
-    private static object[] validBmps =
+    private static object[] _validBmps =
     {
         new object[] { "testResPictures/createdBmps/red_gradient.bmp" }, 
         new object[] { "testResPictures/createdBmps/blue_gradient.bmp" }, 

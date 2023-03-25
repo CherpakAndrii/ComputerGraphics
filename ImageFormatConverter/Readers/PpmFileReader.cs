@@ -25,6 +25,8 @@ public class PpmFileReader : IImageReader
             firstChars[1] == '6' && ValidateP6Structure(filename));
     }
 
+    public string FileExtension => "ppm";
+
     private bool ValidateP3Structure(string filename)
     {
         string filedata;

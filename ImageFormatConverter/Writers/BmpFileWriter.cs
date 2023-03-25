@@ -36,6 +36,8 @@ public class BmpFileWriter : IImageWriter
         
     }
 
+    public string FileExtension => "bmp";
+
     private byte[] GetBmpHeader(int fileSize)
     {
         byte[] header = new byte[14];

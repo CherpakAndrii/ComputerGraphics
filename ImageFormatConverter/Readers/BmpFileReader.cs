@@ -70,4 +70,6 @@ public class BmpFileReader : IImageReader
 
         return (filesize >= expectedFileSize - numberOfZeroBytes && expectedFileSize <= filedata.Length);
     }
+
+    public string FileExtension => "bmp";
 }

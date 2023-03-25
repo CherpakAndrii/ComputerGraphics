@@ -3,40 +3,40 @@
 [TestFixture]
 public class BmpReadAndWriteTests
 {
-    private BmpFileWriter bmpWriter;
-    private BmpFileReader bmpReader;
-    private BmpStructureValidator bmpValidator;
-    private BasicValidator basicValidator;
+    private BmpFileWriter _bmpWriter;
+    private BmpFileReader _bmpReader;
 
     [SetUp]
     public void Setup()
     {
-        bmpWriter = new();
-        bmpReader = new();
-        bmpValidator = new();
-        basicValidator = new ();
+        _bmpWriter = new BmpFileWriter();
+        _bmpReader = new BmpFileReader();
     }
 
     [TestCaseSource(nameof(correctFiles))]
     public void RewriteCorrectBmp_GotCopy(string origFileName)
     {
-        if (basicValidator.CheckFileExistence(origFileName) &&
-            basicValidator.CheckFileExtension(origFileName) &&
-            bmpValidator.ValidateFileStructure(origFileName))
+        if (_bmpReader.ValidateFileStructure(origFileName))
         {
-            Color[,] image = bmpReader.ImageToPixels(origFileName);
-            string filename = Regex.Match(origFileName, @".+/([^/]+)\.bmp$").Groups[1].Captures[0].Value;
-            string newFilepath = "testResPictures/createdBmps/" + filename + ".copy.bmp";
-            bmpWriter.WriteToFile(newFilepath, image);
+            var image = _bmpReader.ImageToPixels(origFileName);
+            var filename = Regex.Match(origFileName, @".+/([^/]+)\.bmp$").Groups[1].Captures[0].Value;
+            var newFilepath = "testResPictures/createdBmps/" + filename + ".copy.bmp";
+            _bmpWriter.WriteToFile(newFilepath, image);
 
-            if (bmpValidator.ValidateFileStructure(newFilepath))
+            if (_bmpReader.ValidateFileStructure(newFilepath))
             {
-                var pic_created = bmpReader.ImageToPixels(newFilepath);
-                CollectionAssert.AreEqual(image, pic_created);
+                var picCreated = _bmpReader.ImageToPixels(newFilepath);
+                CollectionAssert.AreEqual(image, picCreated);
             }
-            else Assert.Fail("invalid created file structure");
+            else
+            {
+                Assert.Fail("invalid created file structure");
+            }
         }
-        else Assert.Fail();
+        else
+        {
+            Assert.Fail();
+        }
     }
     
     private static object[] correctFiles =

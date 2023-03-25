@@ -3,43 +3,43 @@
 [TestFixture]
 public class PpmReadAndWriteTests
 {
-    private PpmFileWriter ppmWriter;
-    private PpmFileReader ppmReader;
-    private PpmStructureValidator ppmValidator;
-    private BasicValidator basicValidator;
+    private PpmFileWriter _ppmWriter;
+    private PpmFileReader _ppmReader;
 
     [SetUp]
     public void Setup()
     {
-        ppmWriter = new();
-        ppmReader = new();
-        ppmValidator = new();
-        basicValidator = new ();
+        _ppmWriter = new PpmFileWriter();
+        _ppmReader = new PpmFileReader();
     }
 
-    [TestCaseSource(nameof(correctFiles))]
+    [TestCaseSource(nameof(_correctFiles))]
     public void RewriteCorrectPpm_GotCopy(string origFileName)
     {
-        if (basicValidator.CheckFileExistence(origFileName) &&
-            basicValidator.CheckFileExtension(origFileName) &&
-            ppmValidator.ValidateFileStructure(origFileName))
+        if (_ppmReader.ValidateFileStructure(origFileName))
         {
-            Color[,] image = ppmReader.ImageToPixels(origFileName);
-            string filename = Regex.Match(origFileName, @".+/([^/]+)\.ppm").Groups[1].Captures[0].Value;
-            string newFilepath = "testResPictures/createdPpms/" + filename + ".copy.ppm";
-            ppmWriter.WriteToFile(newFilepath, image);
+            var image = _ppmReader.ImageToPixels(origFileName);
+            var filename = Regex.Match(origFileName, @".+/([^/]+)\.ppm").Groups[1].Captures[0].Value;
+            var newFilepath = "testResPictures/createdPpms/" + filename + ".copy.ppm";
+            _ppmWriter.WriteToFile(newFilepath, image);
 
-            if (ppmValidator.ValidateFileStructure(newFilepath))
+            if (_ppmReader.ValidateFileStructure(newFilepath))
             {
-                var pic_created = ppmReader.ImageToPixels(newFilepath);
-                CollectionAssert.AreEqual(image, pic_created);
+                var picCreated = _ppmReader.ImageToPixels(newFilepath);
+                CollectionAssert.AreEqual(image, picCreated);
             }
-            else Assert.Fail("invalid created file structure");
+            else
+            {
+                Assert.Fail("invalid created file structure");
+            }
         }
-        else Assert.Fail();
+        else
+        {
+            Assert.Fail();
+        }
     }
     
-    private static object[] correctFiles =
+    private static object[] _correctFiles =
     {
         new object[] { "testResPictures/createdPpms/red_gradient.ppm" }, 
         new object[] { "testResPictures/createdPpms/blue_gradient.ppm" }, 

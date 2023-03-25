@@ -3,22 +3,22 @@
 [TestFixture]
 public class BmpValidationTests
 {
-    private BmpStructureValidator bmpValidator;
+    private BmpFileReader _bmpValidator;
     
     [SetUp]
     public void Setup()
     {
-        bmpValidator = new();
+        _bmpValidator = new BmpFileReader();
     }
 
-    [TestCaseSource(nameof(validBmps))]
+    [TestCaseSource(nameof(_validBmps))]
     public void BMP_ValidateCorrectSample_TrueReturned(string correctFilename)
     {
-        bool structureValidationResult = bmpValidator.ValidateFileStructure(correctFilename);
+        var structureValidationResult = _bmpValidator.ValidateFileStructure(correctFilename);
         Assert.That(structureValidationResult, Is.True);
     }
 
-    private static object[] validBmps =
+    private static object[] _validBmps =
     {
         new object[] { "testResPictures/sources/correct_sample.bmp" },
         new object[] { "testResPictures/sources/incorrect_sample.bmp" },

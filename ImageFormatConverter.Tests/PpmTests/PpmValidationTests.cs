@@ -3,18 +3,18 @@
 [TestFixture]
 public class PpmValidationTests
 {
-    private PpmStructureValidator ppmValidator;
+    private PpmFileReader _ppmValidator;
     
     [SetUp]
     public void Setup()
     {
-        ppmValidator = new();
+        _ppmValidator = new();
     }
 
     [TestCaseSource(nameof(correctFileNames))]
     public void PPM_ValidateCorrectSample_TrueReturned(string correctFileName)
     {
-        bool structureValidationResult = ppmValidator.ValidateFileStructure(correctFileName);
+        bool structureValidationResult = _ppmValidator.ValidateFileStructure(correctFileName);
         Assert.That(structureValidationResult, Is.True);
     }
     
