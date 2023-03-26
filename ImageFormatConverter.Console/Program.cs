@@ -19,8 +19,16 @@ var targetReader = fileFactory.GetImageReader(fileData);
 var targetWriter = fileFactory.GetImageWriter(flagValues[goalFormatFlag]);
 
 if (targetReader is null)
-    throw new Exception("Appropriate file reader is not found");
-    
+{
+    var supportedReaderFormats = fileFactory.GetSupportedReadersExtensions().Select(format => $".{format}");
+    var inputExtension = Path.GetExtension(source);
+    if (string.IsNullOrEmpty(inputExtension))
+    {
+        throw new Exception($"Error: you are trying to open file with unsupported extension. Only {string.Join(" and ", supportedReaderFormats)} files are supported");
+    }
+    throw new Exception($"Error: you are trying to open {inputExtension} file, but only {string.Join(" and ", supportedReaderFormats)} files are supported");
+}
+
 if (targetWriter is null)
     throw new Exception("Appropriate file writer is not found");
     
