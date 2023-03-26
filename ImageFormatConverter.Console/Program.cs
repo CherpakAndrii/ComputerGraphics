@@ -15,14 +15,14 @@ foreach (var dll in Directory.GetFiles(path, "*.dll"))
 var readers = allAssemblies
     .SelectMany(s => s.GetTypes())
     .Where(type => typeof(IImageReader) .IsAssignableFrom(type))
+    .Select(type => (IImageReader)Activator.CreateInstance(type)!)
     .ToArray();
 
 var writers = allAssemblies
     .SelectMany(s => s.GetTypes())
     .Where(type => typeof(IImageWriter) .IsAssignableFrom(type))
+    .Select(type => (IImageWriter)Activator.CreateInstance(type)!)
     .ToArray();
-
-string outputPath, goalFormat, source;
 
 const string goalFormatFlag = "goal-format";
 const string sourceFlag = "source";
@@ -46,6 +46,16 @@ foreach (var arg in args)
         }
     }
 }
+
+var source = flagValues[sourceFlag];
+if (!File.Exists(source))
+    throw new Exception("Source file doesn't exist");
+
+var fileData = File.ReadAllBytes(source);
+
+var targetReader = readers.FirstOrDefault(reader => reader.ValidateFileStructure(fileData));
+
+var targetWriter = writers.FirstOrDefault(writer => writer.FileExtension == flagValues[goalFormatFlag]);
 
 foreach (var flagValue in flagValues.Values)
 {
