@@ -4,13 +4,10 @@
 using System.Reflection;
 using ImageFormatConverter.Abstractions.Interfaces;
 
-var allAssemblies = new List<Assembly>();
 const string path = @"C:\Users\Acer\Documents\computerGraphics\ComputerGraphics\ImagePlugins\net7.0";
 
-foreach (var dll in Directory.GetFiles(path, "*.dll"))
-{
-    allAssemblies.Add(Assembly.LoadFile(dll));
-}
+var allAssemblies = Directory.GetFiles(path, "*.dll")
+    .Select(Assembly.LoadFile).ToList();
 
 var readers = allAssemblies
     .SelectMany(s => s.GetTypes())
@@ -57,7 +54,12 @@ var targetReader = readers.FirstOrDefault(reader => reader.ValidateFileStructure
 
 var targetWriter = writers.FirstOrDefault(writer => writer.FileExtension == flagValues[goalFormatFlag]);
 
-foreach (var flagValue in flagValues.Values)
-{
-    Console.WriteLine(flagValue);
-}
+if (targetReader is null)
+    throw new Exception("Appropriate file reader is not found");
+    
+if (targetWriter is null)
+    throw new Exception("Appropriate file writer is not found");
+    
+var image = targetReader.ImageToPixels(fileData);
+
+var targetFileData = targetWriter.WriteToFile(image);
