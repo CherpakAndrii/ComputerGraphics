@@ -9,12 +9,12 @@ var flagValues = commandLineArgumentsParser.GetFlagsValues(args, goalFormatFlag,
 
 if (!flagValues.ContainsKey(goalFormatFlag))
 {
-    throw new Exception("Goal format flag is not configured");
+    throw new Exception($"{goalFormatFlag} is not configured");
 }
 
 if (!flagValues.ContainsKey(sourceFlag))
 {
-    throw new Exception("Source flag is not configured");
+    throw new Exception($"{sourceFlag} is not configured");
 }
 
 
