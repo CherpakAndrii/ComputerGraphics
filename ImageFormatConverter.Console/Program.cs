@@ -35,7 +35,7 @@ foreach (var arg in args)
 {
     foreach (var flag in flags)
     {
-        if (arg.StartsWith($"--{arg}="))
+        if (arg.StartsWith($"--{flag}="))
             flagValues.Add(flag, arg[arg.IndexOf('=')..]);
     }
 }
