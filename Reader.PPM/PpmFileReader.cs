@@ -17,12 +17,16 @@ public class PpmFileReader : IImageReader
     
     public bool ValidateFileStructure(byte[] fileData)
     {
-        var sr = new StreamReader(new MemoryStream(fileData));
+        using var sr = new StreamReader(new MemoryStream(fileData));
         var firstChars = sr.ReadLine()!;
-        sr.Close();
-        
-        return firstChars.Length >= 2 && firstChars[0] == 'P' && (firstChars[1] == '3' ? ValidateP3Structure(fileData) :
-            firstChars[1] == '6' && ValidateP6Structure(fileData));
+
+        return firstChars is ['P', _, ..]
+               && firstChars[1] switch
+               {
+                   '3' => ValidateP3Structure(fileData),
+                   '6' => ValidateP6Structure(fileData),
+                   _ => false
+               };
     }
 
     public string FileExtension => "ppm";
@@ -30,10 +34,8 @@ public class PpmFileReader : IImageReader
     private static bool ValidateP3Structure(byte[] fileData)
     {
         string filedata;
-        using (var sr = new StreamReader(new MemoryStream(fileData)))
-        {
-            filedata = sr.ReadToEnd();
-        }
+        using var sr = new StreamReader(new MemoryStream(fileData));
+        filedata = sr.ReadToEnd();
         var words = filedata.Split(new []{' ', '\n', '\r', '\t'}, StringSplitOptions.RemoveEmptyEntries);
         
         if (words.Length < 7 || !int.TryParse(words[1], out var width) ||

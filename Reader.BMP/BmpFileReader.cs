@@ -65,7 +65,7 @@ public class BmpFileReader : IImageReader
         
         int expectedFileSize = metadataLength + imageHeight * rowLength;
 
-        return (filesize >= expectedFileSize - numberOfZeroBytes && expectedFileSize <= fileData.Length);
+        return filesize >= expectedFileSize - numberOfZeroBytes && expectedFileSize <= fileData.Length;
     }
 
     public string FileExtension => "bmp";
