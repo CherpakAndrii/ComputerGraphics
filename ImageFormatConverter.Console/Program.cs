@@ -4,18 +4,7 @@ const string goalFormatFlag = "goal-format";
 const string sourceFlag = "source";
 const string outputFlag = "output";
 
-var commandLineArgumentsParser = new CommandLineArgumentsParser();
-var flagValues = commandLineArgumentsParser.GetFlagsValues(args, goalFormatFlag, sourceFlag, outputFlag);
-
-if (!flagValues.ContainsKey(goalFormatFlag))
-{
-    throw new Exception($"{goalFormatFlag} is not configured");
-}
-
-if (!flagValues.ContainsKey(sourceFlag))
-{
-    throw new Exception($"{sourceFlag} is not configured");
-}
+var flagValues = CommandLineArgumentsParser.GetFlagsValues(args, new []{ goalFormatFlag, sourceFlag }, new []{ outputFlag });
 
 var source = flagValues[sourceFlag];
 

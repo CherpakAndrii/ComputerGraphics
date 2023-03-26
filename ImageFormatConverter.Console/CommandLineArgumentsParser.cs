@@ -2,12 +2,13 @@
 
 public class CommandLineArgumentsParser
 {
-    public Dictionary<string, string> GetFlagsValues(IEnumerable<string> args, params string[] flags)
+    public static Dictionary<string, string> GetFlagsValues(IEnumerable<string> args, string[] requiredFlags, string[] optionalFlags)
     {
         var flagValues = new Dictionary<string, string>();
+        var allFlags = requiredFlags.Concat(optionalFlags).ToArray();
         foreach (var arg in args)
         {
-            foreach (var flag in flags)
+            foreach (var flag in allFlags)
             {
                 if (!arg.StartsWith($"--{flag}=")) continue;
 
@@ -18,6 +19,14 @@ public class CommandLineArgumentsParser
                 }
 
                 flagValues.Add(flag, flagValue);
+            }
+
+            foreach (var flag in requiredFlags)
+            {
+                if (!flagValues.ContainsKey(flag))
+                {
+                    throw new Exception($"{flag} is not configured");
+                }
             }
         }
 
