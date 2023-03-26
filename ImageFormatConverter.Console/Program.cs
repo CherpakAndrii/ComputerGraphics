@@ -4,7 +4,12 @@ const string goalFormatFlag = "goal-format";
 const string sourceFlag = "source";
 const string outputFlag = "output";
 
-var flagValues = CommandLineArgumentsParser.GetFlagsValues(args, new []{ goalFormatFlag, sourceFlag }, new []{ outputFlag });
+var flagValues = CommandLineArgumentsParser.GetFlagsValues
+(
+    args,
+    new []{ goalFormatFlag, sourceFlag },
+    new []{ outputFlag }
+);
 
 var source = flagValues[sourceFlag];
 var goalFormat = flagValues[goalFormatFlag];
