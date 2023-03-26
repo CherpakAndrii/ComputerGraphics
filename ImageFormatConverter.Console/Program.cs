@@ -3,6 +3,7 @@
 
 using System.Reflection;
 using ImageFormatConverter.Abstractions.Interfaces;
+using ImageFormatConverter.Console;
 
 const string path = @"C:\Users\Acer\Documents\computerGraphics\ComputerGraphics\ImagePlugins\net7.0";
 
@@ -25,24 +26,8 @@ const string goalFormatFlag = "goal-format";
 const string sourceFlag = "source";
 const string outputFlag = "output";
 
-var flagValues = new Dictionary<string, string>();
-
-var flags = new [] { goalFormatFlag, sourceFlag, outputFlag };
-foreach (var arg in args)
-{
-    foreach (var flag in flags)
-    {
-        if (arg.StartsWith($"--{flag}="))
-        {
-            var flagValue = arg[(arg.IndexOf('=') + 1)..];
-            if (string.IsNullOrWhiteSpace(flagValue))
-            {
-                throw new Exception("Program arg is empty");
-            }
-            flagValues.Add(flag, flagValue);
-        }
-    }
-}
+var commandLineArgumentsParser = new CommandLineArgumentsParser();
+var flagValues = commandLineArgumentsParser.GetFlagsValues(args, goalFormatFlag, sourceFlag, outputFlag);
 
 var source = flagValues[sourceFlag];
 if (!File.Exists(source))
