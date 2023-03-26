@@ -30,8 +30,13 @@ if (targetReader is null)
 }
 
 if (targetWriter is null)
-    throw new Exception("Appropriate file writer is not found");
-    
+{
+    var supportedWriterFormats = fileFactory.GetSupportedWritersExtensions().Select(format => $".{format}");
+    var goalFormat = flagValues[goalFormatFlag];
+
+    throw new Exception($"Error: you are trying to write .{goalFormat} file, but only {string.Join(" and ", supportedWriterFormats)} files are supported");
+}
+
 var image = targetReader.ImageToPixels(fileData);
 
 var targetFileData = targetWriter.WriteToFile(image);
