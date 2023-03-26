@@ -7,6 +7,17 @@ const string outputFlag = "output";
 var commandLineArgumentsParser = new CommandLineArgumentsParser();
 var flagValues = commandLineArgumentsParser.GetFlagsValues(args, goalFormatFlag, sourceFlag, outputFlag);
 
+if (!flagValues.ContainsKey(goalFormatFlag))
+{
+    throw new Exception("Goal format flag is not configured");
+}
+
+if (!flagValues.ContainsKey(sourceFlag))
+{
+    throw new Exception("Source flag is not configured");
+}
+
+
 var source = flagValues[sourceFlag];
 if (!File.Exists(source))
     throw new Exception("Source file doesn't exist");
