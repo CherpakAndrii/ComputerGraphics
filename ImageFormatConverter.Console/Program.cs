@@ -48,3 +48,5 @@ if (targetWriter is null)
 var image = targetReader.ImageToPixels(fileData);
 
 var targetFileData = targetWriter.WriteToFile(image);
+
+File.WriteAllBytes(Path.ChangeExtension(source, flagValues[goalFormatFlag]), targetFileData);
