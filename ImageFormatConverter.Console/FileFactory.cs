@@ -55,6 +55,14 @@ public class FileFactory
         throw new Exception($"Error: you are trying to write .{goalFormat} file, but only {string.Join(" and ", supportedWriterFormats)} files are supported");
     }
 
+    public FileConverter CreateFileConverter(byte[] fileData, string? inputExtension, string goalFormat)
+    {
+        var targetReader = GetImageReader(fileData, inputExtension);
+        var targetWriter = GetImageWriter(goalFormat);
+
+        return new FileConverter(targetReader, targetWriter);
+    }
+
     private string[] GetSupportedReadersExtensions()
     {
         return _imageReaders.Select(reader => $".{reader.FileExtension}").ToArray();

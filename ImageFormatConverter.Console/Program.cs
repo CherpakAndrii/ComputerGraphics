@@ -10,11 +10,8 @@ var source = flagValues[sourceFlag];
 var fileData = FileReader.ReadFile(source);
 
 var fileFactory = new FileFactory();
-var targetReader = fileFactory.GetImageReader(fileData, Path.GetExtension(source));
-var targetWriter = fileFactory.GetImageWriter(flagValues[goalFormatFlag]);
 
-var fileConverter = new FileConverter(targetReader, targetWriter);
-
+var fileConverter = fileFactory.CreateFileConverter(fileData, Path.GetExtension(source), flagValues[goalFormatFlag]);
 var targetFileData = fileConverter.ConvertImage(fileData);
 
 var path = flagValues.TryGetValue(outputFlag, out var output)
