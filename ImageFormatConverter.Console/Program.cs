@@ -36,7 +36,18 @@ foreach (var arg in args)
     foreach (var flag in flags)
     {
         if (arg.StartsWith($"--{flag}="))
-            flagValues.Add(flag, arg[arg.IndexOf('=')..]);
+        {
+            var flagValue = arg[(arg.IndexOf('=') + 1)..];
+            if (string.IsNullOrWhiteSpace(flagValue))
+            {
+                throw new Exception("Program arg is empty");
+            }
+            flagValues.Add(flag, flagValue);
+        }
     }
 }
-    
+
+foreach (var flagValue in flagValues.Values)
+{
+    Console.WriteLine(flagValue);
+}
