@@ -5,7 +5,7 @@ namespace Writer.BMP;
 
 public class BmpFileWriter : IImageWriter
 {
-    public void WriteToFile(string outputFileName, Color[,] pixels)
+    public byte[] WriteToFile(Color[,] pixels)
     {
         int height = pixels.GetLength(0);
         int width = pixels.GetLength(1);
@@ -24,16 +24,13 @@ public class BmpFileWriter : IImageWriter
         byte[] bmpInfoHeader = GetInfoHeader(width, height);
         byte[] pixelData = GetPixelData(pixels, numberOfZeroBytes);
 
-        using (FileStream fs = File.Open(outputFileName, FileMode.Create))
-        {
-            using (BinaryWriter binaryWriter = new BinaryWriter(fs))
-            {
-                binaryWriter.Write(bmpHeader);
-                binaryWriter.Write(bmpInfoHeader);
-                binaryWriter.Write(pixelData);
-            }
-        }
-        
+        using var stream = new MemoryStream();
+        using var binaryWriter = new BinaryWriter(stream);
+        binaryWriter.Write(bmpHeader);
+        binaryWriter.Write(bmpInfoHeader);
+        binaryWriter.Write(pixelData);
+        stream.Flush();
+        return stream.GetBuffer();
     }
 
     public string FileExtension => "bmp";

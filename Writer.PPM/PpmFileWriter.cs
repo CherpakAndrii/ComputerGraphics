@@ -1,13 +1,14 @@
 ﻿using Core.Lights;
 using ImageFormatConverter.Abstractions.Interfaces;
 
-namespace ImageFormatConverter.Writers;
+namespace Writer.PPM;
 
 public class PpmFileWriter : IImageWriter
 {
-    public void WriteToFile(string outputFileName, Color[,] picture)
+    public byte[] WriteToFile(Color[,] picture)
     {
-        StreamWriter streamWriter = new StreamWriter(outputFileName);
+        using var stream = new MemoryStream();
+        using var streamWriter = new StreamWriter(stream);
         streamWriter.WriteLine("P3");
         streamWriter.WriteLine($"{picture.GetLength(1)} {picture.GetLength(0)} 255");
 
@@ -22,7 +23,8 @@ public class PpmFileWriter : IImageWriter
             streamWriter.WriteLine();
         }
         
-        streamWriter.Close();
+        stream.Flush();
+        return stream.GetBuffer();
     }
 
     public string FileExtension => "ppm";

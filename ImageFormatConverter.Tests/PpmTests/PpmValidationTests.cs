@@ -1,38 +1,36 @@
 ﻿using Reader.PPM;
+using Writer.PPM;
 
 namespace ImageFormatConverter.Tests.PpmTests;
 
 [TestFixture]
 public class PpmValidationTests
 {
-    private PpmFileReader _ppmValidator;
+    private PpmFileReader _ppmFileReader;
+    private PpmFileWriter _ppmFileWriter;
+    private Color[,] _image;
     
     [SetUp]
     public void Setup()
     {
-        _ppmValidator = new();
+        _ppmFileReader = new PpmFileReader();
+        _ppmFileWriter = new PpmFileWriter();
+        _image = new Color[512, 512];
+        for (int i = 0; i < 512; i++)
+        {
+            for (int j = 0; j < 512; j++)
+            {
+                _image[i, j] = new Color((byte)(j / 2), 0, 0);
+            }
+        }
     }
 
-    [TestCaseSource(nameof(correctFileNames))]
-    public void PPM_ValidateCorrectSample_TrueReturned(string correctFileName)
+    [Test]
+    public void PPM_ValidateCorrectSample_TrueReturned()
     {
-        bool structureValidationResult = _ppmValidator.ValidateFileStructure(correctFileName);
+        var bytes = _ppmFileWriter.WriteToFile(_image);
+        var structureValidationResult = _ppmFileReader.ValidateFileStructure(bytes);
+        
         Assert.That(structureValidationResult, Is.True);
     }
-    
-    /*[Test]
-    public void PPM_ValidateIncorrectSample_FalseReturned()
-    {
-        bool structureValidationResult = ppmValidator.ValidateFileStructure("testResPictures/incorrect_sample.ppm");
-        Assert.That(structureValidationResult, Is.False);
-    }*/
-
-    private static object[] correctFileNames =
-    {
-        new object[] { "testResPictures/createdPpms/red_gradient.ppm" }, 
-        new object[] { "testResPictures/createdPpms/blue_gradient.ppm" }, 
-        new object[] { "testResPictures/createdPpms/red_blue_gradient.ppm" }, 
-        new object[] { "testResPictures/sources/test.ppm" }, 
-        new object[] { "testResPictures/sources/correct_sample.ppm" }
-    };
 }

@@ -7,75 +7,70 @@ namespace Reader.PPM;
 
 public class PpmFileReader : IImageReader
 {
-    public Color[,] ImageToPixels(string filename)
+    public Color[,] ImageToPixels(byte[] fileData)
     {
-        StreamReader sr = new StreamReader(filename);
-        char second = sr.ReadLine()![1];
+        var sr = new StreamReader(new MemoryStream(fileData));
+        var second = sr.ReadLine()![1];
         sr.Close();
-        return second == '3' ? P3ToPixels(filename) : P6ToPixels(filename);
+        return second == '3' ? P3ToPixels(fileData) : P6ToPixels(fileData);
     }
     
-    public bool ValidateFileStructure(string filename)
+    public bool ValidateFileStructure(byte[] fileData)
     {
-        StreamReader sr = new StreamReader(filename);
-        string firstChars = sr.ReadLine()!;
+        var sr = new StreamReader(new MemoryStream(fileData));
+        var firstChars = sr.ReadLine()!;
         sr.Close();
         
-        return firstChars.Length >= 2 && firstChars[0] == 'P' && (firstChars[1] == '3' ? ValidateP3Structure(filename) :
-            firstChars[1] == '6' && ValidateP6Structure(filename));
+        return firstChars.Length >= 2 && firstChars[0] == 'P' && (firstChars[1] == '3' ? ValidateP3Structure(fileData) :
+            firstChars[1] == '6' && ValidateP6Structure(fileData));
     }
 
     public string FileExtension => "ppm";
 
-    private bool ValidateP3Structure(string filename)
+    private static bool ValidateP3Structure(byte[] fileData)
     {
         string filedata;
-        using (StreamReader sr = new StreamReader(filename))
+        using (var sr = new StreamReader(new MemoryStream(fileData)))
         {
             filedata = sr.ReadToEnd();
         }
-        string[] words = filedata.Split(new char[]{' ', '\n', '\r', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+        var words = filedata.Split(new []{' ', '\n', '\r', '\t'}, StringSplitOptions.RemoveEmptyEntries);
         
-        if (words.Length < 7 || !Int32.TryParse(words[1], out int width) ||
-            !Int32.TryParse(words[2], out int height) || !Int32.TryParse(words[3], out int maxColor) || 
+        if (words.Length < 7 || !int.TryParse(words[1], out var width) ||
+            !int.TryParse(words[2], out var height) || !int.TryParse(words[3], out var maxColor) || 
             words.Length != width*height*3+4)
             return false;
         
-        for (int i = 4; i < words.Length; i++)
+        for (var i = 4; i < words.Length; i++)
         {
-            if (!Int32.TryParse(words[i], out var colorData) || colorData < 0 || colorData > maxColor)
+            if (!int.TryParse(words[i], out var colorData) || colorData < 0 || colorData > maxColor)
                 return false;
         }
 
         return true;
     }
     
-    private bool ValidateP6Structure(string filename)
+    private static bool ValidateP6Structure(byte[] fileData)
     {
-        BinaryReader br = new BinaryReader(new FileStream(filename, FileMode.Open));
+        var br = new BinaryReader(new MemoryStream(fileData));
         string[] header = (Encoding.ASCII.GetString(br.ReadBytes(20)))
             .Split(new char[]{' ', '\n', '\r', '\t'}, StringSplitOptions.RemoveEmptyEntries);
         br.Close();
         
         if (header.Length < 4) return false;
 
-        int headerLength = 0;
-        for (int i = 0; i < 4; i++) headerLength += header[i].Length + 1;
-        
-        byte[] filedata = File.ReadAllBytes(filename);
-        
-        if (filedata.Length < 12 || !Int32.TryParse(header[1], out int width) ||
-            !Int32.TryParse(header[2], out int height) || !Int32.TryParse(header[3], out int maxColor) || 
-            filedata.Length < width*height*3+headerLength)
-            return false;
+        var headerLength = 0;
+        for (var i = 0; i < 4; i++) headerLength += header[i].Length + 1;
 
-        return true;
+        return fileData.Length >= 12 && int.TryParse(header[1], out var width) &&
+               int.TryParse(header[2], out var height) && int.TryParse(header[3], out _) && 
+               fileData.Length >= width*height*3+headerLength;
     }
 
-    private Color[,] P3ToPixels(string filename)
+    private static Color[,] P3ToPixels(byte[] fileData)
     {
-        StreamReader sr = new StreamReader(filename);
-        string filedata = sr.ReadToEnd();
+        var sr = new StreamReader(new MemoryStream(fileData));
+        var filedata = sr.ReadToEnd();
         sr.Close();
         
         string[] words = filedata.Split(new char[]{' ', '\n', '\r', '\t'}, StringSplitOptions.RemoveEmptyEntries);
@@ -85,7 +80,7 @@ public class PpmFileReader : IImageReader
         int maxColorValue = int.Parse(words[3]);
         double colorCoefficient = 255.0 / maxColorValue;
 
-        Color[,] picture = new Color[height, width];
+        var picture = new Color[height, width];
         
         for (int i = 0, ptr = 4; i < height; i++)
         {
@@ -101,10 +96,10 @@ public class PpmFileReader : IImageReader
         return picture; 
     }
 
-    private Color[,] P6ToPixels(string filename)
+    private Color[,] P6ToPixels(byte[] fileData)
     {
-        BinaryReader br = new BinaryReader(new FileStream(filename, FileMode.Open));
-        string header = (Encoding.ASCII.GetString(br.ReadBytes(20)));
+        BinaryReader br = new BinaryReader(new MemoryStream(fileData));
+        string header = Encoding.ASCII.GetString(br.ReadBytes(20));
             string[] headerElements = header.Split(new char[]{' ', '\n', '\r', '\t'}, StringSplitOptions.RemoveEmptyEntries);
         br.Close();
             
@@ -115,7 +110,6 @@ public class PpmFileReader : IImageReader
 
         int headerLength = Regex.Match(header, @"^P6\s+(?:\d+\s+){3}").Length;
 
-        byte[] filedata = File.ReadAllBytes(filename);
         Color[,] picture = new Color[height, width];
         
         for (int i = 0, ptr = headerLength; i < height; i++)
@@ -123,9 +117,9 @@ public class PpmFileReader : IImageReader
             for (int j = 0; j < width; j++)
             {
                 picture[i, j] = new Color(
-                    (byte)(filedata[ptr++]*colorCoefficient), 
-                    (byte)(filedata[ptr++]*colorCoefficient), 
-                    (byte)(filedata[ptr++]*colorCoefficient));
+                    (byte)(fileData[ptr++]*colorCoefficient), 
+                    (byte)(fileData[ptr++]*colorCoefficient), 
+                    (byte)(fileData[ptr++]*colorCoefficient));
             }
         }
 

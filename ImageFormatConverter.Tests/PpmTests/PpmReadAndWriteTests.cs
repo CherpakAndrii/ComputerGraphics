@@ -1,4 +1,5 @@
 ﻿using Reader.PPM;
+using Writer.PPM;
 
 namespace ImageFormatConverter.Tests.PpmTests;
 
@@ -7,45 +8,29 @@ public class PpmReadAndWriteTests
 {
     private PpmFileWriter _ppmWriter;
     private PpmFileReader _ppmReader;
+    private Color[,] _image;
 
     [SetUp]
     public void Setup()
     {
         _ppmWriter = new PpmFileWriter();
         _ppmReader = new PpmFileReader();
-    }
-
-    [TestCaseSource(nameof(_correctFiles))]
-    public void RewriteCorrectPpm_GotCopy(string origFileName)
-    {
-        if (_ppmReader.ValidateFileStructure(origFileName))
+        _image = new Color[512, 512];
+        for (int i = 0; i < 512; i++)
         {
-            var image = _ppmReader.ImageToPixels(origFileName);
-            var filename = Regex.Match(origFileName, @".+/([^/]+)\.ppm").Groups[1].Captures[0].Value;
-            var newFilepath = "testResPictures/createdPpms/" + filename + ".copy.ppm";
-            _ppmWriter.WriteToFile(newFilepath, image);
-
-            if (_ppmReader.ValidateFileStructure(newFilepath))
+            for (int j = 0; j < 512; j++)
             {
-                var picCreated = _ppmReader.ImageToPixels(newFilepath);
-                CollectionAssert.AreEqual(image, picCreated);
-            }
-            else
-            {
-                Assert.Fail("invalid created file structure");
+                _image[i, j] = new Color((byte)(j / 2), 0, 0);
             }
         }
-        else
-        {
-            Assert.Fail();
-        }
     }
-    
-    private static object[] _correctFiles =
+
+    [Test]
+    public void RewriteCorrectPpm_GotCopy()
     {
-        new object[] { "testResPictures/createdPpms/red_gradient.ppm" }, 
-        new object[] { "testResPictures/createdPpms/blue_gradient.ppm" }, 
-        new object[] { "testResPictures/createdPpms/red_blue_gradient.ppm" }, 
-//        new object[] { "testResPictures/sources/correct_sample.ppm" }
-    };
+        var bytes = _ppmWriter.WriteToFile(_image);
+        var picCreated = _ppmReader.ImageToPixels(bytes);
+
+        CollectionAssert.AreEqual(_image, picCreated);
+    }
 }

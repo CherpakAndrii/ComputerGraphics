@@ -8,46 +8,29 @@ public class BmpReadAndWriteTests
 {
     private BmpFileWriter _bmpWriter;
     private BmpFileReader _bmpReader;
+    private Color[,] _image;
 
     [SetUp]
     public void Setup()
     {
         _bmpWriter = new BmpFileWriter();
         _bmpReader = new BmpFileReader();
-    }
-
-    [TestCaseSource(nameof(correctFiles))]
-    public void RewriteCorrectBmp_GotCopy(string origFileName)
-    {
-        if (_bmpReader.ValidateFileStructure(origFileName))
+        _image = new Color[512, 512];
+        for (int i = 0; i < 512; i++)
         {
-            var image = _bmpReader.ImageToPixels(origFileName);
-            var filename = Regex.Match(origFileName, @".+/([^/]+)\.bmp$").Groups[1].Captures[0].Value;
-            var newFilepath = "testResPictures/createdBmps/" + filename + ".copy.bmp";
-            _bmpWriter.WriteToFile(newFilepath, image);
-
-            if (_bmpReader.ValidateFileStructure(newFilepath))
+            for (int j = 0; j < 512; j++)
             {
-                var picCreated = _bmpReader.ImageToPixels(newFilepath);
-                CollectionAssert.AreEqual(image, picCreated);
-            }
-            else
-            {
-                Assert.Fail("invalid created file structure");
+                _image[i, j] = new Color((byte)(j / 2), 0, 0);
             }
         }
-        else
-        {
-            Assert.Fail();
-        }
     }
-    
-    private static object[] correctFiles =
+
+    [Test]
+    public void RewriteCorrectBmp_GotCopy()
     {
-        new object[] { "testResPictures/sources/correct_sample.bmp" },
-        new object[] { "testResPictures/sources/incorrect_sample.bmp" },
-        new object[] { "testResPictures/createdBmps/red_gradient.bmp" },
-        new object[] { "testResPictures/createdBmps/blue_gradient.bmp" },
-        new object[] { "testResPictures/createdBmps/red_blue_gradient.bmp" }
-    };
+        var bytes = _bmpWriter.WriteToFile(_image);
+        var picCreated = _bmpReader.ImageToPixels(bytes);
+
+        CollectionAssert.AreEqual(_image, picCreated);
+    }
 }

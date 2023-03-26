@@ -4,9 +4,9 @@ namespace ImageFormatConverter.Abstractions.Interfaces;
 
 public interface IImageReader
 {
-    public Color[,] ImageToPixels(string filename);
+    public Color[,] ImageToPixels(byte[] fileData);
 
-    public bool ValidateFileStructure(string filename);
+    public bool ValidateFileStructure(byte[] fileData);
 
     public string FileExtension { get; }
 }
