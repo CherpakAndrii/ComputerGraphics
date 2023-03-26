@@ -8,8 +8,8 @@ public class FileFactory
     private const string PluginsPath = "..\\..\\..\\..\\ImagePlugins\\net7.0";
     private const string SearchPattern = "*.dll";
 
-    private IImageWriter[] _imageWriters;
-    private IImageReader[] _imageReaders;
+    private readonly IImageWriter[] _imageWriters;
+    private readonly IImageReader[] _imageReaders;
 
     public FileFactory()
     {

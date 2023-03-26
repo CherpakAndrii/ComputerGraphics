@@ -28,4 +28,8 @@ var image = targetReader.ImageToPixels(fileData);
 
 var targetFileData = targetWriter.WriteToFile(image);
 
-File.WriteAllBytes(Path.ChangeExtension(source, flagValues[goalFormatFlag]), targetFileData);
+var path = flagValues.TryGetValue(outputFlag, out var output)
+    ? output + flagValues[goalFormatFlag]
+    : Path.ChangeExtension(source, flagValues[goalFormatFlag]);
+
+File.WriteAllBytes(path, targetFileData);
