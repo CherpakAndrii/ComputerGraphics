@@ -16,7 +16,7 @@ var fileData = File.ReadAllBytes(source);
 var fileFactory = new FileFactory();
 
 var targetReader = fileFactory.GetImageReader(fileData);
-var targetWriter = fileFactory.GetImageWriter(flagValues[goalFormatFlag];
+var targetWriter = fileFactory.GetImageWriter(flagValues[goalFormatFlag]);
 
 if (targetReader is null)
     throw new Exception("Appropriate file reader is not found");

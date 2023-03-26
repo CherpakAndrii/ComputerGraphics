@@ -5,11 +5,12 @@ namespace ImageFormatConverter.Console;
 
 public class FileFactory
 {
+    private const string PluginsPath = "..\\..\\..\\..\\ImagePlugins\\net7.0";
+    private const string SearchPattern = "*.dll";
     public IImageReader? GetImageReader(byte[] fileData)
     {
-        const string path = @"C:\Users\Acer\Documents\computerGraphics\ComputerGraphics\ImagePlugins\net7.0";
-
-        var allAssemblies = Directory.GetFiles(path, "*.dll")
+        var directoryInfo = new DirectoryInfo(PluginsPath);
+        var allAssemblies = Directory.GetFiles(directoryInfo.FullName, SearchPattern)
             .Select(Assembly.LoadFile).ToList();
         
         var readers = allAssemblies
@@ -23,9 +24,8 @@ public class FileFactory
     
     public IImageWriter? GetImageWriter(string goalFormat)
     {
-        const string path = @"C:\Users\Acer\Documents\computerGraphics\ComputerGraphics\ImagePlugins\net7.0";
-
-        var allAssemblies = Directory.GetFiles(path, "*.dll")
+        var directoryInfo = new DirectoryInfo(PluginsPath);
+        var allAssemblies = Directory.GetFiles(directoryInfo.FullName, SearchPattern)
             .Select(Assembly.LoadFile).ToList();
         
         var writers = allAssemblies
