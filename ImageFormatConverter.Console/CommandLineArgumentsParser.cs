@@ -20,13 +20,13 @@ public class CommandLineArgumentsParser
 
                 flagValues.Add(flag, flagValue);
             }
+        }
 
-            foreach (var flag in requiredFlags)
+        foreach (var flag in requiredFlags)
+        {
+            if (!flagValues.ContainsKey(flag))
             {
-                if (!flagValues.ContainsKey(flag))
-                {
-                    throw new Exception($"{flag} is not configured");
-                }
+                throw new Exception($"{flag} is not configured");
             }
         }
 
