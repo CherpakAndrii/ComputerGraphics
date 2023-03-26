@@ -17,15 +17,11 @@ if (!flagValues.ContainsKey(sourceFlag))
     throw new Exception($"{sourceFlag} is not configured");
 }
 
-
 var source = flagValues[sourceFlag];
-if (!File.Exists(source))
-    throw new Exception("Source file doesn't exist");
 
-var fileData = File.ReadAllBytes(source);
+var fileData = FileReader.ReadFile(source);
 
 var fileFactory = new FileFactory();
-
 var targetReader = fileFactory.GetImageReader(fileData);
 var targetWriter = fileFactory.GetImageWriter(flagValues[goalFormatFlag]);
 
