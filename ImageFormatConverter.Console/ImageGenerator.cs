@@ -83,11 +83,12 @@ public class ImageGenerator
             for (int j = x; j < x + 20; j++)
                 image[i, j] = red;
 
-        for (int i = 110; i < 160; i++)
-        for (int j = i * 4 / 5; j < (i * 4 / 5) + 10; j++)
+        for (int i = 0; i < 50; i++)
+        for (int j = 0, ri = 110+i, rj1 = 160 + i*4/5, rj2 = 209 - i*4/5;
+             j < 10; j++, rj1++, rj2--)
         {
-            image[i, 160 + j] = red;
-            image[i, 209 - j] = red;
+            image[ri, rj1] = red;
+            image[ri, rj2] = red;
         }
 
         return image;
