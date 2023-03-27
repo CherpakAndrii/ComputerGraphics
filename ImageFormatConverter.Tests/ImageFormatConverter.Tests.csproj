@@ -24,4 +24,11 @@
       <ProjectReference Include="..\Writer.PPM\Writer.PPM.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="testPictures\createdBmps" />
+      <Folder Include="testPictures\createdPpms" />
+      <Folder Include="testPictures\interformat" />
+      <Folder Include="testPictures\sources" />
+    </ItemGroup>
+
 </Project>
