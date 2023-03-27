@@ -6,6 +6,7 @@ namespace ImageFormatConverter.Tests.PpmTests;
 [TestFixture]
 public class PpmValidationTests
 {
+    private const string SourceDir = "../../../testPictures/sources/ppm/";
     private PpmFileReader _ppmFileReader;
     private PpmFileWriter _ppmFileWriter;
     private Color[,] _image;
