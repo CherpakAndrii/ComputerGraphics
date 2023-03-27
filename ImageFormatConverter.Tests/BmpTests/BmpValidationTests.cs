@@ -1,10 +1,11 @@
-﻿using Reader.BMP;
+﻿using ImageFormatConverter.Tests.AbstractTests;
+using Reader.BMP;
 using Writer.BMP;
 
 namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]
-public class BmpValidationTests
+public class BmpValidationTests// : ImageValidationTests
 {
     private const string SourceDir = "../../../testPictures/sources/bmp/";
     private BmpFileReader _bmpFileReader;
@@ -69,3 +70,34 @@ public class BmpValidationTests
         new object[] { "incorrect/ppm.bmp" }
     };
 }
+/*
+    [SetUp]
+    public void Setup()
+    {
+        SourceDir = TestPicturesDir + "bmp/";
+        _imgFileReader = new BmpFileReader();
+        _imgWriter = new BmpFileWriter();
+        _image = new Color[512, 512];
+        for (int i = 0; i < 512; i++)
+        {
+            for (int j = 0; j < 512; j++)
+            {
+                _image[i, j] = new Color((byte)(j / 2), 0, 0);
+            }
+        }
+        _validFiles = new []{
+            new object[] { "correct/correct_sample.bmp" },
+            new object[] { "correct/long_header_sample.bmp" },
+            new object[] { "correct/red_gradient.bmp" },
+            new object[] { "correct/blue_gradient.bmp" },
+            new object[] { "correct/red_blue_gradient.bmp" },
+            new object[] { "correct/pnh.bmp" }
+        };
+
+        _invalidFiles = new[]
+        {
+            new object[] { "incorrect/empty.bmp" },
+            new object[] { "incorrect/ppm.bmp" }
+        };
+    }
+}*/
