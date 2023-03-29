@@ -1,6 +1,4 @@
-﻿using ImageFormatConverter.Tests.AbstractTests;
-using ImageFormatConverter.Tests.BmpTests;
-using Writer.PPM;
+﻿using Writer.PPM;
 
 namespace ImageFormatConverter.Tests.PpmTests;
 
@@ -10,6 +8,7 @@ public class PpmWritingTests : ImageWriting_VisualTests
     public void Setup()
     {
         Destination = TestPicturesDir + "createdPpms/"; 
+        if (!Directory.Exists(Destination)) Directory.CreateDirectory(Destination);
         DefaultExtension = ".ppm";
         imgWriter = new PpmFileWriter();
     }

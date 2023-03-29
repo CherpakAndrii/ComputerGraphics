@@ -4,56 +4,30 @@ using Writer.PPM;
 namespace ImageFormatConverter.Tests.PpmTests;
 
 [TestFixture]
-public class PpmValidationTests
+public class PpmValidationTests : ImageValidationTests
 {
-    private const string SourceDir = "../../../testPictures/sources/ppm/";
-    private PpmFileReader _ppmFileReader;
-    private PpmFileWriter _ppmWriter;
-    private Color[,] _image;
-    
     [SetUp]
     public void Setup()
     {
-        _ppmFileReader = new PpmFileReader();
-        _ppmWriter = new PpmFileWriter();
-        _image = new Color[512, 512];
-        for (int i = 0; i < 512; i++)
-        {
-            for (int j = 0; j < 512; j++)
-            {
-                _image[i, j] = new Color((byte)(j / 2), 0, 0);
-            }
-        }
-    }
-
-    [Test]
-    public void PPM_ValidateGeneratedPicture_TrueReturned()
-    {
-        var bytes = _ppmWriter.WriteToFile(_image);
-        var structureValidationResult = _ppmFileReader.ValidateFileStructure(bytes);
-        
-        Assert.That(structureValidationResult, Is.True);
+        SourceDir = TestPicturesDir + "ppm/";
+        _imgFileReader = new PpmFileReader();
+        _imgWriter = new PpmFileWriter();
     }
     
-    [TestCaseSource(nameof(_validPpms))]
-    public void PPM_ValidateCorrectSample_TrueReturned(string filename)
+    
+    [TestCaseSource(nameof(_validFiles))]
+    public void BMP_ValidateCorrectSample_TrueReturned(string filename)
     {
-        var bytes = File.ReadAllBytes(SourceDir+filename);
-        var structureValidationResult = _ppmFileReader.ValidateFileStructure(bytes);
-        
-        Assert.That(structureValidationResult, Is.True);
+        ValidateCorrectSample_TrueReturned(filename);
     }
     
-    [TestCaseSource(nameof(_invalidPpms))]
-    public void PPM_ValidateIncorrectSample_FalseReturned(string filename)
+    [TestCaseSource(nameof(_invalidFiles))]
+    public void BMP_ValidateIncorrectSample_FalseReturned(string filename)
     {
-        var bytes = File.ReadAllBytes(SourceDir+filename);
-        var structureValidationResult = _ppmFileReader.ValidateFileStructure(bytes);
-        
-        Assert.That(structureValidationResult, Is.False);
+        ValidateIncorrectSample_FalseReturned(filename);
     }
     
-    private static object[] _validPpms =
+    private static object[] _validFiles =
     {
         new object[] { "correct/blue_gradient.ppm" },
         new object[] { "correct/correct_sample_P6.ppm" },
@@ -65,7 +39,7 @@ public class PpmValidationTests
         new object[] { "correct/test.ppm" }
     };
     
-    private static object[] _invalidPpms =
+    private static object[] _invalidFiles =
     {
         new object[] { "incorrect/incorrect_header_data.ppm" },
         new object[] { "incorrect/incorrect_header_structure.ppm" },

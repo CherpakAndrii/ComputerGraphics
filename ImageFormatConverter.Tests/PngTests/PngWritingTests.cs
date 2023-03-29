@@ -1,15 +1,15 @@
-﻿using ImageFormatConverter.Tests.AbstractTests;
-using Writer.PNG;
+﻿using Writer.PNG;
 
-namespace ImageFormatConverter.Tests.PpmTests;
+namespace ImageFormatConverter.Tests.PngTests;
 
 public class PngWritingTests : ImageWriting_VisualTests
 {
     [SetUp]
     public void Setup()
     {
-        Destination = TestPicturesDir + "createdPpms/"; 
-        DefaultExtension = ".ppm";
+        Destination = TestPicturesDir + "createdPngs/";
+        if (!Directory.Exists(Destination)) Directory.CreateDirectory(Destination);
+        DefaultExtension = ".png";
         imgWriter = new PngFileWriter();
     }
 }

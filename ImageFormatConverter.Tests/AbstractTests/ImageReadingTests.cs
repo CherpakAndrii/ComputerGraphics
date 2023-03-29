@@ -1,5 +1,4 @@
-﻿using ImageFormatConverter.Abstractions.Interfaces;
-using ImageFormatConverter.Console;
+﻿using ImageFormatConverter.Console;
 
 namespace ImageFormatConverter.Tests.AbstractTests;
 
@@ -21,9 +20,9 @@ public abstract class ImageReadingTests
     
     private static object[] _generated =
     {
-        new object[] { () => ImageGenerator.CreateRedGradientLeftToRightImage() },
-        new object[] { () => ImageGenerator.CreateBlueGradientUpToDownImage() },
-        new object[] { () => ImageGenerator.CreateBlueGradientUpToDownAndRedGradientLeftToRightImage() },
-        new object[] { () => ImageGenerator.CreatePtnPnhImage() }
+        new object[] { ImageGenerator.CreateRedGradientLeftToRightImage() },
+        new object[] { ImageGenerator.CreateBlueGradientUpToDownImage() },
+        new object[] { ImageGenerator.CreateBlueGradientUpToDownAndRedGradientLeftToRightImage() },
+        new object[] { ImageGenerator.CreatePtnPnhImage() }
     };
 }

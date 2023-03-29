@@ -1,5 +1,4 @@
-﻿using ImageFormatConverter.Tests.AbstractTests;
-using Reader.PPM;
+﻿using Reader.PPM;
 using Writer.PPM;
 
 namespace ImageFormatConverter.Tests.PpmTests;

@@ -1,5 +1,4 @@
-﻿using ImageFormatConverter.Abstractions.Interfaces;
-using ImageFormatConverter.Console;
+﻿using ImageFormatConverter.Console;
 
 namespace ImageFormatConverter.Tests.AbstractTests;
 

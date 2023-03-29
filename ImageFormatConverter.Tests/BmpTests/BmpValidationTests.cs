@@ -5,57 +5,30 @@ using Writer.BMP;
 namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]
-public class BmpValidationTests// : ImageValidationTests
+public class BmpValidationTests : ImageValidationTests
 {
-    private const string SourceDir = "../../../testPictures/sources/bmp/";
-    private BmpFileReader _bmpFileReader;
-    private BmpFileWriter _bmpWriter;
-    private Color[,] _image;
-    
     [SetUp]
     public void Setup()
     {
-        _bmpFileReader = new BmpFileReader();
-        _bmpWriter = new BmpFileWriter();
-        _image = new Color[512, 512];
-        for (int i = 0; i < 512; i++)
-        {
-            for (int j = 0; j < 512; j++)
-            {
-                _image[i, j] = new Color((byte)(j / 2), 0, 0);
-            }
-        }
-    }
-
-    [Test]
-    public void BMP_ValidateGeneratedPicture_TrueReturned()
-    {
-        var bytes = _bmpWriter.WriteToFile(_image);
-        var structureValidationResult = _bmpFileReader.ValidateFileStructure(bytes);
-        
-        Assert.That(structureValidationResult, Is.True);
+        SourceDir = TestPicturesDir + "bmp/";
+        _imgFileReader = new BmpFileReader();
+        _imgWriter = new BmpFileWriter();
     }
     
-    [TestCaseSource(nameof(_validBmps))]
+    
+    [TestCaseSource(nameof(_validFiles))]
     public void BMP_ValidateCorrectSample_TrueReturned(string filename)
     {
-        var bytes = File.ReadAllBytes(SourceDir+filename);
-        var structureValidationResult = _bmpFileReader.ValidateFileStructure(bytes);
-        
-        Assert.That(structureValidationResult, Is.True);
+        ValidateCorrectSample_TrueReturned(filename);
     }
     
-    [TestCaseSource(nameof(_invalidBmps))]
+    [TestCaseSource(nameof(_invalidFiles))]
     public void BMP_ValidateIncorrectSample_FalseReturned(string filename)
     {
-        var bytes = File.ReadAllBytes(SourceDir+filename);
-        var structureValidationResult = _bmpFileReader.ValidateFileStructure(bytes);
-        
-        Assert.That(structureValidationResult, Is.False);
+        ValidateIncorrectSample_FalseReturned(filename);
     }
     
-    private static object[] _validBmps =
-    {
+    protected static object[]_validFiles = new []{
         new object[] { "correct/correct_sample.bmp" },
         new object[] { "correct/long_header_sample.bmp" },
         new object[] { "correct/red_gradient.bmp" },
@@ -63,41 +36,10 @@ public class BmpValidationTests// : ImageValidationTests
         new object[] { "correct/red_blue_gradient.bmp" },
         new object[] { "correct/pnh.bmp" }
     };
-    
-    private static object[] _invalidBmps =
+
+    protected static object[]_invalidFiles = new[]
     {
         new object[] { "incorrect/empty.bmp" },
         new object[] { "incorrect/ppm.bmp" }
     };
 }
-/*
-    [SetUp]
-    public void Setup()
-    {
-        SourceDir = TestPicturesDir + "bmp/";
-        _imgFileReader = new BmpFileReader();
-        _imgWriter = new BmpFileWriter();
-        _image = new Color[512, 512];
-        for (int i = 0; i < 512; i++)
-        {
-            for (int j = 0; j < 512; j++)
-            {
-                _image[i, j] = new Color((byte)(j / 2), 0, 0);
-            }
-        }
-        _validFiles = new []{
-            new object[] { "correct/correct_sample.bmp" },
-            new object[] { "correct/long_header_sample.bmp" },
-            new object[] { "correct/red_gradient.bmp" },
-            new object[] { "correct/blue_gradient.bmp" },
-            new object[] { "correct/red_blue_gradient.bmp" },
-            new object[] { "correct/pnh.bmp" }
-        };
-
-        _invalidFiles = new[]
-        {
-            new object[] { "incorrect/empty.bmp" },
-            new object[] { "incorrect/ppm.bmp" }
-        };
-    }
-}*/

@@ -1,5 +1,4 @@
-﻿using ImageFormatConverter.Tests.AbstractTests;
-using Reader.BMP;
+﻿using Reader.BMP;
 using Writer.BMP;
 
 namespace ImageFormatConverter.Tests.BmpTests;
