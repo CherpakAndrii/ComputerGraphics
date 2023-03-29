@@ -20,8 +20,10 @@
       <ProjectReference Include="..\Core\Core.csproj" />
       <ProjectReference Include="..\ImageFormatConverter.Console\ImageFormatConverter.Console.csproj" />
       <ProjectReference Include="..\Reader.BMP\Reader.BMP.csproj" />
+      <ProjectReference Include="..\Reader.PNG\Reader.PNG.csproj" />
       <ProjectReference Include="..\Reader.PPM\Reader.PPM.csproj" />
       <ProjectReference Include="..\Writer.BMP\Writer.BMP.csproj" />
+      <ProjectReference Include="..\Writer.PNG\Writer.PNG.csproj" />
       <ProjectReference Include="..\Writer.PPM\Writer.PPM.csproj" />
     </ItemGroup>
 
