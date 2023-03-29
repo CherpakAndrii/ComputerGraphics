@@ -1,36 +1,45 @@
-﻿using Reader.BMP;
+﻿using ImageFormatConverter.Tests.AbstractTests;
+using Reader.BMP;
 using Writer.BMP;
 
 namespace ImageFormatConverter.Tests.BmpTests;
 
 [TestFixture]
-public class BmpValidationTests
+public class BmpValidationTests : ImageValidationTests
 {
-    private BmpFileReader _bmpFileReader;
-    private BmpFileWriter _bmpWriter;
-    private Color[,] _image;
-    
     [SetUp]
     public void Setup()
     {
-        _bmpFileReader = new BmpFileReader();
-        _bmpWriter = new BmpFileWriter();
-        _image = new Color[512, 512];
-        for (int i = 0; i < 512; i++)
-        {
-            for (int j = 0; j < 512; j++)
-            {
-                _image[i, j] = new Color((byte)(j / 2), 0, 0);
-            }
-        }
+        SourceDir = TestPicturesDir + "bmp/";
+        _imgFileReader = new BmpFileReader();
+        _imgWriter = new BmpFileWriter();
     }
-
-    [Test]
-    public void BMP_ValidateCorrectSample_TrueReturned()
+    
+    
+    [TestCaseSource(nameof(_validFiles))]
+    public void BMP_ValidateCorrectSample_TrueReturned(string filename)
     {
-        var bytes = _bmpWriter.WriteToFile(_image);
-        var structureValidationResult = _bmpFileReader.ValidateFileStructure(bytes);
-        
-        Assert.That(structureValidationResult, Is.True);
+        ValidateCorrectSample_TrueReturned(filename);
     }
+    
+    [TestCaseSource(nameof(_invalidFiles))]
+    public void BMP_ValidateIncorrectSample_FalseReturned(string filename)
+    {
+        ValidateIncorrectSample_FalseReturned(filename);
+    }
+    
+    protected static object[]_validFiles = new []{
+        new object[] { "correct/correct_sample.bmp" },
+        new object[] { "correct/long_header_sample.bmp" },
+        new object[] { "correct/red_gradient.bmp" },
+        new object[] { "correct/blue_gradient.bmp" },
+        new object[] { "correct/red_blue_gradient.bmp" },
+        new object[] { "correct/pnh.bmp" }
+    };
+
+    protected static object[]_invalidFiles = new[]
+    {
+        new object[] { "incorrect/empty.bmp" },
+        new object[] { "incorrect/ppm.bmp" }
+    };
 }

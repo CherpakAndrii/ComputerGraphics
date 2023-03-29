@@ -6,6 +6,8 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
+
+        <UserSecretsId>c555c0ae-db8f-42b3-b975-ac47b25e058f</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,10 +20,20 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Core\Core.csproj" />
+      <ProjectReference Include="..\ImageFormatConverter.Console\ImageFormatConverter.Console.csproj" />
       <ProjectReference Include="..\Reader.BMP\Reader.BMP.csproj" />
+      <ProjectReference Include="..\Reader.PNG\Reader.PNG.csproj" />
       <ProjectReference Include="..\Reader.PPM\Reader.PPM.csproj" />
       <ProjectReference Include="..\Writer.BMP\Writer.BMP.csproj" />
+      <ProjectReference Include="..\Writer.PNG\Writer.PNG.csproj" />
       <ProjectReference Include="..\Writer.PPM\Writer.PPM.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="testPictures\createdBmps" />
+      <Folder Include="testPictures\createdPpms" />
+      <Folder Include="testPictures\interformat" />
+      <Folder Include="testPictures\sources" />
     </ItemGroup>
 
 </Project>

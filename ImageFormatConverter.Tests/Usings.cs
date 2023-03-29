@@ -1,4 +1,4 @@
 global using NUnit.Framework;
 global using Core.Lights;
-
-global using System.Text.RegularExpressions;
+global using ImageFormatConverter.Abstractions.Interfaces;
+global using ImageFormatConverter.Tests.AbstractTests;
