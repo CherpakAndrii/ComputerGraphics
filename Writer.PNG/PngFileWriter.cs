@@ -21,10 +21,10 @@ public class PngFileWriter : IImageWriter
 
     private static byte[] CreateDefaultIHDRChunk(Color[,] pixels)
     {
-        byte[] ihdrChunkLength = BitConverter.GetBytes(13);
+        byte[] ihdrChunkLength = BitConverter.GetBytes(13).Reverse().ToArray();
         byte[] ihdrChunkName = Encoding.ASCII.GetBytes("IHDR");
-        byte[] imageWidth = BitConverter.GetBytes(pixels.GetLength(1));
-        byte[] imageHeight = BitConverter.GetBytes(pixels.GetLength(0));
+        byte[] imageWidth = BitConverter.GetBytes(pixels.GetLength(1)).Reverse().ToArray();
+        byte[] imageHeight = BitConverter.GetBytes(pixels.GetLength(0)).Reverse().ToArray();
         byte bitDepth = 8;
         byte colorType = 2;
         byte compressType = 0;
@@ -58,7 +58,7 @@ public class PngFileWriter : IImageWriter
         deflate.SetInput(uncompressedData);
         byte[] compressedData = new byte[uncompressedData.Length + 6];
         int bytesAmount = deflate.Deflate(compressedData);
-        byte[] idatLength = BitConverter.GetBytes(bytesAmount);
+        byte[] idatLength = BitConverter.GetBytes(bytesAmount).Reverse().ToArray();
         byte[] idatChunkName = Encoding.ASCII.GetBytes("IDAT");
         byte[] idatCrc = Crc32.Hash(idatChunkName.Concat(compressedData[0..bytesAmount]).ToArray());
         return idatLength.Concat(idatChunkName).Concat(compressedData[0..bytesAmount]).Concat(idatCrc).ToArray();
