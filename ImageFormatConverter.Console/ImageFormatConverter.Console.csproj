@@ -12,4 +12,9 @@
       <ProjectReference Include="..\ImageFormatConverter.Abstractions\ImageFormatConverter.Abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="SharpZipLib" Version="1.4.2" />
+      <PackageReference Include="System.IO.Hashing" Version="7.0.0" />
+    </ItemGroup>
+
 </Project>
