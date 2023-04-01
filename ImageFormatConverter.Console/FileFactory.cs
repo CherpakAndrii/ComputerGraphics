@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.Loader;
 using ImageFormatConverter.Abstractions.Interfaces;
 
 namespace ImageFormatConverter.Console;
@@ -15,17 +16,17 @@ public class FileFactory
     {
         var directoryInfo = new DirectoryInfo(PluginsPath);
         var allAssemblies = Directory.GetFiles(directoryInfo.FullName, SearchPattern)
-            .Select(Assembly.LoadFile).ToList();
-        
+            .Select(Assembly.LoadFrom).ToList();
+
         _imageReaders = allAssemblies
             .SelectMany(s => s.GetTypes())
-            .Where(type => typeof(IImageReader) .IsAssignableFrom(type))
+            .Where(type => typeof(IImageReader) .IsAssignableFrom(type) && type.IsClass)
             .Select(type => (IImageReader)Activator.CreateInstance(type)!)
             .ToArray();
-        
+
         _imageWriters = allAssemblies
             .SelectMany(s => s.GetTypes())
-            .Where(type => typeof(IImageWriter) .IsAssignableFrom(type))
+            .Where(type => typeof(IImageWriter) .IsAssignableFrom(type) && type.IsClass)
             .Select(type => (IImageWriter)Activator.CreateInstance(type)!)
             .ToArray();
     }
