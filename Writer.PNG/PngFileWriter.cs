@@ -1,8 +1,8 @@
 ﻿using Core.Lights;
 using System.Text;
 using System.IO.Hashing;
-using ICSharpCode.SharpZipLib.Zip.Compression;
 using ImageFormatConverter.Abstractions.Interfaces;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace Writer.PNG;
 
@@ -21,21 +21,24 @@ public class PngFileWriter : IImageWriter
 
     private static byte[] CreateDefaultIHDRChunk(Color[,] pixels)
     {
-        byte[] ihdrChunkLength = BitConverter.GetBytes(13).Reverse().ToArray();
+        byte[] ihdrChunkLength = BitConverter.GetBytes(13);
         byte[] ihdrChunkName = Encoding.ASCII.GetBytes("IHDR");
-        byte[] imageWidth = BitConverter.GetBytes(pixels.GetLength(1)).Reverse().ToArray();
-        byte[] imageHeight = BitConverter.GetBytes(pixels.GetLength(0)).Reverse().ToArray();
+        byte[] imageWidth = BitConverter.GetBytes(pixels.GetLength(1));
+        byte[] imageHeight = BitConverter.GetBytes(pixels.GetLength(0));
         byte bitDepth = 8;
         byte colorType = 2;
         byte compressType = 0;
         byte filtrationMethod = 0;
         byte interlaceMethod = 0;
-        byte[] ihdrData = imageWidth.Concat(imageHeight)
+        byte[] ihdrData = imageWidth.Reverse()
+                                    .Concat(imageHeight.Reverse())
                                     .Concat(new byte[] { bitDepth, colorType, compressType, filtrationMethod, interlaceMethod })
                                     .ToArray();
         byte[] ihdrCrc = Crc32.Hash(ihdrChunkName.Concat(ihdrData).ToArray());
-
-        return ihdrChunkLength.Concat(ihdrChunkName).Concat(ihdrData).Concat(ihdrCrc).ToArray();
+        return ihdrChunkLength.Reverse().Concat(ihdrChunkName)
+                                        .Concat(ihdrData)
+                                        .Concat(ihdrCrc.Reverse())
+                                        .ToArray();
     }
 
     private static byte[] CreateDefaultIDATChunk(Color[,] pixels)
@@ -54,21 +57,26 @@ public class PngFileWriter : IImageWriter
                 k += 3;
             }
         }
-        Deflater deflate = new();
-        deflate.SetInput(uncompressedData);
-        byte[] compressedData = new byte[uncompressedData.Length + 6];
-        int bytesAmount = deflate.Deflate(compressedData);
-        byte[] idatLength = BitConverter.GetBytes(bytesAmount).Reverse().ToArray();
+        using MemoryStream outputMemoryStream = new();
+        using (DeflaterOutputStream deflateStream = new(outputMemoryStream))
+        {
+            deflateStream.Write(uncompressedData, 0, uncompressedData.Length);
+        }
+        byte[] compressedData = outputMemoryStream.ToArray();
+        byte[] idatLength = BitConverter.GetBytes(compressedData.Length);
         byte[] idatChunkName = Encoding.ASCII.GetBytes("IDAT");
-        byte[] idatCrc = Crc32.Hash(idatChunkName.Concat(compressedData[0..bytesAmount]).ToArray());
-        return idatLength.Concat(idatChunkName).Concat(compressedData[0..bytesAmount]).Concat(idatCrc).ToArray();
+        byte[] idatCrc = Crc32.Hash(idatChunkName.Concat(compressedData).ToArray());
+        return idatLength.Reverse().Concat(idatChunkName)
+                                   .Concat(compressedData)
+                                   .Concat(idatCrc.Reverse())
+                                   .ToArray();
     }
 
     private static byte[] CreateDefaultIENDChunk()
     {
         byte[] iendChunkLength = BitConverter.GetBytes(0);
         byte[] iendChunkName = Encoding.ASCII.GetBytes("IEND");
-        byte[] iendCrc = Crc32.Hash(iendChunkName);
-        return iendChunkLength.Concat(iendChunkName).Concat(iendCrc).ToArray();
+        byte[] iendCrc = Crc32.Hash(iendChunkName).ToArray();
+        return iendChunkLength.Concat(iendChunkName).Concat(iendCrc.Reverse()).ToArray();
     }
 }
