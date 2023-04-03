@@ -1,6 +1,5 @@
 ﻿using Core.Lights;
 using System.Text;
-using System.IO.Hashing;
 using ImageFormatConverter.Abstractions.Interfaces;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
