@@ -124,4 +124,26 @@ public static class ScenesSetup
 
         return scene;
     }
+    
+    public static Scene SphereBetweenCameraAndLight()
+    {
+        Camera camera = new
+        (
+            new Point(0, 0, 0),
+            new Vector(0, 1, 0),
+            90,
+            1
+        );
+
+        var projectionPlane = new ProjectionPlane(camera, 90, 90);
+        Sphere sphere = new(new(0, 10, -4), 5);
+
+        LightPoint lightPoint = new(new Point(0, 20, 17), new Color(255, 255, 255));
+
+        Scene scene = new() { ProjectionPlane = projectionPlane };
+        scene.LightSources.Add(lightPoint);
+        scene.Figures.Add(sphere);
+
+        return scene;
+    }
 }

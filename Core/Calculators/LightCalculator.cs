@@ -12,7 +12,7 @@ public static class LightCalculator
         foreach (var lightSource in scene.LightSources)
         {
             Ray toLightRay = new(intersection, lightSource.GetVector(intersection));
-            if (!IsOnLight(scene, toLightRay, intersection, figure))
+            if (!scene.Figures.CheckForIntersections(toLightRay, figure))
                 continue;
             Vector normal = figure!.GetNormalVector(intersection);
             if (figure.IsFlat && normal.FindCos(scene.ProjectionPlane.Camera.Direction) > 0)
@@ -25,16 +25,5 @@ public static class LightCalculator
                 pixel.B += (int)(Math.Abs(cosLight) * lightSource.Color.B);
             }
         }
-    }
-
-    private static bool IsOnLight(Scene scene, Ray ray, Point currentIntersection, IIntersectable currentFigure)
-    {
-        foreach (var figure in scene.Figures)
-        {
-            if (figure.GetIntersectionWith(ray) is { } point
-                && (!point.Equals(currentIntersection) || figure != currentFigure))
-                return false;
-        }
-        return true;
     }
 }
