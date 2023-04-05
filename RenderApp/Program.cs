@@ -9,6 +9,7 @@ var consoleRendererRetroSymbols = new ConsoleRenderer(true, false);
 
 var scenes = new[]
 {
+    (consoleRendererColourful, ScenesSetup.SphereBetweenCameraAndLight()),
     (consoleRendererColourful, ScenesSetup.PlaneAndSphere()),
     (consoleRendererColourful, ScenesSetup.SceneWithAllFigures()),
     (consoleRendererRetroSymbols, ScenesSetup.CheburashkaScene()),
