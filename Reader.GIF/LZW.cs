@@ -14,7 +14,7 @@ public class Lzw
 		}
 		int digitCapacity = 9, index = 256, maxIndex = 512;
 		string tempStr = string.Empty, prev = string.Empty;
-		bool flag = true;
+		var firstPriorWordWasRead = true;
 		foreach (var compressedByte in compressedData)
 		{
 			for (int i = 7; i >= 0; i--)
@@ -25,10 +25,10 @@ public class Lzw
 				if (tempStr.Length != digitCapacity) continue;
 
 				int tempInt = Convert.ToInt32(tempStr);
-				if (flag)
+				if (firstPriorWordWasRead)
 				{
 					decompressedData.Add((byte)tempInt);
-					flag = false;
+					firstPriorWordWasRead = false;
 					prev = Convert.ToChar(tempInt).ToString();
 				}
 				else {
