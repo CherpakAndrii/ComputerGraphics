@@ -24,15 +24,14 @@ public class Lzw
 
 				if (tempStr.Length != digitCapacity) continue;
 
+				int tempInt = Convert.ToInt32(tempStr);
 				if (flag)
 				{
-					int tempInt = Convert.ToInt32(tempStr);
 					decompressedData.Add((byte)tempInt);
 					flag = false;
 					prev = Convert.ToChar(tempInt).ToString();
 				}
 				else {
-					int tempInt = Convert.ToInt32(tempStr);
 					if (dictionary.TryGetValue(tempInt, out var value)) {
 						prev += value[0];
 						dictionary.Add(index++, prev);
