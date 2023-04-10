@@ -12,7 +12,7 @@ public class Lzw
 		{
 			dictionary.Add(i, Convert.ToChar(i).ToString());
 		}
-		int digitCapacity = 9, index = 256, maxIndex = 512;
+		int digitCapacity = 7, index = 64, maxIndex = 128;
 		string tempStr = string.Empty, prev = string.Empty;
 		var firstPriorWordWasRead = true;
 		foreach (var compressedByte in compressedData)
