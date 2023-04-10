@@ -665,3 +665,11 @@ fabric.properties
 .idea/.idea.ImageFormatConverter/.idea/
 
 ImagePlugins/
+
+ImageFormatConverter.Tests/**/createdBmps
+
+ImageFormatConverter.Tests/**/createdPngs
+
+ImageFormatConverter.Tests/**/createdPpms
+
+ImageFormatConverter.Tests/**/interformat
