@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Core\Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="ColorReplacementRange.cs">
+        <DependentUpon>GifPalette.cs</DependentUpon>
+      </Compile>
+      <Compile Update="PixelsRange.cs">
+        <DependentUpon>GifPaletteSelector.cs</DependentUpon>
+      </Compile>
+      <Compile Update="GifPalette.cs">
+        <DependentUpon>GifPaletteSelector.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
