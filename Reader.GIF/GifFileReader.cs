@@ -29,8 +29,8 @@ public class GifFileReader : IImageReader
             fileData[5] != 'a')
             return false;
 
-        int logicalWidth = BitConverter.ToInt32(fileData.AsSpan()[6..8]);
-        int logicalHeight = BitConverter.ToInt32(fileData.AsSpan()[8..10]);
+        int logicalWidth = BitConverter.ToInt32(fileData[6..8].Concat(new byte[2] { 0, 0 }).ToArray());
+        int logicalHeight = BitConverter.ToInt32(fileData[8..10].Concat(new byte[2] {0, 0}).ToArray());
 
         BitArray logicalScreenData = new(new byte[] { fileData[10] });
         //pixel+1 = # bits/pixel in image
@@ -75,16 +75,17 @@ public class GifFileReader : IImageReader
                     cursor += fileData[cursor] + 1;
                     if (fileData.Length <= cursor) return false;
                 } while (fileData[cursor] != 0);
+                cursor++;
             }
             else return false;
         }
 
         if (fileData.Length <= cursor + 10) return false;
         //image description
-        int imageLeft = BitConverter.ToInt32(fileData.AsSpan()[(cursor + 1)..(cursor + 3)]);
-        int imageTop = BitConverter.ToInt32(fileData.AsSpan()[(cursor + 3)..(cursor + 5)]);
-        int imageWidth = BitConverter.ToInt32(fileData.AsSpan()[(cursor + 5)..(cursor + 7)]);
-        int imageHeight = BitConverter.ToInt32(fileData.AsSpan()[(cursor + 7)..(cursor + 9)]);
+        int imageLeft = BitConverter.ToInt32(fileData[(cursor + 1)..(cursor + 3)].Concat(new byte[2] {0, 0}).ToArray());
+        int imageTop = BitConverter.ToInt32(fileData[(cursor + 3)..(cursor + 5)].Concat(new byte[2] {0, 0}).ToArray());
+        int imageWidth = BitConverter.ToInt32(fileData[(cursor + 5)..(cursor + 7)].Concat(new byte[2] {0, 0}).ToArray());
+        int imageHeight = BitConverter.ToInt32(fileData[(cursor + 7)..(cursor + 9)].Concat(new byte[2] {0, 0}).ToArray());
         if (imageWidth < 0 || imageHeight < 0) return false;
         BitArray localData = new(new byte[] { fileData[cursor + 9] });
         //pixel+1 = # bits/pixel in image
@@ -150,19 +151,14 @@ public class GifFileReader : IImageReader
     private static int IntFromBitArray(BitArray bitArray, int from, int to)
     {
         int value = 0;
-        if (from > 0 && to - from <= 32 && bitArray.Count <= to)
+        if (from >= 0 && to - from <= 32 && bitArray.Count >= to)
         {
             for (int i = from; i < to; i++)
             {
                 if (bitArray[i])
-                    value += Convert.ToInt16(Math.Pow(2, i));
+                    value += Convert.ToInt16(Math.Pow(2, i - from));
             }
         }
         return value;
-    }
-
-    private static byte[] tempLzw(int minlzwCodeSize, byte[] input)
-    {
-        return new byte[10];
     }
 }

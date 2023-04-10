@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Text;
 
 namespace Reader.GIF;
 
@@ -8,7 +9,7 @@ public class Lzw
     {
 	    List<byte> decompressedData = new();
         Dictionary<int, string> dictionary = new();
-        for (int i = 0; i <= 255; i++)
+        for (int i = 0; i <= 63; i++)
 		{
 			dictionary.Add(i, Convert.ToChar(i).ToString());
 		}
@@ -17,14 +18,15 @@ public class Lzw
 		var firstPriorWordWasRead = true;
 		foreach (var compressedByte in compressedData)
 		{
+			var compressedReverseByte = Reverse(compressedByte);
 			for (int i = 7; i >= 0; i--)
 			{
-				int bit = (compressedByte >> i) & 1;
+				int bit = (compressedReverseByte >> i) & 1;
 				tempStr += bit.ToString();
 
 				if (tempStr.Length != digitCapacity) continue;
 
-				int tempInt = Convert.ToInt32(tempStr);
+				int tempInt = IntFromStr(tempStr);
 				if (firstPriorWordWasRead)
 				{
 					decompressedData.Add((byte)tempInt);
@@ -56,5 +58,25 @@ public class Lzw
 		}
 
 		return decompressedData.ToArray();
+    }
+
+    private byte Reverse(byte b)
+    {
+        int a = 0;
+        for (int i = 0; i < 8; i++)
+            if ((b & (1 << i)) != 0)
+                a |= 1 << (7 - i);
+        return (byte)a;
+    }
+
+    private static int IntFromStr(string str)
+    {
+        int value = 0;
+		for (int i = 0; i < str.Length; i++)
+        {
+            if (str[i] == '1')
+                value += Convert.ToInt32(Math.Pow(2, i));
+        }
+        return value;
     }
 }
