@@ -13,7 +13,7 @@ public readonly struct ColorReplacementRange
         _bMin = bMin;
         _bMax = bMax;
         
-        Hash = _rMin << 16 + _gMin << 8 + _bMin;
+        Hash = (_rMin << 16) + (_gMin << 8) + _bMin;
     }
 
     private readonly byte _rMin;
@@ -26,5 +26,5 @@ public readonly struct ColorReplacementRange
     public bool Contains(Color c) =>
         c.R >= _rMin && c.R <= _rMax && c.G >= _gMin && c.G <= _gMax && c.B >= _bMin && c.B <= _bMax;
     
-    public long Hash { get; }
+    public int Hash { get; }
 }

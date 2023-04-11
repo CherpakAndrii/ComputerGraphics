@@ -22,7 +22,7 @@ public class GifPaletteSelector
                 if (ranges[i].Delta > withMaxDiff.Delta) withMaxDiff = ranges[i];
             }
             
-            if (withMaxDiff.Delta < 15) break;
+            if (withMaxDiff.Delta < 5) break;
             ranges.Add(withMaxDiff.Split());
         }
 
@@ -54,6 +54,7 @@ public class GifPaletteSelector
         for (int j = 0; j < m; j++)
             arr1D[ctr++] = picture[i, j];
 
+        Array.Sort(arr1D, (c1, c2) => c1.GetNumericRepresentation().CompareTo(c2.GetNumericRepresentation()));
         return arr1D;
     }
 }

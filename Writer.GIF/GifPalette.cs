@@ -50,7 +50,7 @@ public class GifPalette
             else hInd = cInd + 1;
         }
 
-        return hInd - lInd == 2 && _sortedReplacementMap[lInd + 1].Item1.Hash < colorHash ?
+        return hInd - lInd == 2 && _sortedReplacementMap[lInd + 1].Item1.Hash <= colorHash ?
             _sortedReplacementMap[lInd + 1] : _sortedReplacementMap[lInd];
     }
 }

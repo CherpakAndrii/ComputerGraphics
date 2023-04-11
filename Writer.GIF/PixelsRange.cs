@@ -2,7 +2,7 @@
 
 namespace Writer.GIF;
 
-internal struct PixelsRange
+internal class PixelsRange
 {
     public int StartInd { get; }
     public int EndInd { get; private set; }
@@ -39,7 +39,7 @@ internal struct PixelsRange
         else if (gDiff > bDiff) lambda = (Color c) => (byte)c.G;
         else lambda = (Color c) => (byte)c.B;
         
-        int centralElementIndex = OrderArr(lambda);
+        int centralElementIndex = EndInd-StartInd == 2 ? EndInd-1 : OrderArr(lambda);
         PixelsRange newPixRange = new PixelsRange(_colors, centralElementIndex, EndInd);
         EndInd = centralElementIndex;
         UpdateStats();

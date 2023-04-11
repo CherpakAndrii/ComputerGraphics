@@ -42,5 +42,5 @@ public struct Color
         B = original.B;
     }
 
-    public long GetNumericRepresentation() => _r << 16 + _g << 8 + _b;
+    public int GetNumericRepresentation() => (_r << 16) + (_g << 8) + _b;
 }
