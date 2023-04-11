@@ -4,7 +4,6 @@ using Core.Lights;
 using Core.ObjFileReader;
 using Core.Scenes;
 using ImageFormatConverter.Common;
-using RenderApp;
 using RenderApp.FileOutput;
 using Structures.BaseGeometricalStructures;
 
@@ -45,9 +44,7 @@ foreach (var figure in structures)
     scene.Figures.Add(figure);
 }
 
-RayTracer rayTracer = new(scene);
-
-var pixels = rayTracer.TraceRays();
-
 IRenderOutput renderOutput = new RenderFileOutput(output);
-renderOutput.CreateRenderResult(pixels);
+
+RayTracer rayTracer = new(scene, renderOutput);
+rayTracer.TraceRays();

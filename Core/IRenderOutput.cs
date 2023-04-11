@@ -1,6 +1,6 @@
 ﻿using Core.Lights;
 
-namespace RenderApp;
+namespace Core;
 
 public interface IRenderOutput
 {

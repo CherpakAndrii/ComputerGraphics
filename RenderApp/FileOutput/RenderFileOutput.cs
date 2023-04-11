@@ -1,4 +1,5 @@
-﻿using Core.Lights;
+﻿using Core;
+using Core.Lights;
 using ImageFormatConverter.Console;
 
 namespace RenderApp.FileOutput;

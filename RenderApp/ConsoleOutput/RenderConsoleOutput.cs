@@ -1,3 +1,4 @@
+using Core;
 using Core.Lights;
 
 namespace RenderApp.ConsoleOutput;

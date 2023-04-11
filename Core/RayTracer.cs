@@ -9,9 +9,15 @@ public class RayTracer
 {
     public Scene Scene { get; }
 
-    public RayTracer(Scene scene) { Scene = scene; }
+    private IRenderOutput _renderOutput;
 
-    public Color[,] TraceRays()
+    public RayTracer(Scene scene, IRenderOutput renderOutput)
+    {
+        Scene = scene;
+        _renderOutput = renderOutput;
+    }
+
+    public void TraceRays()
     {
         Point[,] projectionPlane = Scene.ProjectionPlane.Matrix;
         Color[,] pixels = new Color[projectionPlane.GetLength(0), projectionPlane.GetLength(1)];
@@ -25,6 +31,7 @@ public class RayTracer
                     LightCalculator.CalculateLight(Scene, ref pixels[i, j], intersectionPoint, figure);
             }
         }
-        return pixels;
+        
+        _renderOutput.CreateRenderResult(pixels);
     }
 }
