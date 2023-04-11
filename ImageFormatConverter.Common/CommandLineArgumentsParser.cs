@@ -1,4 +1,4 @@
-﻿namespace ImageFormatConverter.Console;
+﻿namespace ImageFormatConverter.Common;
 
 public class CommandLineArgumentsParser
 {

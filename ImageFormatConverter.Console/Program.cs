@@ -1,4 +1,5 @@
-﻿using ImageFormatConverter.Console;
+﻿using ImageFormatConverter.Common;
+using ImageFormatConverter.Console;
 
 const string goalFormatFlag = "goal-format";
 const string sourceFlag = "source";

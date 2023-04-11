@@ -1,26 +1,19 @@
-﻿using Core;
-using RenderApp;
+﻿using Core.ObjFileReader;
+using ImageFormatConverter.Common;
 
-ConsoleConfigurator configurator = new();
-configurator.SetupConsole();
+const string sourceFlag = "source";
+const string outputFlag = "output";
 
-var consoleRendererColourful = new ConsoleRenderer(false, false);
-var consoleRendererRetroSymbols = new ConsoleRenderer(true, false);
+var flagValues = CommandLineArgumentsParser.GetFlagsValues
+(
+    args,
+    new []{ sourceFlag, outputFlag },
+    Array.Empty<string>()
+);
 
-var scenes = new[]
-{
-    (consoleRendererColourful, ScenesSetup.SphereBetweenCameraAndLight()),
-    (consoleRendererColourful, ScenesSetup.PlaneAndSphere()),
-    (consoleRendererColourful, ScenesSetup.SceneWithAllFigures()),
-    (consoleRendererRetroSymbols, ScenesSetup.CheburashkaScene()),
-    (consoleRendererColourful, ScenesSetup.CheburashkaScene()),
-    (consoleRendererColourful, ScenesSetup.SceneSphereAndDisk())
-};
+var source = flagValues[sourceFlag];
+var output = flagValues[outputFlag];
 
-foreach (var scene in scenes)
-{
-    RayTracer rayTracer = new(scene.Item2);
-    scene.Item1.PrintToConsole(rayTracer.TraceRays());
-    Console.ReadKey();
-    Console.Clear();
-}
+ObjFileReader objFileReader = new();
+var objFileData = File.ReadAllLines(source);
+objFileReader.GetStructuresFromFile(objFileData);
