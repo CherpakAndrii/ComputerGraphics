@@ -1,4 +1,5 @@
-﻿using Structures.BaseGeometricalStructures;
+﻿using System.Globalization;
+using Structures.BaseGeometricalStructures;
 using Structures.Interfaces;
 using Structures.IntersectableFigures;
 
@@ -31,9 +32,9 @@ public class ObjFileReader
         for (int i = 0; i < v.Count; i++)
         {
             var splited = v[i].Split();
-            if (splited.Length != 4 || !float.TryParse(splited[1], out float x)
-                                    || !float.TryParse(splited[2], out float y) 
-                                    || !float.TryParse(splited[3], out float z)) return null;
+            if (splited.Length != 4 || !float.TryParse(splited[1], CultureInfo.InvariantCulture, out float x)
+                                    || !float.TryParse(splited[2], CultureInfo.InvariantCulture, out float y) 
+                                    || !float.TryParse(splited[3], CultureInfo.InvariantCulture, out float z)) return null;
             points[i] = new Point(x, y, z);
         }
 
@@ -45,7 +46,7 @@ public class ObjFileReader
                                     || !int.TryParse(splited[3].Split('/')[0], out int c)
                                     || a < 1 || b < 1 || c < 1 || a > points.Length || b > points.Length
                                     || c > points.Length) return null;
-            figures.Add(new Triangle(points[a], points[b], points[c]));
+            figures.Add(new Triangle(points[a - 1], points[b - 1], points[c - 1]));
         }
         
         return figures;
