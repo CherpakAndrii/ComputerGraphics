@@ -8,6 +8,9 @@ using RenderApp;
 using Structures.BaseGeometricalStructures;
 using Structures.IntersectableFigures;
 
+ConsoleConfigurator configurator = new();
+configurator.SetupConsole();
+
 const string sourceFlag = "source";
 const string outputFlag = "output";
 
@@ -50,4 +53,3 @@ var consoleRendererColourful = new ConsoleRenderer(false, false);
 consoleRendererColourful
     .PrintToConsole(rayTracer.TraceRays());
 Console.ReadKey();
-Console.Clear();
