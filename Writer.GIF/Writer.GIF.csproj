@@ -11,12 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="ColorReplacementRange.cs">
-        <DependentUpon>GifPalette.cs</DependentUpon>
-      </Compile>
-      <Compile Update="PixelsRange.cs">
-        <DependentUpon>GifPaletteSelector.cs</DependentUpon>
-      </Compile>
       <Compile Update="GifPalette.cs">
         <DependentUpon>GifPaletteSelector.cs</DependentUpon>
       </Compile>

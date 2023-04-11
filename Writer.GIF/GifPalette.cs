@@ -5,9 +5,9 @@ namespace Writer.GIF;
 public class GifPalette
 {
     public Color[] BaseColors;
-    private (ColorReplacementRange, byte)[] _sortedReplacementMap;
+    private (Color, byte)[] _sortedReplacementMap;
 
-    public GifPalette(Color[] baseColors, (ColorReplacementRange, byte)[] sortedReplacementMap)
+    public GifPalette(Color[] baseColors, (Color, byte)[] sortedReplacementMap)
     {
         BaseColors = baseColors;
         _sortedReplacementMap = sortedReplacementMap;
@@ -35,22 +35,18 @@ public class GifPalette
     
     private byte? GetBaseColorIndexByOriginal(Color color)
     {
-        long colorHash = color.GetNumericRepresentation();
-        (ColorReplacementRange, byte) targetRange = GetTargetRange(colorHash);
-        return targetRange.Item1.Contains(color) ? targetRange.Item2 : null;
-    }
+        int colorHash = color.GetNumericRepresentation();
+        int lBound = 0, uBound = _sortedReplacementMap.Length, center, currentHash;
 
-    private (ColorReplacementRange, byte) GetTargetRange(long colorHash)
-    {
-        int hInd = _sortedReplacementMap.Length, lInd = 0, cInd;
-        while (hInd - lInd > 2)
+        while (lBound < uBound)
         {
-            cInd = (hInd + lInd) / 2;
-            if (_sortedReplacementMap[cInd].Item1.Hash < colorHash) lInd = cInd;
-            else hInd = cInd + 1;
+            center = (lBound + uBound) / 2;
+            currentHash = _sortedReplacementMap[center].Item1.GetNumericRepresentation();
+            if (currentHash == colorHash) return _sortedReplacementMap[center].Item2;
+            if (currentHash > colorHash) uBound = center;
+            else lBound = center+1;
         }
-
-        return hInd - lInd == 2 && _sortedReplacementMap[lInd + 1].Item1.Hash <= colorHash ?
-            _sortedReplacementMap[lInd + 1] : _sortedReplacementMap[lInd];
+        
+        return null;
     }
 }
