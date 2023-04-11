@@ -1,4 +1,6 @@
-﻿namespace ImageFormatConverter.Console;
+﻿using ImageFormatConverter.Common;
+
+namespace ImageFormatConverter.Console;
 
 public class ConverterApp
 {

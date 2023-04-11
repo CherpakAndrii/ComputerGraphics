@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using System.Runtime.Loader;
 using ImageFormatConverter.Abstractions.Interfaces;
+using ImageFormatConverter.Console;
 
-namespace ImageFormatConverter.Console;
+namespace ImageFormatConverter.Common;
 
 public class FileFactory
 {
@@ -40,9 +40,9 @@ public class FileFactory
 
         if (string.IsNullOrEmpty(inputExtension))
         {
-            throw new Exception($"Error: you are trying to open file with unsupported extension. Only {string.Join(" and ", supportedReaderFormats)} files are supported");
+            throw new Exception($"You are trying to open file with unsupported extension. Only {string.Join(" and ", supportedReaderFormats)} files are supported");
         }
-        throw new Exception($"Error: you are trying to open {inputExtension} file, but only {string.Join(" and ", supportedReaderFormats)} files are supported");
+        throw new Exception($"You are trying to open {inputExtension} file, but only {string.Join(" and ", supportedReaderFormats)} files are supported");
         
     }
     
@@ -53,7 +53,7 @@ public class FileFactory
             return writer;
         
         var supportedWriterFormats = GetSupportedWritersExtensions();
-        throw new Exception($"Error: you are trying to write .{goalFormat} file, but only {string.Join(" and ", supportedWriterFormats)} files are supported");
+        throw new Exception($"You are trying to write .{goalFormat} file, but only {string.Join(" and ", supportedWriterFormats)} files are supported");
     }
 
     public FileConverter CreateFileConverter(byte[] fileData, string? inputExtension, string goalFormat)
