@@ -8,7 +8,7 @@ public class GifPaletteSelector
     {
         Color[] pictureColors = To1DArray(sourceImage);
         Color[] uniqueColors = GetUniqueColors(pictureColors);
-        if (uniqueColors.Length < 257) 
+        if (uniqueColors.Length <= 256) 
             return GetPaletteFromUniqueColors(uniqueColors);
 
         var normalizedData = Normalization.Normalize(pictureColors);

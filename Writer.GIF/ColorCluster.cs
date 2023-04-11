@@ -12,8 +12,6 @@ public static class ColorClusterization
         while (ctr-- > 0 && GetClusterCenters(ref centers, normalizedData, numberOfClusters, clusterIndexes))
         {
             clusterIndexes = UpdateClustersByCenters(centers, normalizedData);
-            
-            Console.WriteLine(ctr);
         }
 
         centers = ClearUnusedClusters(centers, clusterIndexes);

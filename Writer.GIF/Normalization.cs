@@ -26,7 +26,7 @@ public class Normalization
         {
             means[i] /= colors.Length;
             double udev = upperBounds[i] - means[i], ldev = means[i] - lowerBounds[i];
-            deviations[i] = ldev > udev ? ldev : udev;
+            deviations[i] = ldev > udev ? ldev : udev > 0 ? udev : 1;
         }
 
         (double, double, double)[] normalized = new (double, double, double)[colors.Length];
