@@ -12,15 +12,18 @@ public class SceneTransformator
         { 0, 0, 0, 1 }
     };
 
-    public double AngleX { get; private set; } = 0;
+    public double AngleRadX { get; private set; } = 0;
+    public double AngleDegreeX { get { return AngleRadX * 180.0 / Math.PI; } }
     public double SinX { get; private set; } = 0;
     public double CosX { get; private set; } = 1;
 
-    public double AngleY { get; private set; } = 0;
+    public double AngleRadY { get; private set; } = 0;
+    public double AngleDegreeY { get { return AngleRadY * 180.0 / Math.PI; } }
     public double SinY { get; private set; } = 0;
     public double CosY { get; private set; } = 1;
 
-    public double AngleZ { get; private set; } = 0;
+    public double AngleRadZ { get; private set; } = 0;
+    public double AngleDegreeZ { get { return AngleRadZ * 180.0 / Math.PI; } }
     public double SinZ { get; private set; } = 0;
     public double CosZ { get; private set; } = 1;
 
@@ -32,30 +35,33 @@ public class SceneTransformator
     public double ScaleY { get; private set; } = 1;
     public double ScaleZ { get; private set; } = 1;
 
-    public void RotateX(double angle) => RotateX(angle, true);
-    private void RotateX(double angle, bool update)
+    public void RotateDegreeX(double angleDegree) => RotateX(angleDegree * Math.PI / 180.0, true);
+    public void RotateRadX(double angleRad) => RotateX(angleRad, true);
+    private void RotateX(double angleRad, bool update)
     {
-        AngleX += angle;
-        SinX = Math.Sin(AngleX);
-        CosX = Math.Cos(AngleX);
+        AngleRadX += angleRad;
+        SinX = Math.Sin(AngleRadX);
+        CosX = Math.Cos(AngleRadX);
         if (update) UpdateTransformationMatrix();
     }
 
-    public void RotateY(double angle) => RotateY(angle, true);
-    private void RotateY(double angle, bool update)
+    public void RotateDegreeY(double angleDegree) => RotateY(angleDegree * Math.PI / 180.0, true);
+    public void RotateRadY(double angleRad) => RotateY(angleRad, true);
+    private void RotateY(double angleRad, bool update)
     {
-        AngleX += angle;
-        SinX = Math.Sin(AngleX);
-        CosX = Math.Cos(AngleX);
+        AngleRadY += angleRad;
+        SinY = Math.Sin(AngleRadY);
+        CosY = Math.Cos(AngleRadY);
         if (update) UpdateTransformationMatrix();
     }
 
-    public void RotateZ(double angle) => RotateZ(angle, true);
-    private void RotateZ(double angle, bool update)
+    public void RotateDegreeZ(double angleDegree) => RotateZ(angleDegree * Math.PI / 180.0, true);
+    public void RotateRadZ(double angleRad) => RotateZ(angleRad, true);
+    private void RotateZ(double angleRad, bool update)
     {
-        AngleX += angle;
-        SinX = Math.Sin(AngleX);
-        CosX = Math.Cos(AngleX);
+        AngleRadZ += angleRad;
+        SinZ = Math.Sin(AngleRadZ);
+        CosZ = Math.Cos(AngleRadZ);
         if (update) UpdateTransformationMatrix();
     }
 
@@ -137,8 +143,8 @@ public class SceneTransformator
         ScaleX = 1;
         ScaleY = 1;
         ScaleY = 1;
-        RotateX(-AngleX, false);
-        RotateY(-AngleY, false);
-        RotateZ(-AngleZ, true);
+        RotateX(-AngleRadX, false);
+        RotateY(-AngleRadY, false);
+        RotateZ(-AngleRadZ, true);
     }
 }
