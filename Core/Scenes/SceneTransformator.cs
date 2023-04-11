@@ -32,7 +32,8 @@ public class SceneTransformator
     public double ScaleY { get; private set; } = 1;
     public double ScaleZ { get; private set; } = 1;
 
-    public void RotateX(double angle, bool update = true)
+    public void RotateX(double angle) => RotateX(angle, true);
+    private void RotateX(double angle, bool update)
     {
         AngleX += angle;
         SinX = Math.Sin(AngleX);
@@ -40,7 +41,8 @@ public class SceneTransformator
         if (update) UpdateTransformationMatrix();
     }
 
-    public void RotateY(double angle, bool update = true)
+    public void RotateY(double angle) => RotateY(angle, true);
+    private void RotateY(double angle, bool update)
     {
         AngleX += angle;
         SinX = Math.Sin(AngleX);
@@ -48,7 +50,8 @@ public class SceneTransformator
         if (update) UpdateTransformationMatrix();
     }
 
-    public void RotateZ(double angle, bool update = true)
+    public void RotateZ(double angle) => RotateZ(angle, true);
+    private void RotateZ(double angle, bool update)
     {
         AngleX += angle;
         SinX = Math.Sin(AngleX);
@@ -56,63 +59,63 @@ public class SceneTransformator
         if (update) UpdateTransformationMatrix();
     }
 
-    public void Rotate(Vector angles, bool update = true)
+    public void Rotate(Vector angles)
     {
         RotateX(angles.X, false);
         RotateY(angles.Y, false);
-        RotateZ(angles.Z, update);
+        RotateZ(angles.Z, true);
     }
 
-    public void MoveX(double directionX, bool update = true)
+    public void MoveX(double directionX)
     {
         ShiftX += directionX;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
-    public void MoveY(double directionY, bool update = true)
+    public void MoveY(double directionY)
     {
         ShiftY += directionY;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
-    public void MoveZ(double directionZ, bool update = true)
+    public void MoveZ(double directionZ)
     {
         ShiftZ += directionZ;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
-    public void Move(Vector direction, bool update = true)
+    public void Move(Vector direction)
     {
         ShiftX += direction.X;
         ShiftY += direction.Y;
         ShiftZ += direction.Z;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
-    public void ToScaleX(double scaleX, bool update = true)
+    public void ToScaleX(double scaleX)
     {
         ScaleX *= scaleX;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
-    public void ToScaleY(double scaleY, bool update = true)
+    public void ToScaleY(double scaleY)
     {
         ScaleY *= scaleY;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
-    public void ToScaleZ(double scaleZ, bool update = true)
+    public void ToScaleZ(double scaleZ)
     {
         ScaleZ *= scaleZ;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
-    public void ToScale(Vector scale, bool update = true)
+    public void ToScale(Vector scale)
     {
         ScaleX *= scale.X;
         ScaleY *= scale.Y;
         ScaleZ *= scale.Z;
-        if (update) UpdateTransformationMatrix();
+        UpdateTransformationMatrix();
     }
 
     private void UpdateTransformationMatrix()
@@ -128,15 +131,14 @@ public class SceneTransformator
 
     public void ResetTransformation()
     {
-        RotateX(-AngleX, false);
-        RotateY(-AngleY, false);
-        RotateZ(-AngleZ, false);
         ShiftX = 0;
         ShiftY = 0;
         ShiftZ = 0;
         ScaleX = 1;
         ScaleY = 1;
         ScaleY = 1;
-        UpdateTransformationMatrix();
+        RotateX(-AngleX, false);
+        RotateY(-AngleY, false);
+        RotateZ(-AngleZ, true);
     }
 }
