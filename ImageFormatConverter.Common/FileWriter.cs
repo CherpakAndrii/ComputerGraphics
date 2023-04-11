@@ -17,9 +17,4 @@ public class FileWriter
 
         File.WriteAllBytes(path, targetFileData);
     }
-    
-    public void Write(byte[] targetFileData, string goalFormat, string outputPathWithName, string fileName)
-    {
-        Write(targetFileData, goalFormat, $"{outputPathWithName}\\{fileName}");
-    }
 } 

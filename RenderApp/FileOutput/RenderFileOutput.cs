@@ -15,12 +15,13 @@ public class RenderFileOutput : IRenderOutput
 
     public void CreateRenderResult(Color[,] pixels)
     {
+        var targetExtension = _output.Split('.').Last();
+        
         var fileFactory = new FileFactory();
-        var imageWriter = fileFactory.GetImageWriter("png");
-
+        var imageWriter = fileFactory.GetImageWriter(targetExtension);
+        
         var fileData = imageWriter.WriteToFile(pixels);
 
-        var fileWriter = new FileWriter(_output);
-        fileWriter.Write(fileData, $".{imageWriter.FileExtension}", _output, "picture");
+        File.WriteAllBytes(_output, fileData);
     }
 }
