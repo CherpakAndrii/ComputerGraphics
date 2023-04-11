@@ -4,7 +4,8 @@ using Core.Lights;
 using Core.ObjFileReader;
 using Core.Scenes;
 using ImageFormatConverter.Common;
-using ImageFormatConverter.Console;
+using RenderApp;
+using RenderApp.FileOutput;
 using Structures.BaseGeometricalStructures;
 
 const string sourceFlag = "source";
@@ -20,8 +21,9 @@ var flagValues = CommandLineArgumentsParser.GetFlagsValues
 var source = flagValues[sourceFlag];
 var output = flagValues[outputFlag];
 
-ObjFileReader objFileReader = new();
 var objFileData = File.ReadAllLines(source);
+
+ObjFileReader objFileReader = new();
 var structures = objFileReader.GetStructuresFromFile(objFileData);
 
 Camera camera = new
@@ -45,10 +47,7 @@ foreach (var figure in structures)
 
 RayTracer rayTracer = new(scene);
 
-var fileFactory = new FileFactory();
-var imageWriter = fileFactory.GetImageWriter("png");
+var pixels = rayTracer.TraceRays();
 
-var fileData = imageWriter.WriteToFile(rayTracer.TraceRays());
-
-var fileWriter = new FileWriter(output);
-fileWriter.Write(fileData, $".{imageWriter.FileExtension}", output, "picture");
+IRenderOutput renderOutput = new RenderFileOutput(output);
+renderOutput.CreateRenderResult(pixels);
