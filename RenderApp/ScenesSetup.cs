@@ -8,6 +8,26 @@ namespace RenderApp;
 
 public static class ScenesSetup
 {
+    public static Scene EmptySceneWithLightAndCamera()
+    {
+        Camera camera = new
+        (
+            new Point(0, -1, 0),
+            new Vector(0, 1, 0),
+            90,
+            1
+        );
+        
+        var projectionPlane = new ProjectionPlane(camera, 100, 100);
+
+        LightPoint lightPoint = new(new Point(0, -1, 0), new Color(100, 255, 255));
+
+        Scene scene = new() { ProjectionPlane = projectionPlane };
+        scene.LightSources.Add(lightPoint);
+
+        return scene;
+    }
+    
     public static Scene CheburashkaScene()
     {
         Camera camera = new
