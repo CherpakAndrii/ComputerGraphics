@@ -4,6 +4,7 @@ using Core.Lights;
 using Core.ObjFileReader;
 using Core.Scenes;
 using ImageFormatConverter.Common;
+using ImageFormatConverter.Console;
 using RenderApp;
 using Structures.BaseGeometricalStructures;
 using Structures.IntersectableFigures;
@@ -30,7 +31,7 @@ var structures = objFileReader.GetStructuresFromFile(objFileData);
 
 Camera camera = new
 (
-    new Point(0, -2, 0),
+    new Point(0, -1, 0),
     new Vector(0, 1, 0),
     90,
     1
@@ -49,7 +50,10 @@ foreach (var figure in structures)
 
 RayTracer rayTracer = new(scene);
 
-var consoleRendererColourful = new ConsoleRenderer(false, false);
-consoleRendererColourful
-    .PrintToConsole(rayTracer.TraceRays());
-Console.ReadKey();
+var fileFactory = new FileFactory();
+var imageWriter = fileFactory.GetImageWriter("png");
+
+var fileData = imageWriter.WriteToFile(rayTracer.TraceRays());
+
+var fileWriter = new FileWriter(output);
+fileWriter.Write(fileData, $".{imageWriter.FileExtension}", output, "picture");

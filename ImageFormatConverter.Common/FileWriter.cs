@@ -9,12 +9,17 @@ public class FileWriter
         _defaultPath = defaultPath;
     }
 
-    public void Write(byte[] targetFileData, string goalFormat, string? outputPath)
+    public void Write(byte[] targetFileData, string goalFormat, string? outputPathWithName)
     {
-        var path = outputPath is not null
-            ? outputPath + goalFormat
+        var path = outputPathWithName is not null
+            ? outputPathWithName + goalFormat
             : Path.ChangeExtension(_defaultPath, goalFormat);
 
         File.WriteAllBytes(path, targetFileData);
+    }
+    
+    public void Write(byte[] targetFileData, string goalFormat, string outputPathWithName, string fileName)
+    {
+        Write(targetFileData, goalFormat, $"{outputPathWithName}\\{fileName}");
     }
 } 
