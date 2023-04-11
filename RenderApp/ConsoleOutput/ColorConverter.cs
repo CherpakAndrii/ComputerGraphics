@@ -1,6 +1,6 @@
 ﻿using Core.Lights;
 
-namespace RenderApp;
+namespace RenderApp.ConsoleOutput;
 
 public static class ColorConverter
 {

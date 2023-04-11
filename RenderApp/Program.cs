@@ -5,12 +5,7 @@ using Core.ObjFileReader;
 using Core.Scenes;
 using ImageFormatConverter.Common;
 using ImageFormatConverter.Console;
-using RenderApp;
 using Structures.BaseGeometricalStructures;
-using Structures.IntersectableFigures;
-
-ConsoleConfigurator configurator = new();
-configurator.SetupConsole();
 
 const string sourceFlag = "source";
 const string outputFlag = "output";
@@ -37,9 +32,9 @@ Camera camera = new
     1
 );
 
-var projectionPlane = new ProjectionPlane(camera, 90, 90);
+var projectionPlane = new ProjectionPlane(camera, 100, 100);
 
-LightPoint lightPoint = new(new Point(-10, -10, -10), new Color(255, 255, 255));
+LightPoint lightPoint = new(new Point(0, -1, 0), new Color(100, 255, 255));
 
 Scene scene = new() { ProjectionPlane = projectionPlane };
 scene.LightSources.Add(lightPoint);

@@ -1,16 +1,21 @@
 using Core.Lights;
-namespace RenderApp;
 
-public class ConsoleRenderer
+namespace RenderApp.ConsoleOutput;
+
+public class RenderConsoleOutput : IRenderOutput
 {
-    public ConsoleRenderer(bool retro, bool retroColor)
+    public RenderConsoleOutput(bool retro, bool retroColor)
     {
+        ConsoleConfigurator configurator = new();
+        configurator.SetupConsole();
+
         Retro = retro;
         RetroColor = retroColor;
     }
     public bool Retro { get; }
     public bool RetroColor { get; }
-    public void PrintToConsole(Color[,] pixels)
+
+    public void CreateRenderResult(Color[,] pixels)
     {
         Console.ForegroundColor = ConsoleColor.White;
         for (int  i = 0; i < pixels.GetLength(0); i++)
