@@ -157,7 +157,7 @@ public class SceneTransformator
         {
             for (int j = 0; j < 4; j++)
             {
-                transformedPoint[j] +=(float)_transformationMatrix[i, j] * pointArray[i];
+                transformedPoint[i] +=(float)_transformationMatrix[i, j] * pointArray[j];
             }
         }
 
