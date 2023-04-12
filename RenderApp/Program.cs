@@ -26,13 +26,16 @@ try
     ObjFileReader objFileReader = new();
     var triangles = objFileReader.GetTrianglesFromFile(objFileData);
 
-    var scene = ScenesSetup.EmptySceneWithLightAndCamera();
+    SceneTransformator cameraTransformator = new();
+    cameraTransformator.RotateDegreeX(30);
+    cameraTransformator.Move(new Vector(0, -1, -0.3f));
+    var scene = ScenesSetup.EmptySceneWithLightAndCamera(cameraTransformator);
 
     SceneTransformator sceneTransformator = new();
-    sceneTransformator.RotateDegreeX(170);
-    sceneTransformator.RotateDegreeZ(45);
-    sceneTransformator.ToScale(new Vector(0.7f, 0.7f, 0.7f));
-    sceneTransformator.Move(new Vector(-0.2f, 0, 0.2f));
+    //sceneTransformator.RotateDegreeX(170);
+    //sceneTransformator.RotateDegreeZ(45);
+    //sceneTransformator.ToScale(new Vector(0.7f, 0.7f, 0.7f));
+    //sceneTransformator.Move(new Vector(-0.2f, 0, 0.2f));
     
 
     var transformedTriangles = triangles.Select(triangle => sceneTransformator.Apply(triangle)).ToArray();

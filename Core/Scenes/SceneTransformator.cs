@@ -179,7 +179,7 @@ public class SceneTransformator
         );
     }
     
-    public Point Apply(Vector vector)
+    public Vector Apply(Vector vector)
     {
         float[] vectorArray = { vector.X, vector.Y, vector.Z };
         float[] transformedVector = { 0, 0, 0 };
@@ -191,7 +191,7 @@ public class SceneTransformator
             }
         }
 
-        return new Point
+        return new Vector
         (
             transformedVector[0],
             transformedVector[1],
