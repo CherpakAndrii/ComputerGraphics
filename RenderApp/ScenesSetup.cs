@@ -18,7 +18,7 @@ public static class ScenesSetup
             1
         );
         
-        var projectionPlane = new ProjectionPlane(camera, 100, 100);
+        var projectionPlane = new ProjectionPlane(camera, 200, 200);
 
         LightPoint lightPoint = new(new Point(0, -1, 0), new Color(100, 255, 255));
 

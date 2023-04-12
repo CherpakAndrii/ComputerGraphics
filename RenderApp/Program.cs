@@ -4,6 +4,7 @@ using Core.Scenes;
 using ImageFormatConverter.Common;
 using RenderApp;
 using RenderApp.FileOutput;
+using Structures.BaseGeometricalStructures;
 
 const string sourceFlag = "source";
 const string outputFlag = "output";
@@ -28,8 +29,10 @@ try
     var scene = ScenesSetup.EmptySceneWithLightAndCamera();
 
     SceneTransformator sceneTransformator = new();
-    sceneTransformator.RotateDegreeX(215);
+    sceneTransformator.RotateDegreeX(170);
     sceneTransformator.RotateDegreeZ(45);
+    sceneTransformator.ToScale(new Vector(0.7f, 0.7f, 0.7f));
+    sceneTransformator.Move(new Vector(-0.2f, 0, 0.2f));
     
 
     var transformedTriangles = triangles.Select(triangle => sceneTransformator.Apply(triangle)).ToArray();
