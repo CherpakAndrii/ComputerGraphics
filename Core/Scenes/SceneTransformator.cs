@@ -178,4 +178,24 @@ public class SceneTransformator
             Apply(triangle.C)
         );
     }
+    
+    public Point Apply(Vector vector)
+    {
+        float[] vectorArray = { vector.X, vector.Y, vector.Z };
+        float[] transformedVector = { 0, 0, 0 };
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                transformedVector[i] +=(float)_transformationMatrix[i, j] * vectorArray[j];
+            }
+        }
+
+        return new Point
+        (
+            transformedVector[0],
+            transformedVector[1],
+            transformedVector[2]
+        );
+    }
 }
