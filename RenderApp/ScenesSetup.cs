@@ -18,12 +18,15 @@ public static class ScenesSetup
             1
         );
         
-        var projectionPlane = new ProjectionPlane(camera, 200, 200, cameraTransformator);
+        var projectionPlane = new ProjectionPlane(camera, 100, 100, cameraTransformator);
 
-        LightPoint lightPoint = new(new Point(0, -1, 0), new Color(100, 255, 255));
+        LightPoint lightPoint1 = new(new Point(0, -1, 0), new Color(100, 255, 255));
+        
+        LightPoint lightPoint2 = new(new Point(-1, -1, -1), new Color(50, 0, 140));
 
         Scene scene = new() { ProjectionPlane = projectionPlane };
-        scene.LightSources.Add(lightPoint);
+        scene.LightSources.Add(lightPoint1);
+        scene.LightSources.Add(lightPoint2);
 
         return scene;
     }
