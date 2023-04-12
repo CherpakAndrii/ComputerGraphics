@@ -127,13 +127,45 @@ public class SceneTransformator
 
     private void UpdateTransformationMatrix()
     {
-        _transformationMatrix = new double[4, 4]
+        var rotationMatrix = new double[4, 4]
         {
-            { ScaleX * CosY * CosZ, -SinZ * CosY, SinY, ShiftX  },
-            { SinX * SinY * CosZ + SinZ * CosX, ScaleY * (-SinX * SinY * SinZ + CosX * CosZ), -SinX * CosY, ShiftY },
-            { SinX * SinZ - SinY * CosX * CosZ, SinX * CosZ + SinY * SinZ * CosX, ScaleZ * CosX * CosY, ShiftZ },
+            { CosY * CosZ, -SinZ * CosY, SinY, 0 },
+            { SinX * SinY * CosZ + SinZ * CosX, -SinX * SinY * SinZ + CosX * CosZ, -SinX * CosY, 0 },
+            { SinX * SinZ - SinY * CosX * CosZ, SinX * CosZ + SinY * SinZ * CosX, CosX * CosY, 0 },
             { 0, 0, 0, 1 }
         };
+
+        var scalingMatrix = new double[4, 4]
+        {
+            { ScaleX, 0, 0, 0 },
+            { 0, ScaleY, 0, 0 },
+            { 0, 0, ScaleZ, 0 },
+            { 0, 0, 0, 1 }
+        };
+
+        var shiftMatrix = new double[4, 4]
+        {
+            { 1, 0, 0, ShiftX },
+            { 0, 1, 0, ShiftY },
+            { 0, 0, 1, ShiftZ },
+            { 0, 0, 0, 1 }
+        };
+
+        _transformationMatrix = Multiply(Multiply(shiftMatrix, rotationMatrix), scalingMatrix);
+        
+        static double[,] Multiply(double[,] matrixA, double[,] matrixB)
+        {
+            var result = new double[matrixA.GetLength(0), matrixB.GetLength(1)];
+            for (int i = 0; i < matrixA.GetLength(0); i++) {
+                for (int j = 0; j < matrixB.GetLength(1); j++) {
+                    for (int k = 0; k < matrixA.GetLength(1); k++) {
+                        result[i, j] += matrixA[i, k] * matrixB[k, j];
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 
     public void ResetTransformation()
