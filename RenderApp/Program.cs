@@ -28,7 +28,9 @@ try
     var scene = ScenesSetup.EmptySceneWithLightAndCamera();
 
     SceneTransformator sceneTransformator = new();
-    sceneTransformator.RotateDegreeX(90);
+    sceneTransformator.RotateDegreeX(215);
+    sceneTransformator.RotateDegreeZ(45);
+    
 
     var transformedTriangles = triangles.Select(triangle => sceneTransformator.Apply(triangle)).ToArray();
 
