@@ -8,7 +8,7 @@ public static class ColorClusterization
     {
         ushort[] clusterIndexes = InitializeRandomClusters((uint)normalizedData.Length, numberOfClusters);
         (double, double, double)[] centers = new (double, double, double)[numberOfClusters];
-        int ctr = 50;
+        int ctr = 150;
         while (ctr-- > 0 && GetClusterCenters(ref centers, normalizedData, numberOfClusters, clusterIndexes))
         {
             clusterIndexes = UpdateClustersByCenters(centers, normalizedData);
