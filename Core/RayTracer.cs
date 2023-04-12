@@ -1,6 +1,7 @@
 using Core.Lights;
 using Core.Scenes;
 using Core.Calculators;
+using Core.Cameras;
 using Structures.BaseGeometricalStructures;
 
 namespace Core;
@@ -26,7 +27,7 @@ public class RayTracer
             for (int j = 0; j < projectionPlane.GetLength(1); j++)
             {
                 pixels[i, j] = new Color();
-                Ray ray = new(Scene.ProjectionPlane.Camera.Position, projectionPlane[i, j]);
+                var ray = Scene.ProjectionPlane.GetRay(i, j);
                 if (IntersectionCalculator.FindClosestIntersection(Scene, ray, out var intersectionPoint, out var figure))
                     LightCalculator.CalculateLight(Scene, ref pixels[i, j], intersectionPoint, figure);
             }

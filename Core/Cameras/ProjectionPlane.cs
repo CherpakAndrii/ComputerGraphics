@@ -1,4 +1,5 @@
-﻿using Structures.BaseGeometricalStructures;
+using Core.Scenes;
+using Structures.BaseGeometricalStructures;
 
 namespace Core.Cameras;
 
@@ -12,11 +13,14 @@ public struct ProjectionPlane
     
     public Point[,] Matrix { get; }
 
-    public ProjectionPlane(Camera camera, int width, int height)
+    private SceneTransformator _cameraTransformator;
+
+    public ProjectionPlane(Camera camera, int width, int height, SceneTransformator? cameraTransformator = null)
     {
         Width = width;
         Height = height;
         Camera = camera;
+        _cameraTransformator = cameraTransformator ?? new SceneTransformator();
         Matrix = Create();
     }
     
@@ -58,6 +62,14 @@ public struct ProjectionPlane
         }
         return projectionPlane;
     }
+
+    public Ray GetRay(int i, int j)
+    {
+        var transformedCameraPosition = _cameraTransformator.Apply(Camera.Position);
+        var transformedProjectionPlanePosition = _cameraTransformator.Apply(Matrix[i, j]);
+        return new Ray(transformedCameraPosition, transformedProjectionPlanePosition);
+    }
+    
 
     private (Vector rightDirection, Vector upDirection) GetProjectionPlaneDirections()
     {

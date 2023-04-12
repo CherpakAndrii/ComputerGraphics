@@ -10,17 +10,15 @@ public static class ScenesSetup
 {
     public static Scene EmptySceneWithLightAndCamera(SceneTransformator cameraTransformator)
     {
-        var position = cameraTransformator.Apply(new Point(0, 0, 0));
-        var direction = cameraTransformator.Apply(new Vector(0, 1, 0));
         Camera camera = new
         (
-            position,
-            direction,
+            new Point(0, 0, 0),
+            new Vector(0, 1, 0),
             90,
             1
         );
         
-        var projectionPlane = new ProjectionPlane(camera, 200, 200);
+        var projectionPlane = new ProjectionPlane(camera, 200, 200, cameraTransformator);
 
         LightPoint lightPoint = new(new Point(0, -1, 0), new Color(100, 255, 255));
 
