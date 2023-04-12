@@ -29,12 +29,13 @@ try
 
     SceneTransformator cameraTransformator = new();
     cameraTransformator.RotateDegreeX(-45);
-    cameraTransformator.Move(new Vector(0, -0.8f, 0.8f));
+    cameraTransformator.Move(new Vector(0, -0.6f, 0.4f));
     var scene = ScenesSetup.EmptySceneWithLightAndCamera(cameraTransformator);
     scene.Figures.Add(new Plane(new Point(0, 0, 0), new Vector(0, 1, 0)));
 
     SceneTransformator sceneTransformator = new();
     sceneTransformator.RotateDegreeX(90);
+    sceneTransformator.ToScale(new Vector(0.5f, 0.5f, 0.5f));
     sceneTransformator.Move(new Vector(0, -0.4f, 0));
     
 
