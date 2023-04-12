@@ -12,7 +12,7 @@ public class ObjFileReader
     /// </summary>
     /// <param name="fileData">array of lines from file</param>
     /// <returns>the list of figures or null if given file contained some errors</returns>
-    public List<IIntersectable>? GetStructuresFromFile(string[] fileData)
+    public List<Triangle>? GetTrianglesFromFile(string[] fileData)
     {
         List<string> v = new List<string>();
         List<string> f = new List<string>();
@@ -27,7 +27,7 @@ public class ObjFileReader
         }
 
         Point[] points = new Point[v.Count];
-        List<IIntersectable> figures = new List<IIntersectable>();
+        List<Triangle> triangles = new List<Triangle>();
 
         for (int i = 0; i < v.Count; i++)
         {
@@ -46,9 +46,9 @@ public class ObjFileReader
                                     || !int.TryParse(splited[3].Split('/')[0], out int c)
                                     || a < 1 || b < 1 || c < 1 || a > points.Length || b > points.Length
                                     || c > points.Length) return null;
-            figures.Add(new Triangle(points[a - 1], points[b - 1], points[c - 1]));
+            triangles.Add(new Triangle(points[a - 1], points[b - 1], points[c - 1]));
         }
         
-        return figures;
+        return triangles;
     }
 }

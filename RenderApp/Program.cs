@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.ObjFileReader;
+using Core.Scenes;
 using ImageFormatConverter.Common;
 using RenderApp;
 using RenderApp.FileOutput;
@@ -22,11 +23,16 @@ try
     var objFileData = File.ReadAllLines(source);
 
     ObjFileReader objFileReader = new();
-    var structures = objFileReader.GetStructuresFromFile(objFileData);
+    var triangles = objFileReader.GetTrianglesFromFile(objFileData);
 
     var scene = ScenesSetup.EmptySceneWithLightAndCamera();
 
-    foreach (var figure in structures)
+    SceneTransformator sceneTransformator = new();
+    sceneTransformator.RotateDegreeX(90);
+
+    var transformedTriangles = triangles.Select(triangle => sceneTransformator.Apply(triangle)).ToArray();
+
+    foreach (var figure in transformedTriangles)
     {
         scene.Figures.Add(figure);
     }
@@ -40,8 +46,4 @@ try
 catch (Exception e)
 {
     Console.WriteLine($"Error: {e.Message}");
-}
-finally
-{
-    Console.ReadKey();
 }

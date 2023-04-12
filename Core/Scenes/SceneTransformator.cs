@@ -151,23 +151,21 @@ public class SceneTransformator
 
     public Point Apply(Point point)
     {
-        Point rotatedScaledPoint = point;
-        for (int i = 0; i < 3; i++)
+        float[] pointArray = { point.X, point.Y, point.Z, 1 };
+        float[] transformedPoint = { 0, 0, 0, 0 };
+        for (int i = 0; i < 4; i++)
         {
-            rotatedScaledPoint = new Point
-            (
-                rotatedScaledPoint.X * (float)_transformationMatrix[0, i],
-                rotatedScaledPoint.Y * (float)_transformationMatrix[1, i],
-                rotatedScaledPoint.Z * (float)_transformationMatrix[2, i]
-            );
+            for (int j = 0; j < 4; j++)
+            {
+                transformedPoint[j] +=(float)_transformationMatrix[i, j] * pointArray[i];
+            }
         }
-
 
         return new Point
         (
-            (float)_transformationMatrix[0, 3] + rotatedScaledPoint.X,
-            (float)_transformationMatrix[1, 3] + rotatedScaledPoint.Y,
-            (float)_transformationMatrix[2, 3] + rotatedScaledPoint.Z
+            transformedPoint[0],
+            transformedPoint[1],
+            transformedPoint[2]
         );
     }
 
