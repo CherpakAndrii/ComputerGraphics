@@ -1,10 +1,11 @@
 ﻿using Structures.BaseGeometricalStructures;
+using Structures.IntersectableFigures;
 
 namespace Core.Scenes;
 
 public class SceneTransformator
 {
-    private double[,] TransformationMatrix = new double[4, 4]
+    private double[,] _transformationMatrix = new double[4, 4]
     {
         { 1, 0, 0, 0 },
         { 0, 1, 0, 0 },
@@ -126,7 +127,7 @@ public class SceneTransformator
 
     private void UpdateTransformationMatrix()
     {
-        TransformationMatrix = new double[4, 4]
+        _transformationMatrix = new double[4, 4]
         {
             { ScaleX * CosY * CosZ, -SinZ * CosY, SinY, ShiftX  },
             { SinX * SinY * CosZ + SinZ * CosX, ScaleY * (-SinX * SinY * SinZ + CosX * CosZ), -SinX * CosY, ShiftY },
@@ -146,5 +147,37 @@ public class SceneTransformator
         RotateX(-AngleRadX, false);
         RotateY(-AngleRadY, false);
         RotateZ(-AngleRadZ, true);
+    }
+
+    public Point Apply(Point point)
+    {
+        Point rotatedScaledPoint = point;
+        for (int i = 0; i < 3; i++)
+        {
+            rotatedScaledPoint = new Point
+            (
+                rotatedScaledPoint.X * (float)_transformationMatrix[0, i],
+                rotatedScaledPoint.Y * (float)_transformationMatrix[1, i],
+                rotatedScaledPoint.Z * (float)_transformationMatrix[2, i]
+            );
+        }
+
+
+        return new Point
+        (
+            (float)_transformationMatrix[0, 3] + rotatedScaledPoint.X,
+            (float)_transformationMatrix[1, 3] + rotatedScaledPoint.Y,
+            (float)_transformationMatrix[2, 3] + rotatedScaledPoint.Z
+        );
+    }
+
+    public Triangle Apply(Triangle triangle)
+    {
+        return new Triangle
+        (
+            Apply(triangle.A),
+            Apply(triangle.B),
+            Apply(triangle.C)
+        );
     }
 }
