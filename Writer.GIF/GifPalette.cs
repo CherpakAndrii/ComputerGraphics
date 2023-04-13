@@ -35,6 +35,7 @@ public class GifPalette
     
     private byte? GetBaseColorIndexByOriginal(Color color)
     {
+        color = new Color((byte)(color.R / 3 * 3), (byte)(color.G / 3 * 3), (byte)(color.B / 3 * 3));
         int colorHash = color.GetNumericRepresentation();
         int lBound = 0, uBound = _sortedReplacementMap.Length, center, currentHash;
 

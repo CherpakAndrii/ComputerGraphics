@@ -15,14 +15,17 @@ public class GiffPaletteTests
     [TestCaseSource(nameof(_validPalettes))]
     public void GIF_ValidatePaletteSelector(Color[,] pict, Color[] baseColors, byte[,] indexes)
     {
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
         var palette = GifPaletteSelector.GetPalette(pict);
+        sw.Stop();
+        
         var baseColorIndexes = palette.GetColorIndexes(pict);
-
+    
         Color[,] expectedNewPic = GetPicFromPalette(baseColors, indexes);
         Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
         
-        
-        CollectionAssert.AreEqual(expectedNewPic, pictureGot);
+        CollectionAssert.AreEqual(expectedNewPic, pictureGot, sw.ElapsedMilliseconds.ToString());
     }
 
     [TestCaseSource(nameof(_picNames))]
@@ -34,12 +37,15 @@ public class GiffPaletteTests
         Stopwatch sw = new Stopwatch();
         sw.Start();
         var palette = GifPaletteSelector.GetPalette(pasalskyPic);
-        sw.Stop();
+        long getPaletteTime = sw.ElapsedMilliseconds;
+        sw.Restart();
         //VisualizePalette(palette, "pasalsky");
         var baseColorIndexes = palette.GetColorIndexes(pasalskyPic);
         Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
+        long pictureReformattingTime = sw.ElapsedMilliseconds;
+        sw.Stop();
         File.WriteAllBytes(createdGifsDir+name+"("+palette.BaseColors.Length+')'+".png", new PngFileWriter().WriteToFile(pictureGot));
-        Assert.Pass(sw.ElapsedMilliseconds.ToString());
+        Assert.Pass($"Palette selecting time: {getPaletteTime} ms\nPicture reformatting time: {pictureReformattingTime} ms");
     }
 
     [TestCaseSource(nameof(_generatedPics))]
@@ -104,7 +110,8 @@ public class GiffPaletteTests
 
     private static object[] _picNames = {
         new object[] { "pasalsky" },
-        new object[] { "ourSanya" }
+        new object[] { "ourSanya" },
+        new object[] { "Hannusya" }
     };
     
     

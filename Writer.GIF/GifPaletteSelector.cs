@@ -1,4 +1,5 @@
-﻿using Core.Lights;
+﻿using System.Diagnostics;
+using Core.Lights;
 
 namespace Writer.GIF;
 
@@ -7,10 +8,9 @@ public class GifPaletteSelector
     public static GifPalette GetPalette(Color[,] sourceImage, ushort maxColors = 256, byte iterations = 50)
     {
         Color[] pictureColors = To1DArray(sourceImage);
-        (Color, ushort)[] uniqueColorsWithAmount = GetUniqueColors(pictureColors);
-        if (uniqueColorsWithAmount.Length <= 256) 
+        (Color, ushort)[] uniqueColorsWithAmount = GetUniqueColorsFaster(pictureColors);
+        if (uniqueColorsWithAmount.Length <= maxColors) 
             return GetPaletteFromUniqueColors(uniqueColorsWithAmount);
-
         var normalizedData = Normalization.Normalize(uniqueColorsWithAmount);
         ushort numberOfClusters = maxColors;
         var clusterIndexes = ColorClustering.Clusterize(normalizedData, ref numberOfClusters, pictureColors.Length, iterations);
@@ -98,6 +98,29 @@ public class GifPaletteSelector
         
         unique.Add((previous, colorCounter));
         
+        return unique.ToArray();
+    }
+    
+    private static (Color, ushort)[] GetUniqueColorsFaster(Color[] colors)
+    {
+        ushort[,,] table = new ushort[86, 86, 86];
+
+        foreach (var color in colors)
+        {
+            table[color.R/3, color.G/3, color.B/3] += 1;
+        }
+        
+        List<(Color, ushort)> unique = new List<(Color, ushort)>();
+
+        for (ushort r = 0; r < 86; r++)
+        for (ushort g = 0; g < 86; g++)
+        for (ushort b = 0; b < 86; b++)
+        {
+            ushort amount = table[r, g, b];
+            if (amount > 0)
+                unique.Add((new Color((byte)(r*3), (byte)(g*3), (byte)(b*3)), amount));
+        }
+
         return unique.ToArray();
     }
 
