@@ -9,7 +9,7 @@ namespace ImageFormatConverter.Tests.GifTests;
 [TestFixture]
 public class GiffPaletteTests
 {
-    private static string createdGifsDir = "../../../testPictures/CreatedGifs/";
+    private static string createdGifsDir = "../../../testPictures/CreatedGifs/paletteTestImages/";
     private static ImageGenerator ImageGenerator = new ();
     
     [TestCaseSource(nameof(_validPalettes))]
@@ -28,7 +28,7 @@ public class GiffPaletteTests
     [Test]
     public void GIF_PasalskyTest()
     {
-        var pasalskyData = File.ReadAllBytes(createdGifsDir + "../sources/pasalsky.bmp");
+        var pasalskyData = File.ReadAllBytes(createdGifsDir + "../../../testPictures/sources/bmp/correct/pasalsky.bmp");
         Color[,] pasalskyPic = new BmpFileReader().ImageToPixels(pasalskyData);
         var palette = GifPaletteSelector.GetPalette(pasalskyPic);
         VisualizePalette(palette, "pasalsky");
