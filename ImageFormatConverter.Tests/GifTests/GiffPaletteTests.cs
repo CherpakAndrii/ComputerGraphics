@@ -25,16 +25,17 @@ public class GiffPaletteTests
         CollectionAssert.AreEqual(expectedNewPic, pictureGot);
     }
 
-    [Test]
-    public void GIF_PasalskyTest()
+    [TestCaseSource(nameof(_picNames))]
+    public void GIF_PasalskyTest(string name)
     {
-        var pasalskyData = File.ReadAllBytes(createdGifsDir + "../../../testPictures/sources/bmp/correct/pasalsky.bmp");
+        string sourceDirPath = "../../../testPictures/sources/bmp/correct/";
+        var pasalskyData = File.ReadAllBytes( sourceDirPath+name+".bmp");
         Color[,] pasalskyPic = new BmpFileReader().ImageToPixels(pasalskyData);
         var palette = GifPaletteSelector.GetPalette(pasalskyPic);
         //VisualizePalette(palette, "pasalsky");
         var baseColorIndexes = palette.GetColorIndexes(pasalskyPic);
         Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
-        File.WriteAllBytes(createdGifsDir+"pasalsky("+palette.BaseColors.Length+')'+".bmp", new BmpFileWriter().WriteToFile(pictureGot));
+        File.WriteAllBytes(createdGifsDir+name+"("+palette.BaseColors.Length+')'+".bmp", new BmpFileWriter().WriteToFile(pictureGot));
     }
 
     [TestCaseSource(nameof(_generatedPics))]
@@ -97,7 +98,10 @@ public class GiffPaletteTests
         new object[] { () => ImageGenerator.CreatePtnPnhImage(), "ptn_pnh" }
     };
 
-    
+    private static object[] _picNames = {
+        new object[] { "pasalsky" },
+        new object[] { "ourSanya" }
+    };
     
     
     private static object[] _validPalettes = {
