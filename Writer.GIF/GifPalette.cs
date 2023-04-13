@@ -5,12 +5,24 @@ namespace Writer.GIF;
 public class GifPalette
 {
     public Color[] BaseColors;
-    private (Color, byte)[] _sortedReplacementMap;
+    private object _sortedReplacementMap;
+
+    private delegate byte? ColorTransformationFunction(Color c);
+
+    private ColorTransformationFunction GetBaseColorIndexByOriginal;
 
     public GifPalette(Color[] baseColors, (Color, byte)[] sortedReplacementMap)
     {
         BaseColors = baseColors;
         _sortedReplacementMap = sortedReplacementMap;
+        GetBaseColorIndexByOriginal = GetBaseColorIndexByOriginalWithoutCompression;
+    }
+    
+    public GifPalette(Color[] baseColors, byte?[,,] sortedReplacementMap, Compression compression)
+    {
+        BaseColors = baseColors;
+        _sortedReplacementMap = sortedReplacementMap;
+        GetBaseColorIndexByOriginal = GetBaseColorIndexByOriginalWithCompression;
     }
 
     public byte[,] GetColorIndexes(Color[,] originalPicture)
@@ -33,21 +45,30 @@ public class GifPalette
         return indexes;
     }
     
-    private byte? GetBaseColorIndexByOriginal(Color color)
+    private byte? GetBaseColorIndexByOriginalWithoutCompression(Color color)
     {
-        color = new Color((byte)(color.R / 3 * 3), (byte)(color.G / 3 * 3), (byte)(color.B / 3 * 3));
+        (Color, byte)[] map = ((Color, byte)[])_sortedReplacementMap;
+        var transform = (int component) => (byte)component;
+        color = new Color(transform(color.R), transform(color.G), transform(color.B));
         int colorHash = color.GetNumericRepresentation();
-        int lBound = 0, uBound = _sortedReplacementMap.Length, center, currentHash;
+        int lBound = 0, uBound = map.Length, center, currentHash;
 
         while (lBound < uBound)
         {
             center = (lBound + uBound) / 2;
-            currentHash = _sortedReplacementMap[center].Item1.GetNumericRepresentation();
-            if (currentHash == colorHash) return _sortedReplacementMap[center].Item2;
+            currentHash = map[center].Item1.GetNumericRepresentation();
+            if (currentHash == colorHash) return map[center].Item2;
             if (currentHash > colorHash) uBound = center;
             else lBound = center+1;
         }
         
         return null;
+    }
+    
+    private byte? GetBaseColorIndexByOriginalWithCompression(Color color)
+    {
+        var transform = (int component) => (byte)(component / 3);
+        byte?[,,] map = (byte?[,,])_sortedReplacementMap;
+        return map[transform(color.R), transform(color.G), transform(color.B)];
     }
 }
