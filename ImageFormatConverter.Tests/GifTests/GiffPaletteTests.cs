@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices.ComTypes;
 using ImageFormatConverter.Console;
+using Reader.BMP;
 using Writer.BMP;
 using Writer.GIF;
 
@@ -22,6 +23,18 @@ public class GiffPaletteTests
         
         
         CollectionAssert.AreEqual(expectedNewPic, pictureGot);
+    }
+
+    [Test]
+    public void GIF_PasalskyTest()
+    {
+        var pasalskyData = File.ReadAllBytes(createdGifsDir + "../sources/pasalsky.bmp");
+        Color[,] pasalskyPic = new BmpFileReader().ImageToPixels(pasalskyData);
+        var palette = GifPaletteSelector.GetPalette(pasalskyPic);
+        VisualizePalette(palette, "pasalsky");
+        var baseColorIndexes = palette.GetColorIndexes(pasalskyPic);
+        Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
+        File.WriteAllBytes(createdGifsDir+"pasalsky("+palette.BaseColors.Length+')'+".bmp", new BmpFileWriter().WriteToFile(pictureGot));
     }
 
     [TestCaseSource(nameof(_generatedPics))]

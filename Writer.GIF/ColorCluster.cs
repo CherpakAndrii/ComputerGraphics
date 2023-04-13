@@ -2,22 +2,24 @@
 
 namespace Writer.GIF;
 
-public static class ColorClusterization
+public static class ColorClustering
 {
-    public static ushort[] Clusterize((double, double, double)[] normalizedData, ref ushort numberOfClusters)
+    public static ushort[] Clusterize(((double, double, double), ushort)[] normalizedData, ref ushort numberOfClusters, int fullDataLength)
     {
-        ushort[] clusterIndexes = InitializeRandomClusters((uint)normalizedData.Length, numberOfClusters);
-        (double, double, double)[] centers = new (double, double, double)[numberOfClusters];
-        int ctr = 150;
+        (double, double, double)[] centers = InitializeRandomClusterCenters(normalizedData, numberOfClusters, fullDataLength);
+        ushort[] clusterIndexes = UpdateClustersByCenters(centers, normalizedData);
+        int ctr = 50;
         while (ctr-- > 0 && GetClusterCenters(ref centers, normalizedData, numberOfClusters, clusterIndexes))
         {
             clusterIndexes = UpdateClustersByCenters(centers, normalizedData);
         }
 
-        centers = ClearUnusedClusters(centers, clusterIndexes);
-        clusterIndexes = UpdateClustersByCenters(centers, normalizedData);
-
-        numberOfClusters = (ushort)centers.Length;
+        if (ClearUnusedClusters(ref centers, clusterIndexes))
+        {
+            clusterIndexes = UpdateClustersByCenters(centers, normalizedData);
+            numberOfClusters = (ushort)centers.Length;
+        }
+        
         return clusterIndexes;
     }
 
@@ -38,7 +40,31 @@ public static class ColorClusterization
         return clusterIndexes;
     }
     
-    private static bool GetClusterCenters(ref (double, double, double)[] centers, (double, double, double)[] normalizedData,
+    private static (double, double, double)[] InitializeRandomClusterCenters(((double, double, double), ushort)[] normalizedData, ushort numberOfClusters, int fullDataLength)
+    {
+        Random random = new Random();
+        HashSet<(double, double, double)> centers = new HashSet<(double, double, double)>(numberOfClusters);
+
+        for (int i = 0; i < numberOfClusters; i++)
+        {
+            int index = random.Next(fullDataLength);
+            foreach (var (coordinates, amount) in normalizedData)
+            {
+                if (index < amount)
+                {
+                    var c = coordinates;
+                    if (centers.Contains(c)) i--;
+                    else centers.Add(c);
+                    break;
+                }
+                index -= amount;
+            }
+        }
+        
+        return centers.ToArray();
+    }
+    
+    private static bool GetClusterCenters(ref (double, double, double)[] centers, ((double, double, double), ushort)[] normalizedData,
         ushort numberOfClusters, ushort[] clusterIndexes)
     {
         (double, double, double)[] newCenters = new (double, double, double)[numberOfClusters];
@@ -46,7 +72,7 @@ public static class ColorClusterization
 
         for (int i = 0; i < normalizedData.Length; i++)
         {
-            clusterCounters[clusterIndexes[i]]++;
+            clusterCounters[clusterIndexes[i]] += normalizedData[i].Item2;
             newCenters[clusterIndexes[i]] = newCenters[clusterIndexes[i]].Plus(normalizedData[i]);
         }
 
@@ -66,11 +92,11 @@ public static class ColorClusterization
         return smthIsChanged;
     }
     
-    private static ushort[] UpdateClustersByCenters((double, double, double)[] centers, (double, double, double)[] normalizedData)
+    private static ushort[] UpdateClustersByCenters((double, double, double)[] centers, ((double, double, double), ushort)[] normalizedData)
     {
         ushort[] clusterIndexes = new ushort[normalizedData.Length];
         Parallel.For(0, normalizedData.Length,
-            (i) => { var ind = GetClosestCluster(centers, normalizedData[i]);
+            (i) => { var ind = GetClosestCluster(centers, normalizedData[i].Item1);
                 clusterIndexes[i] = ind;
             });
 
@@ -84,6 +110,7 @@ public static class ColorClusterization
         for (ushort i = 1; i < centers.Length; i++)
         {
             distance = GetDistance(centers[i], element);
+            if (distance < 3) return i;
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -100,7 +127,7 @@ public static class ColorClusterization
                          Math.Pow(el1.Item3 - el2.Item3, 2));
     }
 
-    private static (double, double, double)[] ClearUnusedClusters((double, double, double)[] centers, ushort[] clusterIndexes)
+    private static bool ClearUnusedClusters(ref (double, double, double)[] centers, ushort[] clusterIndexes)
     {
         int[] clusterCounters = new int[centers.Length];
         foreach (var i in clusterIndexes)
@@ -116,15 +143,17 @@ public static class ColorClusterization
                 newCenters[ctr++] = centers[i];
         }
 
-        return newCenters[..ctr];
+        bool centersNumberIsReduced = centers.Length > newCenters.Length;
+        centers = newCenters;
+        return centersNumberIsReduced;
     }
 }
 
 public static class TupleOperations
 {
-    public static (double, double, double) Plus(this (double, double, double) t1, (double, double, double) t2)
+    public static (double, double, double) Plus(this (double, double, double) t1, ((double, double, double), ushort) tn)
     {
-        return (t1.Item1 + t2.Item1, t1.Item2 + t2.Item2, t1.Item3 + t2.Item3);
+        return (t1.Item1 + tn.Item2*tn.Item1.Item1, t1.Item2 + tn.Item2*tn.Item1.Item2, t1.Item3 + tn.Item2*tn.Item1.Item3);
     }
     
     public static (double, double, double) Divide(this (double, double, double) t1, double denominator)
