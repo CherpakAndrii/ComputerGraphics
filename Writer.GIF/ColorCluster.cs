@@ -4,11 +4,11 @@ namespace Writer.GIF;
 
 public static class ColorClustering
 {
-    public static ushort[] Clusterize(((double, double, double), ushort)[] normalizedData, ref ushort numberOfClusters, int fullDataLength)
+    public static ushort[] Clusterize(((double, double, double), ushort)[] normalizedData, ref ushort numberOfClusters, int fullDataLength, byte numberOfIterations)
     {
         (double, double, double)[] centers = InitializeRandomClusterCenters(normalizedData, numberOfClusters, fullDataLength);
         ushort[] clusterIndexes = UpdateClustersByCenters(centers, normalizedData);
-        int ctr = 50;
+        int ctr = numberOfIterations;
         while (ctr-- > 0 && GetClusterCenters(ref centers, normalizedData, numberOfClusters, clusterIndexes))
         {
             clusterIndexes = UpdateClustersByCenters(centers, normalizedData);

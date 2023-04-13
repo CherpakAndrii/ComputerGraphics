@@ -4,7 +4,7 @@ namespace Writer.GIF;
 
 public class GifPaletteSelector
 {
-    public static GifPalette GetPalette(Color[,] sourceImage)
+    public static GifPalette GetPalette(Color[,] sourceImage, ushort maxColors = 256, byte iterations = 50)
     {
         Color[] pictureColors = To1DArray(sourceImage);
         (Color, ushort)[] uniqueColorsWithAmount = GetUniqueColors(pictureColors);
@@ -12,8 +12,8 @@ public class GifPaletteSelector
             return GetPaletteFromUniqueColors(uniqueColorsWithAmount);
 
         var normalizedData = Normalization.Normalize(uniqueColorsWithAmount);
-        ushort numberOfClusters = 256;
-        var clusterIndexes = ColorClustering.Clusterize(normalizedData, ref numberOfClusters, pictureColors.Length);
+        ushort numberOfClusters = maxColors;
+        var clusterIndexes = ColorClustering.Clusterize(normalizedData, ref numberOfClusters, pictureColors.Length, iterations);
         return GetPaletteFromClusters(uniqueColorsWithAmount, clusterIndexes, numberOfClusters);
     }
 

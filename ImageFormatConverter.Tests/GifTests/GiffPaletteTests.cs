@@ -31,7 +31,7 @@ public class GiffPaletteTests
         var pasalskyData = File.ReadAllBytes(createdGifsDir + "../../../testPictures/sources/bmp/correct/pasalsky.bmp");
         Color[,] pasalskyPic = new BmpFileReader().ImageToPixels(pasalskyData);
         var palette = GifPaletteSelector.GetPalette(pasalskyPic);
-        VisualizePalette(palette, "pasalsky");
+        //VisualizePalette(palette, "pasalsky");
         var baseColorIndexes = palette.GetColorIndexes(pasalskyPic);
         Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
         File.WriteAllBytes(createdGifsDir+"pasalsky("+palette.BaseColors.Length+')'+".bmp", new BmpFileWriter().WriteToFile(pictureGot));
@@ -42,7 +42,7 @@ public class GiffPaletteTests
     {
         var pic = generatingFunction();
         var palette = GifPaletteSelector.GetPalette(pic);
-        VisualizePalette(palette, name);
+        //VisualizePalette(palette, name);
         var baseColorIndexes = palette.GetColorIndexes(pic);
         Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
         File.WriteAllBytes(createdGifsDir+name+'('+palette.BaseColors.Length+')'+".bmp", new BmpFileWriter().WriteToFile(pictureGot));
