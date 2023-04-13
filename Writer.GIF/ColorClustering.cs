@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Writer.GIF;
+﻿namespace Writer.GIF;
 
 public static class ColorClustering
 {

@@ -1,8 +1,8 @@
-﻿using System.Runtime.InteropServices.ComTypes;
+﻿using System.Diagnostics;
 using ImageFormatConverter.Console;
 using Reader.BMP;
-using Writer.BMP;
 using Writer.GIF;
+using Writer.PNG;
 
 namespace ImageFormatConverter.Tests.GifTests;
 
@@ -31,11 +31,15 @@ public class GiffPaletteTests
         string sourceDirPath = "../../../testPictures/sources/bmp/correct/";
         var pasalskyData = File.ReadAllBytes( sourceDirPath+name+".bmp");
         Color[,] pasalskyPic = new BmpFileReader().ImageToPixels(pasalskyData);
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
         var palette = GifPaletteSelector.GetPalette(pasalskyPic);
+        sw.Stop();
         //VisualizePalette(palette, "pasalsky");
         var baseColorIndexes = palette.GetColorIndexes(pasalskyPic);
         Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
-        File.WriteAllBytes(createdGifsDir+name+"("+palette.BaseColors.Length+')'+".bmp", new BmpFileWriter().WriteToFile(pictureGot));
+        File.WriteAllBytes(createdGifsDir+name+"("+palette.BaseColors.Length+')'+".png", new PngFileWriter().WriteToFile(pictureGot));
+        Assert.Pass(sw.ElapsedMilliseconds.ToString());
     }
 
     [TestCaseSource(nameof(_generatedPics))]
@@ -46,7 +50,7 @@ public class GiffPaletteTests
         //VisualizePalette(palette, name);
         var baseColorIndexes = palette.GetColorIndexes(pic);
         Color[,] pictureGot = GetPicFromPalette(palette.BaseColors, baseColorIndexes);
-        File.WriteAllBytes(createdGifsDir+name+'('+palette.BaseColors.Length+')'+".bmp", new BmpFileWriter().WriteToFile(pictureGot));
+        File.WriteAllBytes(createdGifsDir+name+'('+palette.BaseColors.Length+')'+".png", new PngFileWriter().WriteToFile(pictureGot));
     }
     
     private static void VisualizePalette(GifPalette palette, string origPicName)
@@ -68,8 +72,8 @@ public class GiffPaletteTests
             }
         }
 
-        string name = createdGifsDir + origPicName + "_palette.bmp";
-        var pic = new BmpFileWriter().WriteToFile(plt);
+        string name = createdGifsDir + origPicName + "_palette.png";
+        var pic = new PngFileWriter().WriteToFile(plt);
         File.WriteAllBytes(name, pic);
     }
 
