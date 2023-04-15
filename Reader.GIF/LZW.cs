@@ -1,59 +1,98 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Text;
 
 namespace Reader.GIF;
 
 public class Lzw
 {
-    public byte[] Decompress(IEnumerable<byte> compressedData)
-    {
-	    List<byte> decompressedData = new();
-        Dictionary<int, string> dictionary = new();
-        for (int i = 0; i <= 63; i++)
+	private Dictionary<int, string> GetInitializedDictionary()
+	{
+		Dictionary<int, string> dictionary = new();
+		for (int i = 0; i <= 127; i++)
 		{
 			dictionary.Add(i, Convert.ToChar(i).ToString());
 		}
-		int digitCapacity = 7, index = 64, maxIndex = 128;
+
+		return dictionary;
+	}
+    public byte[] Decompress(IEnumerable<byte> compressedData)
+    {
+	    
+	    List<byte> decompressedData = new();
+	    Dictionary<int, string> dictionary = GetInitializedDictionary();
+	    int code_size = 7;
+	    int digitCapacity = code_size + 1, index = 130, maxIndex = 256;
 		string tempStr = string.Empty, prev = string.Empty;
+		string tempStr2 = string.Empty;
 		var firstPriorWordWasRead = true;
 		foreach (var compressedByte in compressedData)
 		{
-			var compressedReverseByte = Reverse(compressedByte);
+			var compressedReverseByte = compressedByte;
 			for (int i = 7; i >= 0; i--)
 			{
 				int bit = (compressedReverseByte >> i) & 1;
-				tempStr += bit.ToString();
+				if ((tempStr2 + tempStr).Length < 8)
+				{
+					tempStr += bit;
+				}
+				else
+				{
+					tempStr2 += bit;
+				}
+				
+				
+				if ((tempStr2 + tempStr).Length != digitCapacity) continue;
 
-				if (tempStr.Length != digitCapacity) continue;
+				tempStr = tempStr2 + tempStr;
 
 				int tempInt = IntFromStr(tempStr);
-				if (firstPriorWordWasRead)
+				int cc = (int)Math.Pow(2, code_size);
+				int end = cc + 1;
+				if (tempInt == cc)
 				{
-					decompressedData.Add((byte)tempInt);
-					firstPriorWordWasRead = false;
-					prev = Convert.ToChar(tempInt).ToString();
+					dictionary = GetInitializedDictionary();
+					digitCapacity = code_size + 1;
 				}
-				else {
-					if (dictionary.TryGetValue(tempInt, out var value)) {
-						prev += value[0];
-						dictionary.Add(index++, prev);
-						if (index == maxIndex - 1) {
-							maxIndex *= 2;
-							digitCapacity++;
-						}
-						decompressedData.AddRange(Encoding.ASCII.GetBytes(dictionary[tempInt]));
+				else if (tempInt == end)
+				{
+					break;
+				}
+				else
+				{
+					if (firstPriorWordWasRead)
+					{
+						decompressedData.Add((byte)tempInt);
+						firstPriorWordWasRead = false;
+						prev = Convert.ToChar(tempInt).ToString();
 					}
-					else {
-						dictionary.Add(index++, prev + prev[0]);
-						if (index == maxIndex - 1) {
-							maxIndex *= 2;
-							digitCapacity++;
+					else
+					{
+						string entry;
+						if (dictionary.TryGetValue(tempInt, out var value)) {
+							prev += value[0];
+							dictionary.Add(index++, prev);
+							if (index == maxIndex - 1) {
+								maxIndex *= 2;
+								digitCapacity++;
+							}
+							decompressedData.AddRange(Encoding.ASCII.GetBytes(dictionary[tempInt]));
+							entry = value;
 						}
-						decompressedData.AddRange(Encoding.ASCII.GetBytes(prev + prev[0]));
+						else {
+							dictionary.Add(index++, prev + prev[0]);
+							if (index == maxIndex - 1) {
+								maxIndex *= 2;
+								digitCapacity++;
+							}
+							decompressedData.AddRange(Encoding.ASCII.GetBytes(prev + prev[0]));
+							entry = prev + prev[0];
+						}
+
+						prev = entry;
 					}
-					prev = dictionary[tempInt];
 				}
 				tempStr = string.Empty;
+				tempStr2 = string.Empty;
 			}
 		}
 
@@ -75,7 +114,7 @@ public class Lzw
 		for (int i = 0; i < str.Length; i++)
         {
             if (str[i] == '1')
-                value += Convert.ToInt32(Math.Pow(2, i));
+                value += Convert.ToInt32(Math.Pow(2, (str.Length - i - 1)));
         }
         return value;
     }
