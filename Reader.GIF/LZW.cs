@@ -51,16 +51,17 @@ public class Lzw
 				tempStr = tempStr + tempStr2;
 
 				int tempInt = IntFromStr(tempStr);
-				//if (tempInt == cc)
-				//{
-				//	dictionary = GetInitializedDictionary();
-				//	digitCapacity = code_size + 1;
-				//}
-				//else if (tempInt == end)
-				//{
-				//	break;
-				//}
-				//else
+				if (tempInt == cc)
+				{
+					firstPriorWordWasRead = false;
+					dictionary = GetInitializedDictionary();
+					digitCapacity = code_size + 1;
+				}
+				else if (tempInt == end)
+				{
+					
+				}
+				else
 				{
 					if (firstPriorWordWasRead)
 					{
@@ -87,11 +88,22 @@ public class Lzw
 								maxIndex *= 2;
 								digitCapacity++;
 							}
+
+							if (digitCapacity > 13)
+							{
+								Console.WriteLine("Hello");
+							}
 							decompressedData.AddRange(Encoding.ASCII.GetBytes(prev + prev[0]));
 							entry = prev + prev[0];
 						}
 
 						prev = entry;
+						if (digitCapacity > 13)
+						{
+							dictionary = GetInitializedDictionary();
+							digitCapacity = code_size + 1;
+							firstPriorWordWasRead = false;
+						}
 					}
 				}
 				tempStr = string.Empty;
