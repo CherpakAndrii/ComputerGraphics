@@ -2,7 +2,7 @@
 using ImageFormatConverter.Abstractions.Interfaces;
 
 namespace Writer.GIF;
-
+/*
 public class GifFileWriter : IImageWriter
 {
     public byte[] WriteToFile(Color[,] pixels)
@@ -11,4 +11,4 @@ public class GifFileWriter : IImageWriter
     }
 
     public string FileExtension => "gif";
-}
+}*/

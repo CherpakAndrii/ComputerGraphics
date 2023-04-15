@@ -37,6 +37,7 @@ public class GifFileReader : IImageReader
         int globalBitPerPixel = IntFromBitArray(logicalScreenData, 0, 3) + 1;
         int globalColorAmount = (int)Math.Pow(2, globalBitPerPixel);
         if (globalColorAmount < 2 || globalColorAmount > 256) return false;
+        //sort flag
         if (logicalScreenData[3]) return false;
         //cr+1 = # bits of color resolution
         int cr = IntFromBitArray(logicalScreenData, 4, 7) + 1;
