@@ -56,6 +56,8 @@ public class Lzw
 					firstPriorWordWasRead = false;
 					dictionary = GetInitializedDictionary();
 					digitCapacity = code_size + 1;
+					index = 130;
+					maxIndex = 256;
 				}
 				else if (tempInt == end)
 				{
@@ -103,6 +105,8 @@ public class Lzw
 							dictionary = GetInitializedDictionary();
 							digitCapacity = code_size + 1;
 							firstPriorWordWasRead = false;
+							index = 130;
+							maxIndex = 256;
 						}
 					}
 				}
