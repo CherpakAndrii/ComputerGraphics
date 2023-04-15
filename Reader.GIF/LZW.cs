@@ -8,7 +8,7 @@ public class Lzw
 	private Dictionary<int, string> GetInitializedDictionary()
 	{
 		Dictionary<int, string> dictionary = new();
-		for (int i = 0; i <= 127; i++)
+		for (int i = 0; i <= 129; i++)
 		{
 			dictionary.Add(i, Convert.ToChar(i).ToString());
 		}
@@ -25,8 +25,13 @@ public class Lzw
 		string tempStr = string.Empty, prev = string.Empty;
 		string tempStr2 = string.Empty;
 		var firstPriorWordWasRead = true;
+		int counter = 0;
+		
+		int cc = (int)Math.Pow(2, code_size);
+		int end = cc + 1;
 		foreach (var compressedByte in compressedData)
 		{
+			counter++;
 			var compressedReverseByte = compressedByte;
 			for (int i = 7; i >= 0; i--)
 			{
@@ -43,21 +48,19 @@ public class Lzw
 				
 				if ((tempStr2 + tempStr).Length != digitCapacity) continue;
 
-				tempStr = tempStr2 + tempStr;
+				tempStr = tempStr + tempStr2;
 
 				int tempInt = IntFromStr(tempStr);
-				int cc = (int)Math.Pow(2, code_size);
-				int end = cc + 1;
-				if (tempInt == cc)
-				{
-					dictionary = GetInitializedDictionary();
-					digitCapacity = code_size + 1;
-				}
-				else if (tempInt == end)
-				{
-					break;
-				}
-				else
+				//if (tempInt == cc)
+				//{
+				//	dictionary = GetInitializedDictionary();
+				//	digitCapacity = code_size + 1;
+				//}
+				//else if (tempInt == end)
+				//{
+				//	break;
+				//}
+				//else
 				{
 					if (firstPriorWordWasRead)
 					{
