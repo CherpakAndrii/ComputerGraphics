@@ -8,10 +8,23 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Core\Core.csproj" />
+      <ProjectReference Include="..\ImageFormatConverter.Abstractions\ImageFormatConverter.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Compile Update="GifPalette.cs">
+        <DependentUpon>GifPaletteSelector.cs</DependentUpon>
+      </Compile>
+      <Compile Update="GifPaletteSelector.Methods.cs">
+        <DependentUpon>GifPaletteSelector.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Normalization.cs">
+        <DependentUpon>GifPaletteSelector.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Compression.cs">
+        <DependentUpon>GifPaletteSelector.cs</DependentUpon>
+      </Compile>
+      <Compile Update="ColorClustering.cs">
         <DependentUpon>GifPaletteSelector.cs</DependentUpon>
       </Compile>
     </ItemGroup>
