@@ -28,7 +28,6 @@ public class Lzw
 		
 		foreach (var compressedByte in compressedData)
 		{
-			counter++;
 			var compressedReverseByte = compressedByte;
 			for (int i = 0; i <=7; i++)
 			{
@@ -37,10 +36,12 @@ public class Lzw
 
 
 				if ((tempStr).Length != digitCapacity) continue;
+				
+				counter++;
 
 				int tempInt = IntFromStr(tempStr);
 				
-				int cc = (int)Math.Pow(2, digitCapacity - 1);
+				int cc = (int)Math.Pow(2, code_size);
 				int end = cc + 1;
 				if (tempInt == cc)
 				{
@@ -65,33 +66,26 @@ public class Lzw
 					else
 					{
 						string entry;
+
 						if (dictionary.TryGetValue(tempInt, out var value)) {
 							prev += value[0];
 							dictionary.Add(index++, prev);
-							if (index == maxIndex - 1) {
-								maxIndex *= 2;
-								digitCapacity++;
-							}
-							decompressedData.AddRange(Encoding.ASCII.GetBytes(dictionary[tempInt]));
 							entry = value;
 						}
 						else {
 							dictionary.Add(index++, prev + prev[0]);
-							if (index == maxIndex - 1) {
-								maxIndex *= 2;
-								digitCapacity++;
-							}
-
-							if (digitCapacity > 13)
-							{
-								Console.WriteLine("Hello");
-							}
-							decompressedData.AddRange(Encoding.ASCII.GetBytes(prev + prev[0]));
 							entry = prev + prev[0];
+						}
+						
+						decompressedData.AddRange(Encoding.ASCII.GetBytes(entry));
+						
+						if (index == maxIndex - 1) {
+							maxIndex *= 2;
+							digitCapacity++;
 						}
 
 						prev = entry;
-						if (digitCapacity > 13)
+						if (digitCapacity > 12)
 						{
 							dictionary = GetInitializedDictionary(129);
 							digitCapacity = code_size + 1;

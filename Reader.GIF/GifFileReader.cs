@@ -1,4 +1,4 @@
-﻿using Core.Lights;
+using Core.Lights;
 using ImageFormatConverter.Abstractions.Interfaces;
 using System.Collections;
 
@@ -121,7 +121,7 @@ public class GifFileReader : IImageReader
         {
             int compressedDataLength = fileData[cursor + 1];
             compressedData = compressedData.Concat(fileData[(cursor + 2)..(cursor + 3 + compressedDataLength)]).ToArray();
-            cursor += 3 + compressedDataLength;
+            cursor += 1 + compressedDataLength;
         } while (fileData[cursor + 1] != 0);
         Lzw lzw = new();
         byte[] decompressedData = lzw.Decompress(compressedData);
