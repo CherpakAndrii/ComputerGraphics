@@ -5,21 +5,23 @@ namespace Reader.GIF;
 
 public class Lzw
 {
-	private Dictionary<int, string> GetInitializedDictionary(int maxSize)
+	private (Dictionary<int, string>, Dictionary<int, List<int>>) GetInitializedDictionary(int maxSize)
 	{
 		Dictionary<int, string> dictionary = new();
+		Dictionary<int, List<int>> dictionary2 = new();
 		for (int i = 0; i <= maxSize; i++)
 		{
 			dictionary.Add(i, Convert.ToChar(i).ToString());
+			dictionary2.Add(i, new List<int>() { i });
 		}
 
-		return dictionary;
+		return (dictionary, dictionary2);
 	}
     public byte[] Decompress(IEnumerable<byte> compressedData)
     {
 	    
 	    List<byte> decompressedData = new();
-	    Dictionary<int, string> dictionary = GetInitializedDictionary(129);
+	    var (dictionary, dictionary2) = GetInitializedDictionary(129);
 	    int code_size = 7;
 	    int digitCapacity = code_size + 1, index = 130, maxIndex = 256;
 		string tempStr = string.Empty, prev = string.Empty;
@@ -36,6 +38,11 @@ public class Lzw
 
 
 				if ((tempStr).Length != digitCapacity) continue;
+
+				if (counter == 124)
+				{
+					Console.WriteLine("Test");
+				}
 				
 				counter++;
 
@@ -46,7 +53,7 @@ public class Lzw
 				if (tempInt == cc)
 				{
 					firstPriorWordWasRead = true;
-					dictionary = GetInitializedDictionary(129);
+					(dictionary, dictionary2) = GetInitializedDictionary(129);
 					digitCapacity = code_size + 1;
 					index = 130;
 					maxIndex = 256;
@@ -68,16 +75,16 @@ public class Lzw
 						string entry;
 
 						if (dictionary.TryGetValue(tempInt, out var value)) {
-							prev += value[0];
-							dictionary.Add(index++, prev);
 							entry = value;
 						}
 						else {
-							dictionary.Add(index++, prev + prev[0]);
 							entry = prev + prev[0];
 						}
 						
 						decompressedData.AddRange(Encoding.ASCII.GetBytes(entry));
+						
+						dictionary.Add(index++, prev + entry[0]);
+						dictionary2.Add(index - 1, (prev + entry[0]).ToArray().Select(c => (int)c).ToList());
 						
 						if (index == maxIndex) {
 							maxIndex *= 2;
@@ -87,7 +94,8 @@ public class Lzw
 						prev = entry;
 						if (digitCapacity > 12)
 						{
-							dictionary = GetInitializedDictionary(129);
+							//return decompressedData.ToArray();
+							(dictionary, dictionary2) = GetInitializedDictionary(129);
 							digitCapacity = code_size + 1;
 							firstPriorWordWasRead = true;
 							index = 130;
