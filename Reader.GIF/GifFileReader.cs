@@ -116,13 +116,14 @@ public class GifFileReader : IImageReader
 
         //table based image data
         int minLzwCode = fileData[cursor];
+        cursor++;
         byte[] compressedData = Array.Empty<byte>();
         do
         {
-            int compressedDataLength = fileData[cursor + 1];
-            compressedData = compressedData.Concat(fileData[(cursor + 2)..(cursor + 3 + compressedDataLength)]).ToArray();
-            cursor += 2 + compressedDataLength;
-        } while (fileData[cursor + 1] != 0);
+            int compressedDataLength = fileData[cursor];
+            compressedData = compressedData.Concat(fileData[(cursor + 1)..(cursor + 1 + compressedDataLength)]).ToArray();
+            cursor += 1 + compressedDataLength;
+        } while (fileData[cursor] != 0);
         Lzw lzw = new();
         byte[] decompressedData = lzw.Decompress(compressedData);
 
