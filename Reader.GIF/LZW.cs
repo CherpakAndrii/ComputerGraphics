@@ -27,9 +27,13 @@ public class Lzw
 		string tempStr = string.Empty, prev = string.Empty;
 		var firstPriorWordWasRead = true;
 		int counter = 0;
+
+		int byteCounter = 0;
 		
 		foreach (var compressedByte in compressedData)
 		{
+			byteCounter++;
+			
 			var compressedReverseByte = compressedByte;
 			for (int i = 0; i <=7; i++)
 			{
@@ -64,6 +68,7 @@ public class Lzw
 				}
 				else
 				{
+
 					if (firstPriorWordWasRead)
 					{
 						decompressedData.Add((byte)tempInt);
@@ -86,21 +91,12 @@ public class Lzw
 						dictionary.Add(index++, prev + entry[0]);
 						dictionary2.Add(index - 1, (prev + entry[0]).ToArray().Select(c => (int)c).ToList());
 						
-						if (index == maxIndex) {
+						if (index == maxIndex && digitCapacity < 12) {
 							maxIndex *= 2;
 							digitCapacity++;
 						}
 
 						prev = entry;
-						if (digitCapacity > 12)
-						{
-							//return decompressedData.ToArray();
-							(dictionary, dictionary2) = GetInitializedDictionary(129);
-							digitCapacity = code_size + 1;
-							firstPriorWordWasRead = true;
-							index = 130;
-							maxIndex = 256;
-						}
 					}
 				}
 				tempStr = string.Empty;
