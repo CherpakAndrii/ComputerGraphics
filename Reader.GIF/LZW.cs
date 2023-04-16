@@ -9,7 +9,7 @@ public class Lzw
 	{
 		Dictionary<int, string> dictionary = new();
 		Dictionary<int, List<int>> dictionary2 = new();
-		for (int i = 0; i <= maxSize; i++)
+		for (int i = 0; i <= maxSize - 2; i++)
 		{
 			dictionary.Add(i, Convert.ToChar(i).ToString());
 			dictionary2.Add(i, new List<int>() { i });
@@ -17,23 +17,18 @@ public class Lzw
 
 		return (dictionary, dictionary2);
 	}
-    public byte[] Decompress(IEnumerable<byte> compressedData)
+    public byte[] Decompress(IEnumerable<byte> compressedData, int code_size)
     {
 	    
 	    List<byte> decompressedData = new();
-	    var (dictionary, dictionary2) = GetInitializedDictionary(129);
-	    int code_size = 7;
-	    int digitCapacity = code_size + 1, index = 130, maxIndex = 256;
+	    var (dictionary, dictionary2) = GetInitializedDictionary((int)Math.Pow(2, code_size) + 1);
+	    int digitCapacity = code_size + 1, index = (int)Math.Pow(2, code_size) + 2, maxIndex = (int)Math.Pow(2, code_size + 1);
 		string tempStr = string.Empty, prev = string.Empty;
 		var firstPriorWordWasRead = true;
-		int counter = 0;
 
-		int byteCounter = 0;
-		
 		foreach (var compressedByte in compressedData)
 		{
-			byteCounter++;
-			
+
 			var compressedReverseByte = compressedByte;
 			for (int i = 0; i <=7; i++)
 			{
@@ -43,13 +38,6 @@ public class Lzw
 
 				if ((tempStr).Length != digitCapacity) continue;
 
-				if (counter == 124)
-				{
-					Console.WriteLine("Test");
-				}
-				
-				counter++;
-
 				int tempInt = IntFromStr(tempStr);
 				
 				int cc = (int)Math.Pow(2, code_size);
@@ -57,10 +45,10 @@ public class Lzw
 				if (tempInt == cc)
 				{
 					firstPriorWordWasRead = true;
-					(dictionary, dictionary2) = GetInitializedDictionary(129);
+					(dictionary, dictionary2) = GetInitializedDictionary((int)Math.Pow(2, code_size) + 1);
+					index = (int)Math.Pow(2, code_size) + 2;
+					maxIndex = (int)Math.Pow(2, code_size + 1);
 					digitCapacity = code_size + 1;
-					index = 130;
-					maxIndex = 256;
 				}
 				else if (tempInt == end)
 				{

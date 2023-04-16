@@ -125,7 +125,7 @@ public class GifFileReader : IImageReader
             cursor += 1 + compressedDataLength;
         } while (fileData[cursor] != 0);
         Lzw lzw = new();
-        byte[] decompressedData = lzw.Decompress(compressedData);
+        byte[] decompressedData = lzw.Decompress(compressedData, minLzwCode);
 
         //reading decompressed data
         result = new Color[imageHeight, imageWidth];
