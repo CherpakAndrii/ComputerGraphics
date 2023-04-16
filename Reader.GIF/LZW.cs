@@ -23,7 +23,6 @@ public class Lzw
 	    int code_size = 7;
 	    int digitCapacity = code_size + 1, index = 130, maxIndex = 256;
 		string tempStr = string.Empty, prev = string.Empty;
-		string tempStr2 = string.Empty;
 		var firstPriorWordWasRead = true;
 		int counter = 0;
 		
@@ -34,19 +33,10 @@ public class Lzw
 			for (int i = 0; i <=7; i++)
 			{
 				int bit = (compressedReverseByte >> i) & 1;
-				if ((tempStr2 + tempStr).Length < 8)
-				{
-					tempStr += bit;
-				}
-				else
-				{
-					tempStr2 += bit;
-				}
-				
-				
-				if ((tempStr2 + tempStr).Length != digitCapacity) continue;
+				tempStr += bit;
 
-				tempStr = tempStr + tempStr2;
+
+				if ((tempStr).Length != digitCapacity) continue;
 
 				int tempInt = IntFromStr(tempStr);
 				
@@ -112,7 +102,6 @@ public class Lzw
 					}
 				}
 				tempStr = string.Empty;
-				tempStr2 = string.Empty;
 			}
 		}
 
