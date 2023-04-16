@@ -5,107 +5,91 @@ namespace Reader.GIF;
 
 public class Lzw
 {
-	private (Dictionary<int, string>, Dictionary<int, List<int>>) GetInitializedDictionary(int maxSize)
-	{
-		Dictionary<int, string> dictionary = new();
-		Dictionary<int, List<int>> dictionary2 = new();
-		for (int i = 0; i <= maxSize - 2; i++)
-		{
-			dictionary.Add(i, Convert.ToChar(i).ToString());
-			dictionary2.Add(i, new List<int>() { i });
-		}
-
-		return (dictionary, dictionary2);
-	}
-    public byte[] Decompress(IEnumerable<byte> compressedData, int code_size)
+	public byte[] Decompress(IEnumerable<byte> compressedData, int codeSize)
     {
-	    
+	    int clearCode = (int)Math.Pow(2, codeSize);
+	    int endOfInformation = clearCode + 1;
+
 	    List<byte> decompressedData = new();
-	    var (dictionary, dictionary2) = GetInitializedDictionary((int)Math.Pow(2, code_size) + 1);
-	    int digitCapacity = code_size + 1, index = (int)Math.Pow(2, code_size) + 2, maxIndex = (int)Math.Pow(2, code_size + 1);
-		string tempStr = string.Empty, prev = string.Empty;
-		var firstPriorWordWasRead = true;
+	    var dictionary = GetInitializedDictionary(clearCode + 1);
+	    int digitCapacity = codeSize + 1, index = clearCode + 2, maxIndex = clearCode * 2;
+		string codeWord = string.Empty, previousCodeWord = string.Empty;
 
 		foreach (var compressedByte in compressedData)
 		{
-
-			var compressedReverseByte = compressedByte;
 			for (int i = 0; i <=7; i++)
 			{
-				int bit = (compressedReverseByte >> i) & 1;
-				tempStr += bit;
-
-
-				if ((tempStr).Length != digitCapacity) continue;
-
-				int tempInt = IntFromStr(tempStr);
+				var bit = (compressedByte >> i) & 1;
+				codeWord += bit;
 				
-				int cc = (int)Math.Pow(2, code_size);
-				int end = cc + 1;
-				if (tempInt == cc)
+				if (codeWord.Length != digitCapacity)
+					continue;
+
+				int codeWordInt = IntFromStr(codeWord);
+				
+				if (codeWordInt == clearCode)
 				{
-					firstPriorWordWasRead = true;
-					(dictionary, dictionary2) = GetInitializedDictionary((int)Math.Pow(2, code_size) + 1);
-					index = (int)Math.Pow(2, code_size) + 2;
-					maxIndex = (int)Math.Pow(2, code_size + 1);
-					digitCapacity = code_size + 1;
+					dictionary = GetInitializedDictionary((int)Math.Pow(2, codeSize) + 1);
+					index = clearCode + 2;
+					maxIndex = clearCode * 2;
+					digitCapacity = codeSize + 1;
+					previousCodeWord = string.Empty;
 				}
-				else if (tempInt == end)
+				else if (codeWordInt == endOfInformation)
 				{
-					Console.WriteLine("Hi");
 				}
 				else
 				{
-
-					if (firstPriorWordWasRead)
+					if (string.IsNullOrEmpty(previousCodeWord))
 					{
-						decompressedData.Add((byte)tempInt);
-						firstPriorWordWasRead = false;
-						prev = Convert.ToChar(tempInt).ToString();
+						decompressedData.Add((byte)codeWordInt);
+						previousCodeWord = Convert.ToChar(codeWordInt).ToString();
 					}
 					else
 					{
 						string entry;
 
-						if (dictionary.TryGetValue(tempInt, out var value)) {
+						if (dictionary.TryGetValue(codeWordInt, out var value)) {
 							entry = value;
 						}
 						else {
-							entry = prev + prev[0];
+							entry = previousCodeWord + previousCodeWord[0];
 						}
 						
 						decompressedData.AddRange(Encoding.ASCII.GetBytes(entry));
-						
-						dictionary.Add(index++, prev + entry[0]);
-						dictionary2.Add(index - 1, (prev + entry[0]).ToArray().Select(c => (int)c).ToList());
-						
+						dictionary.Add(index++, previousCodeWord + entry[0]);
+						previousCodeWord = entry;
+
 						if (index == maxIndex && digitCapacity < 12) {
 							maxIndex *= 2;
 							digitCapacity++;
 						}
 
-						prev = entry;
+						
 					}
 				}
-				tempStr = string.Empty;
+
+				codeWord = string.Empty;
 			}
 		}
 
 		return decompressedData.ToArray();
     }
+	
+	private static Dictionary<int, string> GetInitializedDictionary(int maxSize)
+	{
+		Dictionary<int, string> dictionary = new();
+		for (int i = 0; i <= maxSize - 2; i++)
+		{
+			dictionary.Add(i, Convert.ToChar(i).ToString());
+		}
 
-    private byte Reverse(byte b)
-    {
-        int a = 0;
-        for (int i = 0; i < 8; i++)
-            if ((b & (1 << i)) != 0)
-                a |= 1 << (7 - i);
-        return (byte)a;
-    }
+		return dictionary;
+	}
 
     private static int IntFromStr(string str)
     {
-        int value = 0;
+        var value = 0;
 		for (int i = 0; i < str.Length; i++)
         {
             if (str[i] == '1')
