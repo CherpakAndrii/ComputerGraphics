@@ -5,10 +5,10 @@ namespace Reader.GIF;
 
 public class Lzw
 {
-	private Dictionary<int, string> GetInitializedDictionary()
+	private Dictionary<int, string> GetInitializedDictionary(int maxSize)
 	{
 		Dictionary<int, string> dictionary = new();
-		for (int i = 0; i <= 129; i++)
+		for (int i = 0; i <= maxSize; i++)
 		{
 			dictionary.Add(i, Convert.ToChar(i).ToString());
 		}
@@ -19,7 +19,7 @@ public class Lzw
     {
 	    
 	    List<byte> decompressedData = new();
-	    Dictionary<int, string> dictionary = GetInitializedDictionary();
+	    Dictionary<int, string> dictionary = GetInitializedDictionary(129);
 	    int code_size = 7;
 	    int digitCapacity = code_size + 1, index = 130, maxIndex = 256;
 		string tempStr = string.Empty, prev = string.Empty;
@@ -27,8 +27,6 @@ public class Lzw
 		var firstPriorWordWasRead = true;
 		int counter = 0;
 		
-		int cc = (int)Math.Pow(2, code_size);
-		int end = cc + 1;
 		foreach (var compressedByte in compressedData)
 		{
 			counter++;
@@ -51,17 +49,20 @@ public class Lzw
 				tempStr = tempStr + tempStr2;
 
 				int tempInt = IntFromStr(tempStr);
+				
+				int cc = (int)Math.Pow(2, digitCapacity - 1);
+				int end = cc + 1;
 				if (tempInt == cc)
 				{
-					firstPriorWordWasRead = false;
-					dictionary = GetInitializedDictionary();
+					firstPriorWordWasRead = true;
+					dictionary = GetInitializedDictionary(129);
 					digitCapacity = code_size + 1;
 					index = 130;
 					maxIndex = 256;
 				}
 				else if (tempInt == end)
 				{
-					
+					Console.WriteLine("Hi");
 				}
 				else
 				{
@@ -102,9 +103,9 @@ public class Lzw
 						prev = entry;
 						if (digitCapacity > 13)
 						{
-							dictionary = GetInitializedDictionary();
+							dictionary = GetInitializedDictionary(129);
 							digitCapacity = code_size + 1;
-							firstPriorWordWasRead = false;
+							firstPriorWordWasRead = true;
 							index = 130;
 							maxIndex = 256;
 						}
