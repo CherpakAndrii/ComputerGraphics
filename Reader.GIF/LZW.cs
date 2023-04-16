@@ -79,7 +79,7 @@ public class Lzw
 						
 						decompressedData.AddRange(Encoding.ASCII.GetBytes(entry));
 						
-						if (index == maxIndex - 1) {
+						if (index == maxIndex) {
 							maxIndex *= 2;
 							digitCapacity++;
 						}
