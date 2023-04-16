@@ -31,7 +31,7 @@ public class Lzw
 		{
 			counter++;
 			var compressedReverseByte = compressedByte;
-			for (int i = 7; i >= 0; i--)
+			for (int i = 0; i <=7; i++)
 			{
 				int bit = (compressedReverseByte >> i) & 1;
 				if ((tempStr2 + tempStr).Length < 8)
@@ -134,7 +134,7 @@ public class Lzw
 		for (int i = 0; i < str.Length; i++)
         {
             if (str[i] == '1')
-                value += Convert.ToInt32(Math.Pow(2, (str.Length - i - 1)));
+                value += Convert.ToInt32(Math.Pow(2, i));
         }
         return value;
     }
