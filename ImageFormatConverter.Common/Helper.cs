@@ -28,4 +28,9 @@ public static class Helper
         }
         return value;
     }
+    
+    public static string IntToBinary(int number, int digitCapacity)
+    {
+        return Convert.ToString(number, 2).PadLeft(digitCapacity, '0');
+    }
 }
