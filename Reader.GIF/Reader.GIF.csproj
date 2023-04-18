@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImageFormatConverter.Abstractions\ImageFormatConverter.Abstractions.csproj" />
+    <ProjectReference Include="..\ImageFormatConverter.Common\ImageFormatConverter.Common.csproj" />
   </ItemGroup>
 
 </Project>

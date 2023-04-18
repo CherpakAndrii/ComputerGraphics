@@ -1,6 +1,7 @@
 ﻿using Core.Lights;
-using ImageFormatConverter.Abstractions.Interfaces;
 using System.Collections;
+using ImageFormatConverter.Common;
+using ImageFormatConverter.Abstractions.Interfaces;
 
 namespace Writer.GIF;
 
@@ -31,7 +32,7 @@ public class GifFileWriter : IImageWriter
         int globalPalettePower = (int)Math.Ceiling(Math.Log2(palette.BaseColors.Length));
         BitArray globalBitPerPixel = new(new int[] { globalPalettePower - 1 });
         BitArray colorResolution = new(new int[] { 7 });
-        byte packedFields = BitConverter.GetBytes(IntFromBitArray(globalBitPerPixel, 0, 3) + IntFromBitArray(colorResolution, 4, 7))[0];
+        byte packedFields = BitConverter.GetBytes(Helper.IntFromBitArray(globalBitPerPixel, 0, 3) + Helper.IntFromBitArray(colorResolution, 4, 7))[0];
         byte[] lastBytes = new byte[]{ packedFields, 0, 0 };
         return logicalHeight.Reverse().Concat(logicalWidth.Reverse())
                                       .Concat(lastBytes).ToArray();
@@ -46,7 +47,7 @@ public class GifFileWriter : IImageWriter
         byte[] imageHeight = BitConverter.GetBytes(pixels.GetLength(0))[0..2];
         int locallPalettePower = (int)Math.Ceiling(Math.Log2(palette.BaseColors.Length));
         BitArray localBitPerPixel = new(new int[] { locallPalettePower - 1 });
-        byte[] packedFields = { BitConverter.GetBytes(IntFromBitArray(localBitPerPixel, 0, 3) + 128)[0] };
+        byte[] packedFields = { BitConverter.GetBytes(Helper.IntFromBitArray(localBitPerPixel, 0, 3) + 128)[0] };
         return descriptorSeparator.Concat(imageLeft.Reverse())
                                   .Concat(imageTop.Reverse())
                                   .Concat(imageWidth.Reverse())
@@ -89,20 +90,6 @@ public class GifFileWriter : IImageWriter
         return result.Concat(new byte[] { BitConverter.GetBytes(rest)[0] })
                      .Concat(compressedData[(256 * counter)..compressedData.Length])
                      .Concat(new byte[] { BitConverter.GetBytes(0)[0] }).ToArray();
-    }
-
-    private static int IntFromBitArray(BitArray bitArray, int from, int to)
-    {
-        int value = 0;
-        if (from >= 0 && to - from <= 32 && bitArray.Count >= to)
-        {
-            for (int i = from; i < to; i++)
-            {
-                if (bitArray[i])
-                    value += Convert.ToInt16(Math.Pow(2, i - from));
-            }
-        }
-        return value;
     }
 
     private static byte[] TempLzwCompress(Color[,] pixels, GifPalette palette)

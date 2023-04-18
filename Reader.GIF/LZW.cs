@@ -1,3 +1,4 @@
+using ImageFormatConverter.Common;
 using System.Collections;
 using System.Text;
 
@@ -25,7 +26,7 @@ public class Lzw
 				if (codeWord.Length != digitCapacity)
 					continue;
 
-				int codeWordInt = IntFromStr(codeWord);
+				int codeWordInt = Helper.IntFromStr(codeWord);
 				
 				if (codeWordInt == clearCode)
 				{
@@ -86,15 +87,4 @@ public class Lzw
 
 		return dictionary;
 	}
-
-    private static int IntFromStr(string str)
-    {
-        var value = 0;
-		for (int i = 0; i < str.Length; i++)
-        {
-            if (str[i] == '1')
-                value += Convert.ToInt32(Math.Pow(2, i));
-        }
-        return value;
-    }
 }

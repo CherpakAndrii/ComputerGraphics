@@ -1,5 +1,6 @@
 using Core.Lights;
 using System.Collections;
+using ImageFormatConverter.Common;
 using ImageFormatConverter.Abstractions.Interfaces;
 
 namespace Reader.GIF;
@@ -70,7 +71,7 @@ public class GifFileReader : IImageReader
     private static void ParseLogicalScreenPacked(byte data, out int pixel, out bool sort, out bool globalPalette)
     {
         BitArray logicalScreenData = new(new byte[] { data });
-        pixel = IntFromBitArray(logicalScreenData, 0, 3) + 1;
+        pixel = Helper.IntFromBitArray(logicalScreenData, 0, 3) + 1;
         sort = logicalScreenData[3];
         globalPalette = logicalScreenData[7];
     }
@@ -87,7 +88,7 @@ public class GifFileReader : IImageReader
     private static void ParseLocalLogicalScreenPacked(byte data, out int pixel, out bool sort, out bool interlancing, out bool isLocalPalette)
     {
         BitArray logicalScreenData = new(new byte[] { data });
-        pixel = IntFromBitArray(logicalScreenData, 0, 3) + 1;
+        pixel = Helper.IntFromBitArray(logicalScreenData, 0, 3) + 1;
         sort = logicalScreenData[5];
         interlancing = logicalScreenData[6];
         isLocalPalette = logicalScreenData[7];
@@ -163,19 +164,5 @@ public class GifFileReader : IImageReader
             }
         }
         return result;
-    }
-
-    private static int IntFromBitArray(BitArray bitArray, int from, int to)
-    {
-        int value = 0;
-        if (from >= 0 && to - from <= 32 && bitArray.Count >= to)
-        {
-            for (int i = from; i < to; i++)
-            {
-                if (bitArray[i])
-                    value += Convert.ToInt16(Math.Pow(2, i - from));
-            }
-        }
-        return value;
     }
 }
