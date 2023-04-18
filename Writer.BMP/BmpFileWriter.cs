@@ -35,7 +35,7 @@ public class BmpFileWriter : IImageWriter
 
     public string FileExtension => "bmp";
 
-    private byte[] GetBmpHeader(int fileSize)
+    private static byte[] GetBmpHeader(int fileSize)
     {
         byte[] header = new byte[14];
 
@@ -47,7 +47,7 @@ public class BmpFileWriter : IImageWriter
         return header;
     }
     
-    private byte[] GetInfoHeader(int width, int height)
+    private static byte[] GetInfoHeader(int width, int height)
     {
         byte[] infoHeader = new byte[40];
 
@@ -60,7 +60,7 @@ public class BmpFileWriter : IImageWriter
         return infoHeader;
     }
 
-    private byte[] GetPixelData(Color[,] pixels, int zeros)
+    private static byte[] GetPixelData(Color[,] pixels, int zeros)
     {
         int height = pixels.GetLength(0);
         int width = pixels.GetLength(1);
@@ -83,11 +83,4 @@ public class BmpFileWriter : IImageWriter
 
         return pixelData;
     }
-
-    /*private string GetOutputFileName(string inputFileName)
-    {
-        string[] splited = inputFileName.Split('.');
-        splited[^1] = "bmp";
-        return String.Join('.', splited);
-    }*/
 }

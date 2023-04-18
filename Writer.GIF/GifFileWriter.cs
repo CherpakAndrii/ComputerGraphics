@@ -14,7 +14,7 @@ public class GifFileWriter : IImageWriter
         byte[] gifSignature = "GIF89a"u8.ToArray();
         byte[] logicalScreen = CreateLogicalScreenDescriptor(pixels, palette);
         byte[] imageDescriptor = CreateImageDescriptor(pixels, palette);
-        byte[] localColorTable = CreateLocalColorTable(pixels, palette);
+        byte[] localColorTable = CreateLocalColorTable(palette);
         byte[] dataSubBlocks = CreateDataSubBlocks(pixels, palette);
         return gifSignature.Concat(logicalScreen)
                            .Concat(imageDescriptor)
@@ -24,7 +24,7 @@ public class GifFileWriter : IImageWriter
                            .ToArray();
     }
 
-    private byte[] CreateLogicalScreenDescriptor(Color[,] pixels, GifPalette palette)
+    private static byte[] CreateLogicalScreenDescriptor(Color[,] pixels, GifPalette palette)
     {
         byte[] logicalWidth = BitConverter.GetBytes(pixels.GetLength(1))[0..2];
         byte[] logicalHeight = BitConverter.GetBytes(pixels.GetLength(0))[0..2];
@@ -37,7 +37,7 @@ public class GifFileWriter : IImageWriter
                                       .Concat(lastBytes).ToArray();
     }
 
-    private byte[] CreateImageDescriptor(Color[,] pixels, GifPalette palette)
+    private static byte[] CreateImageDescriptor(Color[,] pixels, GifPalette palette)
     {
         byte[] descriptorSeparator = { 44 };
         byte[] imageLeft = BitConverter.GetBytes(0)[0..2];
@@ -54,7 +54,7 @@ public class GifFileWriter : IImageWriter
                                   .Concat(packedFields).ToArray();
     }
 
-    private byte[] CreateLocalColorTable(Color[,] pixels, GifPalette palette)
+    private static byte[] CreateLocalColorTable(GifPalette palette)
     {
         int ColorNumbers = (int)Math.Pow(2, Math.Ceiling(Math.Log2(palette.BaseColors.Length)));
         byte[] localColorTable = new byte[ColorNumbers * 3];
@@ -73,10 +73,10 @@ public class GifFileWriter : IImageWriter
         return localColorTable;
     }
 
-    private byte[] CreateDataSubBlocks(Color[,] pixels, GifPalette palette)
+    private static byte[] CreateDataSubBlocks(Color[,] pixels, GifPalette palette)
     {
         byte[] result = { BitConverter.GetBytes(Math.Ceiling(Math.Log2(palette.BaseColors.Length)))[0] };
-        byte[] compressedData = TempLzwCompress(palette);
+        byte[] compressedData = TempLzwCompress(pixels, palette);
         int counter = 0;
         while (compressedData.Length / 256 > counter)
         {
@@ -105,7 +105,7 @@ public class GifFileWriter : IImageWriter
         return value;
     }
 
-    private byte[] TempLzwCompress(GifPalette palette)
+    private static byte[] TempLzwCompress(Color[,] pixels, GifPalette palette)
     {
         throw new NotImplementedException();
     }

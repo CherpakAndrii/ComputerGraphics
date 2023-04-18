@@ -98,7 +98,7 @@ public class PpmFileReader : IImageReader
         return picture; 
     }
 
-    private Color[,] P6ToPixels(byte[] fileData)
+    private static Color[,] P6ToPixels(byte[] fileData)
     {
         BinaryReader br = new BinaryReader(new MemoryStream(fileData));
         string header = Encoding.ASCII.GetString(br.ReadBytes(20));
