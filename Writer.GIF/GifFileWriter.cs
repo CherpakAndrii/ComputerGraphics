@@ -1,4 +1,4 @@
-﻿using Core.Lights;
+using Core.Lights;
 using System.Collections;
 using ImageFormatConverter.Common;
 using ImageFormatConverter.Abstractions.Interfaces;
@@ -94,6 +94,9 @@ public class GifFileWriter : IImageWriter
 
     private static byte[] TempLzwCompress(Color[,] pixels, GifPalette palette)
     {
-        throw new NotImplementedException();
+        var lzw = new Lzw();
+        //lzw.Сompress();
+        
+        return Array.Empty<byte>();
     }
 }
