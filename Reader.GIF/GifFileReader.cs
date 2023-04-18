@@ -1,6 +1,7 @@
 using Core.Lights;
 using ImageFormatConverter.Abstractions.Interfaces;
 using System.Collections;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Reader.GIF;
 
@@ -8,19 +9,29 @@ public class GifFileReader : IImageReader
 {
     public string FileExtension => "gif";
 
-    //TEMPORARY HARDCODE
-    private static Color[,] result = new Color[0,0];
     public Color[,] ImageToPixels(byte[] fileData)
     {
-        return result;
+        ParseLogicalScreenPacked(fileData[10], out int globalBitPerPixel, out bool _, out bool isGlobalPalette);
+        int globalColorAmount = (int)Math.Pow(2, globalBitPerPixel);
+        int backgroundColorIndex = fileData[11];
+        int cursor = 13;
+        Color[] palette = isGlobalPalette ? ParseColorTable(fileData, globalColorAmount, ref cursor) : Array.Empty<Color>();
+        Color backgroundColor = isGlobalPalette ? palette[backgroundColorIndex] : new(0, 0, 0);
+        SkipExtensions(fileData, ref cursor);
+        ParseImageDescription(fileData, ref cursor, out int _, out int _, out int width, out int height);
+        ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int localBitPerpixel, out bool _, out bool _, out bool islocalPalette);
+        int localColorAmount = (int)Math.Pow(2, localBitPerpixel + 1);
+        cursor += 10;
+        palette = islocalPalette ? ParseColorTable(fileData, localColorAmount, ref cursor) : Array.Empty<Color>();
+        int minLzwCode = fileData[cursor++];
+        byte[] compressedData = GetCompressedData(fileData, ref cursor);
+        return GetPixels(palette, compressedData, minLzwCode, height, width, islocalPalette ? localColorAmount : globalColorAmount);
     }
 
     public bool ValidateFileStructure(byte[] fileData)
     {
-        //not yet calculated
         if (fileData.Length <= 15) return false;
-
-        //The first six bytes of a GIF file always contain the same values:
+        
         if (fileData[0] != 'G' ||
             fileData[1] != 'I' ||
             fileData[2] != 'F' ||
@@ -29,42 +40,65 @@ public class GifFileReader : IImageReader
             fileData[5] != 'a')
             return false;
 
-        int logicalWidth = BitConverter.ToInt32(fileData[6..8].Concat(new byte[2] { 0, 0 }).ToArray());
-        int logicalHeight = BitConverter.ToInt32(fileData[8..10].Concat(new byte[2] {0, 0}).ToArray());
+        if (!ValidateLogicalScreen(fileData, out int globalColorAmount, out bool isGlobalPalette)) 
+            return false;
 
-        BitArray logicalScreenData = new(new byte[] { fileData[10] });
-        //pixel+1 = # bits/pixel in image
-        int globalBitPerPixel = IntFromBitArray(logicalScreenData, 0, 3) + 1;
-        int globalColorAmount = (int)Math.Pow(2, globalBitPerPixel);
-        if (globalColorAmount < 2 || globalColorAmount > 256) return false;
-        //sort flag
-        if (logicalScreenData[3]) return false;
-        //cr+1 = # bits of color resolution
-        int cr = IntFromBitArray(logicalScreenData, 4, 7) + 1;
-        //bool is there global palette or not
-        bool isGlobalPalette = logicalScreenData[7];
-        //index in global palette of background color (or default, if there is no global palette)
-        int backgroundColorIndex = fileData[11];
-        if (isGlobalPalette && backgroundColorIndex >= globalColorAmount) return false;
-        //aspect ratio (0 - default 1:1)
+        int cursor = isGlobalPalette? 13 : 13 + globalColorAmount * 3;
+        if (fileData.Length <= cursor) return false;
+
+        if (!SkipExtensions(fileData, ref cursor)) return false;
+
+        if (fileData.Length <= cursor + 10) return false;
+        ParseImageDescription(fileData, ref cursor, out int _, out int _, out int width, out int height);
+        if (width < 0 || height < 0) return false;
+
+        if(!ValidateLocalLogicalScreen(fileData, ref cursor, out bool isLocalPalette))
+            return false;
+        if (!isLocalPalette && !isGlobalPalette) return false;
+        return true;
+    }
+
+    private static bool ValidateLogicalScreen(byte[] fileData, out int colorAmount, out bool isGlobalPalette)
+    {
+        ParseLogicalScreenPacked(fileData[10], out int pixel, out bool sort, out isGlobalPalette);
+        colorAmount = (int)Math.Pow(2, pixel + 1);
+        if (pixel < 0 || pixel > 7) return false;
+        if (sort) return false;
+        if (isGlobalPalette && fileData[11] >= colorAmount) return false;
         if (fileData[12] != 0) return false;
+        return true;
+    }
 
-        //reading global palette
-        Color[] globalPalette = new Color[globalColorAmount];
-        int cursor = 13;
-        if (isGlobalPalette)
-        {
-            for (int i = 0; i < globalColorAmount; i++)
-            {
-                globalPalette[i] = new Color(fileData[cursor], fileData[cursor + 1], fileData[cursor + 2]);
-                cursor += 3;
-                if (fileData.Length <= cursor) return false;
-            }
-        }
+    private static void ParseLogicalScreenPacked(byte data, out int pixel, out bool sort, out bool globalPalette)
+    {
+        BitArray logicalScreenData = new(new byte[] { data });
+        pixel = IntFromBitArray(logicalScreenData, 0, 3) + 1;
+        sort = logicalScreenData[3];
+        globalPalette = logicalScreenData[7];
+    }
 
-        Color backgroundColor = isGlobalPalette ? globalPalette[backgroundColorIndex] : new(0, 0, 0);
+    private static bool ValidateLocalLogicalScreen(byte[] fileData, ref int cursor, out bool islocalPalette)
+    {
+        ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int pixel, out bool sort, out bool interlancing, out islocalPalette);
+        int colorAmount = (int)Math.Pow(2, pixel + 1);
+        if (pixel < 0 || pixel > 7) return false;
+        if (sort) return false;
+        if (interlancing) return false;
+        if (fileData[12] != 0) return false;
+        return true;
+    }
 
-        //skipping all extensions
+    private static void ParseLocalLogicalScreenPacked(byte data, out int pixel, out bool sort, out bool interlancing, out bool isLocalPalette)
+    {
+        BitArray logicalScreenData = new(new byte[] { data });
+        pixel = IntFromBitArray(logicalScreenData, 0, 3) + 1;
+        sort = logicalScreenData[5];
+        interlancing = logicalScreenData[6];
+        isLocalPalette = logicalScreenData[7];
+    }
+
+    private static bool SkipExtensions(byte[] fileData, ref int cursor)
+    {
         while (fileData[cursor] != 44)
         {
             if (fileData[cursor] == 33)
@@ -80,43 +114,30 @@ public class GifFileReader : IImageReader
             }
             else return false;
         }
+        return true;
+    }
 
-        if (fileData.Length <= cursor + 10) return false;
-        //image description
-        int imageLeft = BitConverter.ToInt32(fileData[(cursor + 1)..(cursor + 3)].Concat(new byte[2] {0, 0}).ToArray());
-        int imageTop = BitConverter.ToInt32(fileData[(cursor + 3)..(cursor + 5)].Concat(new byte[2] {0, 0}).ToArray());
-        int imageWidth = BitConverter.ToInt32(fileData[(cursor + 5)..(cursor + 7)].Concat(new byte[2] {0, 0}).ToArray());
-        int imageHeight = BitConverter.ToInt32(fileData[(cursor + 7)..(cursor + 9)].Concat(new byte[2] {0, 0}).ToArray());
-        if (imageWidth < 0 || imageHeight < 0) return false;
-        BitArray localData = new(new byte[] { fileData[cursor + 9] });
-        //pixel+1 = # bits/pixel in image
-        int localBitPerPixel = IntFromBitArray(logicalScreenData, 0, 3) + 1;
-        int localColorAmount = (int)Math.Pow(2, globalBitPerPixel);
-        if (localColorAmount < 2 || localColorAmount > 256) return false;
-        //reserved (should be both 0)
-        if (localData[3] || localData[4]) return false;
-        bool sortFlag = localData[5];
-        //Do not support interlacing
-        if (localData[6]) return false;
-        bool isLocalColorTable = localData[7];
-        if (!isLocalColorTable && !isGlobalPalette) return false;
-
-        //local color table
-        cursor += 10;
-        Color[] localPalette = new Color[localColorAmount];
-        if (isLocalColorTable)
+    private static Color[] ParseColorTable(byte[] fileData, int amount, ref int cursor)
+    {
+        Color[] globalPalette = new Color[amount];
+        for (int i = 0; i < amount; i++)
         {
-            for (int i = 0; i < localColorAmount; i++)
-            {
-                localPalette[i] = new Color(fileData[cursor], fileData[cursor + 1], fileData[cursor + 2]);
-                cursor += 3;
-                if (fileData.Length <= cursor) return false;
-            }
+            globalPalette[i] = new Color(fileData[cursor], fileData[cursor + 1], fileData[cursor + 2]);
+            cursor += 3;
         }
+        return globalPalette;
+    }
 
-        //table based image data
-        int minLzwCode = fileData[cursor];
-        cursor++;
+    private static void ParseImageDescription(byte[] fileData, ref int cursor, out int left, out int top, out int width, out int height)
+    {
+        left = BitConverter.ToInt32(fileData[(cursor + 1)..(cursor + 3)].Concat(new byte[2] { 0, 0 }).ToArray());
+        top = BitConverter.ToInt32(fileData[(cursor + 3)..(cursor + 5)].Concat(new byte[2] { 0, 0 }).ToArray());
+        width = BitConverter.ToInt32(fileData[(cursor + 5)..(cursor + 7)].Concat(new byte[2] { 0, 0 }).ToArray());
+        height = BitConverter.ToInt32(fileData[(cursor + 7)..(cursor + 9)].Concat(new byte[2] { 0, 0 }).ToArray());
+    }
+
+    private static byte[] GetCompressedData(byte[] fileData, ref int cursor) 
+    {
         byte[] compressedData = Array.Empty<byte>();
         do
         {
@@ -124,30 +145,26 @@ public class GifFileReader : IImageReader
             compressedData = compressedData.Concat(fileData[(cursor + 1)..(cursor + 1 + compressedDataLength)]).ToArray();
             cursor += 1 + compressedDataLength;
         } while (fileData[cursor] != 0);
+        return compressedData;
+    }
+
+    private static Color[,] GetPixels(Color[] palette, byte[] compressedData, int minLzwCode, int height, int width, int colorAmount)
+    {
         Lzw lzw = new();
         byte[] decompressedData = lzw.Decompress(compressedData, minLzwCode);
-
-        //reading decompressed data
-        result = new Color[imageHeight, imageWidth];
+        Color[,] result = new Color[height, width];
         int k = 0;
-        for (int i = 0; i < imageHeight; i++)
+        for (int i = 0; i < height; i++)
         {
-            for (int j = 0; j < imageWidth; j++)
+            for (int j = 0; j < width; j++)
             {
-                if (isLocalColorTable)
-                {
-                    if (localColorAmount <= decompressedData[k]) return false;
-                    result[i, j] = localPalette[decompressedData[k]];
-                }
-                else
-                {
-                    if (globalColorAmount <= decompressedData[k]) return false;
-                    result[i, j] = globalPalette[decompressedData[k]];
-                }
+                if (decompressedData[k] > colorAmount)
+                    result[i, j] = palette[colorAmount - 1];
+                else result[i, j] = palette[decompressedData[k]];
                 k++;
             }
         }
-        return true;
+        return result;
     }
 
     private static int IntFromBitArray(BitArray bitArray, int from, int to)
