@@ -15,7 +15,13 @@ public class GifFileWriter : IImageWriter
         byte[] logicalScreen = CreateLogicalScreenDescriptor(pixels, palette);
         byte[] imageDescriptor = CreateImageDescriptor(pixels, palette);
         byte[] localColorTable = CreateLocalColorTable(pixels, palette);
-        throw new NotImplementedException();
+        byte[] dataSubBlocks = CreateDataSubBlocks(pixels, palette);
+        return gifSignature.Concat(logicalScreen)
+                           .Concat(imageDescriptor)
+                           .Concat(localColorTable)
+                           .Concat(dataSubBlocks)
+                           .Concat(new byte[] { 59 })
+                           .ToArray();
     }
 
     private byte[] CreateLogicalScreenDescriptor(Color[,] pixels, GifPalette palette)
@@ -48,7 +54,7 @@ public class GifFileWriter : IImageWriter
                                   .Concat(packedFields).ToArray();
     }
 
-    private byte[] CreateLocalColorTable(Color[,] pixels, GifPalette palette )
+    private byte[] CreateLocalColorTable(Color[,] pixels, GifPalette palette)
     {
         int ColorNumbers = (int)Math.Pow(2, Math.Ceiling(Math.Log2(palette.BaseColors.Length)));
         byte[] localColorTable = new byte[ColorNumbers * 3];
@@ -67,6 +73,24 @@ public class GifFileWriter : IImageWriter
         return localColorTable;
     }
 
+    private byte[] CreateDataSubBlocks(Color[,] pixels, GifPalette palette)
+    {
+        byte[] result = { BitConverter.GetBytes(Math.Ceiling(Math.Log2(palette.BaseColors.Length)))[0] };
+        byte[] compressedData = TempLzwCompress(palette);
+        int counter = 0;
+        while (compressedData.Length / 256 > counter)
+        {
+            result = result.Concat(new byte[] { 255 })
+                           .Concat(compressedData[(256 * counter)..(256 * (counter + 1))])
+                           .ToArray();
+            counter++;
+        }
+        int rest = compressedData.Length % 256;
+        return result.Concat(new byte[] { BitConverter.GetBytes(rest)[0] })
+                     .Concat(compressedData[(256 * counter)..compressedData.Length])
+                     .Concat(new byte[] { BitConverter.GetBytes(0)[0] }).ToArray();
+    }
+
     private static int IntFromBitArray(BitArray bitArray, int from, int to)
     {
         int value = 0;
@@ -79,5 +103,10 @@ public class GifFileWriter : IImageWriter
             }
         }
         return value;
+    }
+
+    private byte[] TempLzwCompress(GifPalette palette)
+    {
+        throw new NotImplementedException();
     }
 }
