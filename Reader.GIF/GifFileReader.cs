@@ -22,7 +22,7 @@ public class GifFileReader : IImageReader
         ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int localBitPerpixel, out bool _, out bool _, out bool islocalPalette);
         int localColorAmount = (int)Math.Pow(2, localBitPerpixel + 1);
         cursor += 10;
-        palette = islocalPalette ? ParseColorTable(fileData, localColorAmount, ref cursor) : Array.Empty<Color>();
+        if (islocalPalette) palette = ParseColorTable(fileData, localColorAmount, ref cursor);
         int minLzwCode = fileData[cursor++];
         byte[] compressedData = GetCompressedData(fileData, ref cursor);
         return GetPixels(palette, compressedData, minLzwCode, height, width, islocalPalette ? localColorAmount : globalColorAmount);
@@ -31,7 +31,6 @@ public class GifFileReader : IImageReader
     public bool ValidateFileStructure(byte[] fileData)
     {
         if (fileData.Length <= 15) return false;
-        
         if (fileData[0] != 'G' ||
             fileData[1] != 'I' ||
             fileData[2] != 'F' ||
@@ -39,29 +38,29 @@ public class GifFileReader : IImageReader
             !(fileData[4] == '7' || fileData[4] == '9') ||
             fileData[5] != 'a')
             return false;
-
         if (!ValidateLogicalScreen(fileData, out int globalColorAmount, out bool isGlobalPalette)) 
             return false;
-
-        int cursor = isGlobalPalette? 13 : 13 + globalColorAmount * 3;
-        if (fileData.Length <= cursor) return false;
-
-        if (!SkipExtensions(fileData, ref cursor)) return false;
-
-        if (fileData.Length <= cursor + 10) return false;
-        ParseImageDescription(fileData, ref cursor, out int _, out int _, out int width, out int height);
-        if (width < 0 || height < 0) return false;
-
+        int cursor = isGlobalPalette? 13 + globalColorAmount * 3 : 13;
+        if (fileData.Length <= cursor) 
+            return false;
+        if (!SkipExtensions(fileData, ref cursor)) 
+            return false;
+        if (fileData.Length <= cursor + 10) 
+            return false;
+        ParseImageDescription(fileData, ref cursor, out _, out _, out int width, out int height);
+        if (width < 0 || height < 0) 
+            return false;
         if(!ValidateLocalLogicalScreen(fileData, ref cursor, out bool isLocalPalette))
             return false;
-        if (!isLocalPalette && !isGlobalPalette) return false;
+        if (!isLocalPalette && !isGlobalPalette) 
+            return false;
         return true;
     }
 
     private static bool ValidateLogicalScreen(byte[] fileData, out int colorAmount, out bool isGlobalPalette)
     {
         ParseLogicalScreenPacked(fileData[10], out int pixel, out bool sort, out isGlobalPalette);
-        colorAmount = (int)Math.Pow(2, pixel + 1);
+        colorAmount = (int)Math.Pow(2, pixel);
         if (pixel < 0 || pixel > 7) return false;
         if (sort) return false;
         if (isGlobalPalette && fileData[11] >= colorAmount) return false;
@@ -80,7 +79,6 @@ public class GifFileReader : IImageReader
     private static bool ValidateLocalLogicalScreen(byte[] fileData, ref int cursor, out bool islocalPalette)
     {
         ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int pixel, out bool sort, out bool interlancing, out islocalPalette);
-        int colorAmount = (int)Math.Pow(2, pixel + 1);
         if (pixel < 0 || pixel > 7) return false;
         if (sort) return false;
         if (interlancing) return false;
