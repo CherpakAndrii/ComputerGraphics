@@ -91,6 +91,7 @@ public class Lzw
 		decompressedDataList.RemoveAt(0);
 		
 		List<string> stringBinaryEncoding = new();
+		stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
 		
 		foreach (var decompressedByte in decompressedDataList)
 		{
@@ -115,9 +116,10 @@ public class Lzw
 		if (index == maxIndex)
 		{
 			digitCapacity++;
-			maxIndex *= 2;
 		}
+
 		stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
+		stringBinaryEncoding.Add(Helper.IntToBinary(endOfInformation, digitCapacity));
 
 		var compressedBitsString = string.Join("", stringBinaryEncoding.ToArray());
 		var compressedBits = Enumerable.Range(0, compressedBitsString.Length / 8).
