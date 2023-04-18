@@ -1,7 +1,6 @@
 using Core.Lights;
-using ImageFormatConverter.Abstractions.Interfaces;
 using System.Collections;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using ImageFormatConverter.Abstractions.Interfaces;
 
 namespace Reader.GIF;
 
@@ -11,18 +10,19 @@ public class GifFileReader : IImageReader
 
     public Color[,] ImageToPixels(byte[] fileData)
     {
-        ParseLogicalScreenPacked(fileData[10], out int globalBitPerPixel, out bool _, out bool isGlobalPalette);
+        ParseLogicalScreenPacked(fileData[10], out int globalBitPerPixel, out _, out bool isGlobalPalette);
         int globalColorAmount = (int)Math.Pow(2, globalBitPerPixel);
         int backgroundColorIndex = fileData[11];
         int cursor = 13;
         Color[] palette = isGlobalPalette ? ParseColorTable(fileData, globalColorAmount, ref cursor) : Array.Empty<Color>();
         Color backgroundColor = isGlobalPalette ? palette[backgroundColorIndex] : new(0, 0, 0);
         SkipExtensions(fileData, ref cursor);
-        ParseImageDescription(fileData, ref cursor, out int _, out int _, out int width, out int height);
-        ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int localBitPerpixel, out bool _, out bool _, out bool islocalPalette);
+        ParseImageDescription(fileData, ref cursor, out _, out _, out int width, out int height);
+        ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int localBitPerpixel, out _, out _, out bool islocalPalette);
         int localColorAmount = (int)Math.Pow(2, localBitPerpixel + 1);
         cursor += 10;
-        if (islocalPalette) palette = ParseColorTable(fileData, localColorAmount, ref cursor);
+        if (islocalPalette)
+            palette = ParseColorTable(fileData, localColorAmount, ref cursor);
         int minLzwCode = fileData[cursor++];
         byte[] compressedData = GetCompressedData(fileData, ref cursor);
         return GetPixels(palette, compressedData, minLzwCode, height, width, islocalPalette ? localColorAmount : globalColorAmount);
@@ -61,11 +61,10 @@ public class GifFileReader : IImageReader
     {
         ParseLogicalScreenPacked(fileData[10], out int pixel, out bool sort, out isGlobalPalette);
         colorAmount = (int)Math.Pow(2, pixel);
-        if (pixel < 0 || pixel > 7) return false;
-        if (sort) return false;
-        if (isGlobalPalette && fileData[11] >= colorAmount) return false;
-        if (fileData[12] != 0) return false;
-        return true;
+        return !((isGlobalPalette && fileData[11] >= colorAmount)
+                || pixel is < 0 or > 7
+                || fileData[12] != 0
+                || sort);
     }
 
     private static void ParseLogicalScreenPacked(byte data, out int pixel, out bool sort, out bool globalPalette)
@@ -79,11 +78,10 @@ public class GifFileReader : IImageReader
     private static bool ValidateLocalLogicalScreen(byte[] fileData, ref int cursor, out bool islocalPalette)
     {
         ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int pixel, out bool sort, out bool interlancing, out islocalPalette);
-        if (pixel < 0 || pixel > 7) return false;
-        if (sort) return false;
-        if (interlancing) return false;
-        if (fileData[12] != 0) return false;
-        return true;
+        return !(pixel is < 0 or > 7
+                || fileData[12] != 0
+                || interlancing
+                || sort);
     }
 
     private static void ParseLocalLogicalScreenPacked(byte data, out int pixel, out bool sort, out bool interlancing, out bool isLocalPalette)
@@ -102,11 +100,13 @@ public class GifFileReader : IImageReader
             if (fileData[cursor] == 33)
             {
                 cursor += 2;
-                if (fileData.Length <= cursor) return false;
+                if (fileData.Length <= cursor) 
+                    return false;
                 do
                 {
                     cursor += fileData[cursor] + 1;
-                    if (fileData.Length <= cursor) return false;
+                    if (fileData.Length <= cursor) 
+                        return false;
                 } while (fileData[cursor] != 0);
                 cursor++;
             }
@@ -128,10 +128,10 @@ public class GifFileReader : IImageReader
 
     private static void ParseImageDescription(byte[] fileData, ref int cursor, out int left, out int top, out int width, out int height)
     {
-        left = BitConverter.ToInt32(fileData[(cursor + 1)..(cursor + 3)].Concat(new byte[2] { 0, 0 }).ToArray());
-        top = BitConverter.ToInt32(fileData[(cursor + 3)..(cursor + 5)].Concat(new byte[2] { 0, 0 }).ToArray());
-        width = BitConverter.ToInt32(fileData[(cursor + 5)..(cursor + 7)].Concat(new byte[2] { 0, 0 }).ToArray());
-        height = BitConverter.ToInt32(fileData[(cursor + 7)..(cursor + 9)].Concat(new byte[2] { 0, 0 }).ToArray());
+        left = BitConverter.ToUInt16(fileData.AsSpan()[(cursor + 1)..(cursor + 3)]);
+        top = BitConverter.ToUInt16(fileData.AsSpan()[(cursor + 3)..(cursor + 5)]);
+        width = BitConverter.ToUInt16(fileData.AsSpan()[(cursor + 5)..(cursor + 7)]);
+        height = BitConverter.ToUInt16(fileData.AsSpan()[(cursor + 7)..(cursor + 9)]);
     }
 
     private static byte[] GetCompressedData(byte[] fileData, ref int cursor) 
