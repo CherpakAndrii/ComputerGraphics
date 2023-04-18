@@ -119,7 +119,21 @@ public class Lzw
 		}
 		stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
 
-		return Array.Empty<byte>();
+		var compressedBitsString = string.Join("", stringBinaryEncoding.ToArray());
+		var compressedBits = Enumerable.Range(0, compressedBitsString.Length / 8).
+			Select(pos => Convert.ToByte(
+				compressedBitsString.Substring(pos * 8, 8),
+				2)
+			).ToList();
+
+		if (compressedBitsString.Length % 8 > 0)
+		{
+			var substringPosition = compressedBitsString.Length - compressedBitsString.Length % 8 - 1;
+			var substringLength = compressedBitsString.Length % 8;
+			compressedBits.Add(Convert.ToByte(compressedBitsString.Substring(substringPosition, substringLength), 2));
+		}
+
+		return compressedBits.ToArray();
 	}
 	
 	private static Dictionary<int, string> GetInitializedDecompressorDictionary(int maxSize)
