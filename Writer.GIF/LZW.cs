@@ -73,17 +73,6 @@ public class Lzw
 
 		return compressedBits.ToArray();
 	}
-	
-	private static Dictionary<int, string> GetInitializedDecompressorDictionary(int maxSize)
-	{
-		Dictionary<int, string> dictionary = new();
-		for (int i = 0; i <= maxSize - 2; i++)
-		{
-			dictionary.Add(i, Convert.ToChar(i).ToString());
-		}
-
-		return dictionary;
-	}
 
 	private static Dictionary<string, int> GetInitializedCompressorDictionary(int maxSize)
 	{
