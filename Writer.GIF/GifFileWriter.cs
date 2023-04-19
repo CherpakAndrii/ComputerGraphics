@@ -34,7 +34,7 @@ public class GifFileWriter : IImageWriter
         BitArray colorResolution = new(new int[] { 7 });
         byte packedFields = BitConverter.GetBytes(Helper.IntFromBitArray(globalBitPerPixel, 0, 3) + Helper.IntFromBitArray(colorResolution, 4, 7))[0];
         byte[] lastBytes = new byte[]{ packedFields, 0, 0 };
-        return logicalHeight.Reverse().Concat(logicalWidth.Reverse())
+        return logicalWidth.Concat(logicalHeight)
                                       .Concat(lastBytes).ToArray();
     }
 
