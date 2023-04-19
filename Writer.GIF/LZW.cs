@@ -41,9 +41,11 @@ public class Lzw
 					index = clearCode + 2;
 					maxIndex = clearCode * 2;
 					digitCapacity = codeSize + 1;
+					currentlyRecognised = ((char)decompressedByte).ToString();
+					continue;
 				}
 				
-				stringBinaryEncoding.Add(Helper.IntToBinary(value, digitCapacity));
+				stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
 				dictionary.Add(currentlyRecognised + (char)decompressedByte, index);
 				index++;
 				currentlyRecognised = ((char)decompressedByte).ToString();
