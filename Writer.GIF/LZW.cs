@@ -33,20 +33,23 @@ public class Lzw
 					digitCapacity++;
 					maxIndex *= 2;
 				}
+
+				if (digitCapacity > 12)
+				{
+					stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
+					dictionary = GetInitializedCompressorDictionary(clearCode + 1);
+					index = clearCode + 2;
+					maxIndex = clearCode * 2;
+					digitCapacity = codeSize + 1;
+				}
+				
 				stringBinaryEncoding.Add(Helper.IntToBinary(value, digitCapacity));
 				dictionary.Add(currentlyRecognised + (char)decompressedByte, index);
 				index++;
 				currentlyRecognised = ((char)decompressedByte).ToString();
 			}
 
-			if (digitCapacity <= 12) continue;
 			
-			stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
-					
-			dictionary = GetInitializedCompressorDictionary(clearCode + 1);
-			index = clearCode + 2;
-			maxIndex = clearCode * 2;
-			digitCapacity = codeSize + 1;
 		}
 		
 		if (index == maxIndex)
