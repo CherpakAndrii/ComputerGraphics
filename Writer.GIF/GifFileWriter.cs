@@ -77,7 +77,7 @@ public class GifFileWriter : IImageWriter
     private static byte[] CreateDataSubBlocks(Color[,] pixels, GifPalette palette)
     {
         byte[] result = { BitConverter.GetBytes(Math.Ceiling(Math.Log2(palette.BaseColors.Length)))[0] };
-        byte[] compressedData = TempLzwCompress(pixels, palette);
+        byte[] compressedData = LzwCompress(pixels, palette);
         int counter = 0;
         while (compressedData.Length / 256 > counter)
         {
@@ -92,10 +92,22 @@ public class GifFileWriter : IImageWriter
                      .Concat(new byte[] { BitConverter.GetBytes(0)[0] }).ToArray();
     }
 
-    private static byte[] TempLzwCompress(Color[,] pixels, GifPalette palette)
+    private static byte[] LzwCompress(Color[,] pixels, GifPalette palette)
     {
         var lzw = new Lzw();
-        //lzw.Сompress();
+        var paletteIndexes = palette.GetColorIndexes(pixels);
+
+        List<byte> decompressedData = new();
+
+        for (int i = 0; i < paletteIndexes.GetLength(0); i++)
+        {
+            for (int j = 0; j < paletteIndexes.GetLength(1); j++)
+            {
+                decompressedData.Add(paletteIndexes[i, j]);
+            }
+        }
+
+        lzw.Сompress(decompressedData, palette.BaseColors.Length);
         
         return Array.Empty<byte>();
     }
