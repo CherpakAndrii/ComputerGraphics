@@ -76,7 +76,7 @@ public class GifFileWriter : IImageWriter
 
     private static byte[] CreateDataSubBlocks(Color[,] pixels, GifPalette palette)
     {
-        var minLzwCode = BitConverter.GetBytes(Math.Ceiling(Math.Log2(palette.BaseColors.Length)))[0];
+        var minLzwCode = BitConverter.GetBytes((int)Math.Ceiling(Math.Log2(palette.BaseColors.Length)))[0];
         byte[] result = { minLzwCode };
         byte[] compressedData = LzwCompress(pixels, palette, minLzwCode);
         int counter = 0;
