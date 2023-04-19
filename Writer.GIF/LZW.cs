@@ -18,12 +18,11 @@ public class Lzw
 		var currentlyRecognised = ((char)decompressedDataList[0]).ToString();
 		decompressedDataList.RemoveAt(0);
 		
-		List<string> stringBinaryEncoding = new();
-		stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
-		
+		List<string> stringBinaryEncoding = new() { Helper.IntToBinary(clearCode, digitCapacity) };
+
 		foreach (var decompressedByte in decompressedDataList)
 		{
-			if (dictionary.ContainsKey(currentlyRecognised + (char)decompressedByte))
+			if (dictionary.TryGetValue(currentlyRecognised + (char)decompressedByte, out var value))
 			{
 				currentlyRecognised += ((char)decompressedByte).ToString();
 			}
@@ -34,21 +33,20 @@ public class Lzw
 					digitCapacity++;
 					maxIndex *= 2;
 				}
-				stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
+				stringBinaryEncoding.Add(Helper.IntToBinary(value, digitCapacity));
 				dictionary.Add(currentlyRecognised + (char)decompressedByte, index);
 				index++;
 				currentlyRecognised = ((char)decompressedByte).ToString();
 			}
+
+			if (digitCapacity <= 12) continue;
 			
-			if (digitCapacity > 12)
-			{
-				stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
+			stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
 					
-				dictionary = GetInitializedCompressorDictionary(clearCode + 1);
-				index = clearCode + 2;
-				maxIndex = clearCode * 2;
-				digitCapacity = codeSize + 1;
-			}
+			dictionary = GetInitializedCompressorDictionary(clearCode + 1);
+			index = clearCode + 2;
+			maxIndex = clearCode * 2;
+			digitCapacity = codeSize + 1;
 		}
 		
 		if (index == maxIndex)
@@ -66,12 +64,12 @@ public class Lzw
 				2)
 			).ToList();
 
-		if (compressedBitsString.Length % 8 > 0)
-		{
-			var substringPosition = compressedBitsString.Length - compressedBitsString.Length % 8 - 1;
-			var substringLength = compressedBitsString.Length % 8;
-			compressedBits.Add(Convert.ToByte(compressedBitsString.Substring(substringPosition, substringLength), 2));
-		}
+		if (compressedBitsString.Length % 8 == 0)
+			return compressedBits.ToArray();
+
+		var substringPosition = compressedBitsString.Length - compressedBitsString.Length % 8 - 1;
+		var substringLength = compressedBitsString.Length % 8;
+		compressedBits.Add(Convert.ToByte(compressedBitsString.Substring(substringPosition, substringLength), 2));
 
 		return compressedBits.ToArray();
 	}
