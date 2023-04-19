@@ -39,6 +39,16 @@ public class Lzw
 				index++;
 				currentlyRecognised = ((char)decompressedByte).ToString();
 			}
+			
+			if (digitCapacity > 12)
+			{
+				stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
+					
+				dictionary = GetInitializedCompressorDictionary(clearCode + 1);
+				index = clearCode + 2;
+				maxIndex = clearCode * 2;
+				digitCapacity = codeSize + 1;
+			}
 		}
 		
 		if (index == maxIndex)
