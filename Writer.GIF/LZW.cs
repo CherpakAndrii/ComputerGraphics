@@ -5,6 +5,9 @@ namespace Writer.GIF;
 
 public class Lzw
 {
+	public Dictionary<string, int> dictionary;
+	
+	public Dictionary<string, int> _Firstdictionary;
 	public byte[] Сompress(IEnumerable<byte> decompressedData, int codeSize)
 	{
 		int clearCode = (int)Math.Pow(2, codeSize);
@@ -13,45 +16,42 @@ public class Lzw
 		
 		var decompressedDataList = decompressedData.ToList();
 		
-		var dictionary = GetInitializedCompressorDictionary(clearCode + 1);
+		dictionary = GetInitializedCompressorDictionary(clearCode + 1);
 
-		var currentlyRecognised = ((char)decompressedDataList[0]).ToString();
-		decompressedDataList.RemoveAt(0);
+		var currentlyRecognised = string.Empty;
 		
 		List<string> stringBinaryEncoding = new() { Helper.IntToBinary(clearCode, digitCapacity) };
 
 		foreach (var decompressedByte in decompressedDataList)
 		{
-			if (dictionary.TryGetValue(currentlyRecognised + (char)decompressedByte, out var value))
+			if (dictionary.ContainsKey(currentlyRecognised + (char)decompressedByte) || string.IsNullOrEmpty(currentlyRecognised))
 			{
 				currentlyRecognised += ((char)decompressedByte).ToString();
 			}
 			else
 			{
-				if (index == maxIndex)
+				if (index == maxIndex && digitCapacity < 13)
 				{
 					digitCapacity++;
 					maxIndex *= 2;
 				}
+				
+				stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
 
+				dictionary.Add(currentlyRecognised + (char)decompressedByte, index++);
+				currentlyRecognised = ((char)decompressedByte).ToString();
+				
 				if (digitCapacity > 12)
 				{
-					stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, digitCapacity));
+					_Firstdictionary = dictionary;
+					stringBinaryEncoding.Add(Helper.IntToBinary(clearCode, 12));
 					dictionary = GetInitializedCompressorDictionary(clearCode + 1);
 					index = clearCode + 2;
 					maxIndex = clearCode * 2;
 					digitCapacity = codeSize + 1;
-					currentlyRecognised = ((char)decompressedByte).ToString();
-					continue;
+					currentlyRecognised = "";
 				}
-				
-				stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
-				dictionary.Add(currentlyRecognised + (char)decompressedByte, index);
-				index++;
-				currentlyRecognised = ((char)decompressedByte).ToString();
 			}
-
-			
 		}
 		
 		if (index == maxIndex)
