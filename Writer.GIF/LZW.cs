@@ -30,14 +30,14 @@ public class Lzw
 			}
 			else
 			{
+				stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
+
 				if (index == maxIndex && digitCapacity < 13)
 				{
 					digitCapacity++;
 					maxIndex *= 2;
 				}
 				
-				stringBinaryEncoding.Add(Helper.IntToBinary(dictionary[currentlyRecognised], digitCapacity));
-
 				dictionary.Add(currentlyRecognised + (char)decompressedByte, index++);
 				currentlyRecognised = ((char)decompressedByte).ToString();
 				
