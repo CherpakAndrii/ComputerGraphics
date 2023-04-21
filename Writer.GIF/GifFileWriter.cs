@@ -41,17 +41,17 @@ public class GifFileWriter : IImageWriter
     private static byte[] CreateImageDescriptor(Color[,] pixels, GifPalette palette)
     {
         byte[] descriptorSeparator = { 44 };
-        byte[] imageLeft = BitConverter.GetBytes(0)[0..2];
-        byte[] imageTop = BitConverter.GetBytes(0)[0..2];
+        byte[] imageLeft = { 0, 0 };
+        byte[] imageTop = { 0, 0 };
         byte[] imageWidth = BitConverter.GetBytes(pixels.GetLength(1))[0..2];
         byte[] imageHeight = BitConverter.GetBytes(pixels.GetLength(0))[0..2];
         int locallPalettePower = (int)Math.Ceiling(Math.Log2(palette.BaseColors.Length));
         BitArray localBitPerPixel = new(new int[] { locallPalettePower - 1 });
         byte[] packedFields = { BitConverter.GetBytes(Helper.IntFromBitArray(localBitPerPixel, 0, 3) + 128)[0] };
-        return descriptorSeparator.Concat(imageLeft.Reverse())
-                                  .Concat(imageTop.Reverse())
-                                  .Concat(imageWidth.Reverse())
-                                  .Concat(imageHeight.Reverse())
+        return descriptorSeparator.Concat(imageLeft)
+                                  .Concat(imageTop)
+                                  .Concat(imageWidth)
+                                  .Concat(imageHeight)
                                   .Concat(packedFields).ToArray();
     }
 
