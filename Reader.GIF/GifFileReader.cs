@@ -28,6 +28,10 @@ public class GifFileReader : IImageReader
         byte[] compressedData = GetCompressedData(fileData, ref cursor);
         return GetPixels(palette, compressedData, minLzwCode, height, width, islocalPalette ? localColorAmount : globalColorAmount);
     }
+    
+    public byte[] CompressedData { get; set; }
+    
+    public int LzwCode { get; set; }
 
     public bool ValidateFileStructure(byte[] fileData)
     {
@@ -147,9 +151,13 @@ public class GifFileReader : IImageReader
         return compressedData;
     }
 
-    private static Color[,] GetPixels(Color[] palette, byte[] compressedData, int minLzwCode, int height, int width, int colorAmount)
+    private Color[,] GetPixels(Color[] palette, byte[] compressedData, int minLzwCode, int height, int width, int colorAmount)
     {
         Lzw lzw = new();
+
+        this.CompressedData = compressedData;
+        this.LzwCode = minLzwCode;
+        
         byte[] decompressedData = lzw.Decompress(compressedData, minLzwCode);
         Color[,] result = new Color[height, width];
         int k = 0;
