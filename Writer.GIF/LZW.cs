@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using ImageFormatConverter.Common;
 
 namespace Writer.GIF;
@@ -51,7 +51,6 @@ public class Lzw
 					index = clearCode + 2;
 					maxIndex = clearCode * 2;
 					digitCapacity = codeSize + 1;
-					currentlyRecognised = "";
 				}
 			}
 		}

@@ -14,14 +14,20 @@ public class LzwTests
 
         var decompressor = new Reader.GIF.Lzw();
         var compressor = new Writer.GIF.Lzw();
+
+        var gifReader = new GifFileReader();
         
-        var compressedData = compressor.Сompress(new byte[] { 1, 2, 3, 4, 5}, 7);
+        var fileData = FileReader.ReadFile("C:\\Users\\Acer\\Downloads\\test\\screenshot.gif");
+        var image = gifReader.ImageToPixels(fileData);
 
-        var decompressedData = decompressor.Decompress(compressedData, 7);
+        var compressedData = gifReader.CompressedData;
+        var code = gifReader.LzwCode;
 
-        for (int i = 0; i < decompressedData.Length; i++)
-        {
-        }
+        var decompressedData = decompressor.Decompress(compressedData, code);
+
+        var compressedActual = compressor.Сompress(decompressedData, code);
+
+        Assert.That(compressedData, Is.EquivalentTo(compressedActual));
     }
     
 }
