@@ -72,9 +72,9 @@ public class Lzw
 		if (compressedBitsString.Length % 8 == 0)
 			return compressedBits.ToArray();
 
-		var substringPosition = compressedBitsString.Length - compressedBitsString.Length % 8 - 1;
+		var substringPosition = compressedBitsString.Length - compressedBitsString.Length % 8;
 		var substringLength = compressedBitsString.Length % 8;
-		compressedBits.Add(Convert.ToByte(compressedBitsString.Substring(substringPosition, substringLength), 2));
+		compressedBits.Add(Convert.ToByte(compressedBitsString.Substring(substringPosition, substringLength).PadRight(8, '0'), 2));
 
 		return compressedBits.ToArray();
 	}
