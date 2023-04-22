@@ -38,6 +38,7 @@ public class Lzw
 				}
 				else if (codeWordInt == endOfInformation)
 				{
+					return decompressedData.ToArray();
 				}
 				else
 				{
