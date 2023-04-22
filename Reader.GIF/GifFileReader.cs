@@ -67,7 +67,7 @@ public class GifFileReader : IImageReader
         ParseLogicalScreenPacked(fileData[10], out int pixel, out bool sort, out isGlobalPalette);
         colorAmount = (int)Math.Pow(2, pixel);
         return !((isGlobalPalette && fileData[11] >= colorAmount)
-                || pixel is < 0 or > 7
+                || pixel is < 1 or > 8
                 || fileData[12] != 0
                 || sort);
     }
@@ -83,7 +83,7 @@ public class GifFileReader : IImageReader
     private static bool ValidateLocalLogicalScreen(byte[] fileData, ref int cursor, out bool islocalPalette)
     {
         ParseLocalLogicalScreenPacked(fileData[cursor + 9], out int pixel, out bool sort, out bool interlancing, out islocalPalette);
-        return !(pixel is < 0 or > 7
+        return !(pixel is < 1 or > 8
                 || fileData[12] != 0
                 || interlancing
                 || sort);
