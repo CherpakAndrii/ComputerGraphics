@@ -58,7 +58,7 @@ public class Lzw
 							entry = previousCodeWord + previousCodeWord[0];
 						}
 						
-						decompressedData.AddRange(Encoding.ASCII.GetBytes(entry));
+						decompressedData.AddRange(Encoding.UTF32.GetBytes(entry).Where((_, ind) => ind % 4 == 0));
 						dictionary.Add(index++, previousCodeWord + entry[0]);
 						previousCodeWord = entry;
 
