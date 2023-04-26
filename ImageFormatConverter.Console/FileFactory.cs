@@ -42,6 +42,12 @@ public class FileFactory
         {
             throw new Exception($"Error: you are trying to open file with unsupported extension. Only {string.Join(" and ", supportedReaderFormats)} files are supported");
         }
+
+        if (supportedReaderFormats.Any(format => format == inputExtension))
+        {
+            throw new Exception($"Error: you are trying to open {inputExtension} file, but this file seems to be broken");
+        }
+
         throw new Exception($"Error: you are trying to open {inputExtension} file, but only {string.Join(" and ", supportedReaderFormats)} files are supported");
         
     }

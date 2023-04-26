@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<OutputPath>..\ImagePlugins\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ImageFormatConverter.Abstractions\ImageFormatConverter.Abstractions.csproj" />
+    <ProjectReference Include="..\ImageFormatConverter.Common\ImageFormatConverter.Common.csproj" />
+  </ItemGroup>
+
+</Project>

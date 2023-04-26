@@ -41,4 +41,6 @@ public struct Color
         G = original.G;
         B = original.B;
     }
+
+    public int GetNumericRepresentation() => (_r << 16) + (_g << 8) + _b;
 }
